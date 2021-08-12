@@ -23,6 +23,17 @@
         app:layout_constraintRight_toRightOf="@id/rectangle_3"
         android:layout_marginRight="25dp"/>
 
+    <Button
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:background="@android:color/transparent"
+        android:padding="0dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
+        android:drawableLeft="@drawable/ic_baseline_add_24"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
     <View
         android:id="@+id/rectangle_3"
         app:layout_constraintRight_toRightOf="parent"
@@ -54,13 +65,67 @@
         android:background="#2399BF" />
 
     <View
+        android:id="@+id/right_shelf"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/nav"
+        android:layout_width="50dp"
+        android:layout_height="400dp"
+        android:layout_marginBottom="50dp"
+        android:background="#FF7A17" />
+
+    <View
+        android:id="@+id/left_shelf"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/nav"
+        android:layout_width="50dp"
+        android:layout_height="400dp"
+        android:layout_marginBottom="50dp"
+        android:background="#FF7A17" />
+
+    <RelativeLayout
+        android:layout_width="60dp"
+        android:layout_height="400dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintBottom_toBottomOf="@id/left_shelf">
+
+           <View
+               android:layout_width="100dp"
+               android:layout_height="30dp"
+               android:background="@drawable/shelf_row_lefthalf" />
+
+           <View
+               android:layout_width="100dp"
+               android:layout_height="30dp"
+               android:background="@drawable/shelf_row_lefthalf"
+               android:layout_alignParentBottom="true"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="60dp"
+        android:layout_height="400dp"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toBottomOf="@id/left_shelf">
+
+        <View
+            android:layout_width="100dp"
+            android:layout_height="30dp"
+            android:background="@drawable/shelf_row_righthalf" />
+
+        <View
+            android:layout_width="100dp"
+            android:layout_height="30dp"
+            android:background="@drawable/shelf_row_righthalf"
+            android:layout_alignParentBottom="true"/>
+    </RelativeLayout>
+
+    <View
         android:id="@+id/shelf_bg"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintBottom_toTopOf="@id/nav"
         android:layout_width="200dp"
         android:layout_height="330dp"
-        android:layout_marginBottom="50dp"
+        android:layout_marginBottom="70dp"
         android:background="#FF7A17" />
 
     <RelativeLayout
@@ -105,15 +170,58 @@
         app:layout_constraintBottom_toBottomOf="@id/shelf_bg"
         android:nestedScrollingEnabled="false"/>
 
+    <Button
+        android:id="@+id/btn_more"
+        android:text="more"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@id/nav"
+        app:layout_constraintRight_toRightOf="parent"
+        android:background="@android:color/transparent"
+        android:textColor="@color/black"
+        android:drawableRight="@drawable/ic_baseline_keyboard_arrow_right_24"
+        android:drawableTint="@color/black"/>
 
-    <View
+    <LinearLayout
         android:id="@+id/nav"
         app:layout_constraintBottom_toBottomOf="parent"
         android:layout_width="match_parent"
         android:layout_height="42dp"
         android:background="#E5E5E5"
         android:elevation="10dp"
-        android:layout_alignParentBottom="true"/>
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:weightSum="9">
+
+        <Button
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:background="@android:color/transparent"
+            android:drawableLeft="@drawable/ic_baseline_home_24"
+            android:drawableTint="@color/black"
+            android:padding="0dp"
+            android:layout_margin="@android:dimen/app_icon_size"/>
+
+        <Button
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:drawableLeft="@drawable/ic_baseline_person_24"
+            android:background="@android:color/transparent"
+            android:drawableTint="@color/black"
+            android:padding="0dp"
+
+            android:layout_margin="@android:dimen/app_icon_size"/>
+
+        <Button
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:drawableLeft="@drawable/ic_baseline_search_24"
+            android:background="@android:color/transparent"
+            android:drawableTint="@color/black"
+            android:padding="0dp"
+            android:layout_margin="@android:dimen/app_icon_size"/>
+
+    </LinearLayout>
 
 
 
