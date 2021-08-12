@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -182,46 +183,19 @@
         android:drawableRight="@drawable/ic_baseline_keyboard_arrow_right_24"
         android:drawableTint="@color/black"/>
 
-    <LinearLayout
-        android:id="@+id/nav"
-        app:layout_constraintBottom_toBottomOf="parent"
+
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
         android:layout_width="match_parent"
         android:layout_height="42dp"
+        android:id="@+id/nav"
         android:background="#E5E5E5"
-        android:elevation="10dp"
-        android:orientation="horizontal"
-        android:gravity="center"
-        android:weightSum="9">
+        app:menu="@menu/menu_nav"
+        app:itemIconTint="@drawable/nav_selector"
+        app:itemTextColor="@drawable/nav_selector"
+        app:layout_constraintBottom_toBottomOf="parent"
+        />
 
-        <Button
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:background="@android:color/transparent"
-            android:drawableLeft="@drawable/ic_baseline_home_24"
-            android:drawableTint="@color/black"
-            android:padding="0dp"
-            android:layout_margin="@android:dimen/app_icon_size"/>
-
-        <Button
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:drawableLeft="@drawable/ic_baseline_person_24"
-            android:background="@android:color/transparent"
-            android:drawableTint="@color/black"
-            android:padding="0dp"
-
-            android:layout_margin="@android:dimen/app_icon_size"/>
-
-        <Button
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:drawableLeft="@drawable/ic_baseline_search_24"
-            android:background="@android:color/transparent"
-            android:drawableTint="@color/black"
-            android:padding="0dp"
-            android:layout_margin="@android:dimen/app_icon_size"/>
-
-    </LinearLayout>
 
 
 
