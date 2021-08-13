@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 public class Album {
     private int imageId;
+    private int albumID;
     private String albumTitle;
     private String artistName;
     private float avgRating;
