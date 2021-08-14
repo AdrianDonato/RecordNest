@@ -1,10 +1,5 @@
 package com.mobdeve.s18.recordnest;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -12,6 +7,10 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.GridLayoutManager;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.mobdeve.s18.recordnest.adapter.AlbumAdapter;
@@ -73,19 +72,6 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
         });
 
 
-        //binding.btnMore.setOnClickListener(this);
-
-/*
-        more.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(MainActivity.this, AlbumProfileActivity.class);
-                startActivity(i);
-            }
-        });
-
-
-         */
         albumAdapter = new AlbumAdapter(getApplicationContext(), initializeData());
 
 
@@ -108,12 +94,11 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
     public ArrayList<Album> initializeData() {
 
         ArrayList<Album> data = new ArrayList<>();
-        data.add(new Album(R.drawable.vinyl));
-        data.add(new Album(R.drawable.vinyl2));
-        data.add(new Album(R.drawable.vinyl));
-        data.add(new Album(R.drawable.vinyl2));
-        data.add(new Album(R.drawable.vinyl));
-
+        data.add(new Album(R.drawable.album1, "Juicebox","Mac Ayres"));
+        data.add(new Album(R.drawable.album2, "Twentytwenty","Jake Scott"));
+        data.add(new Album(R.drawable.album3, "Happier than ever","Billie Eilish"));
+        data.add(new Album(R.drawable.album1, "Juicebox","Mac Ayres"));
+        data.add(new Album(R.drawable.album2, "Twentytwenty","Jake Scott"));
 
         Collections.shuffle(data);
 

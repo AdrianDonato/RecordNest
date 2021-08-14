@@ -12,7 +12,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.mobdeve.s18.recordnest.databinding.ActivitySearchByBinding;
-import com.mobdeve.s18.recordnest.databinding.ActivitySearchUserBinding;
 
 public class SearchByActivity extends AppCompatActivity {
 
@@ -33,8 +32,8 @@ public class SearchByActivity extends AppCompatActivity {
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.nav);
 
-        //home
-        bottomNavigationView.setSelectedItemId(R.id.home);
+
+        bottomNavigationView.setSelectedItemId(R.id.invisible);
 
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
