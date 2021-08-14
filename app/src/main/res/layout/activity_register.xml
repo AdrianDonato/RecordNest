@@ -1,6 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="#2399BF"
+    tools:context=".LoginActivity">
+
+    <LinearLayout
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@drawable/login_reg_con"
+        android:elevation="10dp"
+
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:padding="20dp"
+        android:gravity="center">
+
+        <EditText
+            android:id="@+id/USERNAME"
+            android:layout_width="220dp"
+            android:layout_height="wrap_content"
+            android:gravity="start|top"
+            android:inputType="textShortMessage"
+            android:hint="USERNAME"
+            android:background="@color/white"
+            android:padding="10dp"
+            android:layout_marginTop="20dp"/>
+
+        <EditText
+            android:id="@+id/email"
+            android:layout_width="220dp"
+            android:layout_height="wrap_content"
+            android:gravity="start|top"
+            android:inputType="textEmailAddress"
+            android:hint="EMAIL"
+            android:background="@color/white"
+            android:padding="10dp"
+            android:layout_marginTop="20dp"/>
+
+        <EditText
+            android:id="@+id/password"
+            android:layout_width="220dp"
+            android:layout_height="wrap_content"
+            android:gravity="start|top"
+            android:inputType="textPassword"
+            android:hint="PASSWORD"
+            android:background="@color/white"
+            app:layout_constraintHorizontal_bias="0.0"
+            android:padding="10dp"
+            android:layout_marginTop="20dp" />
+
+        <Button
+            android:id="@+id/btn_register2"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="15dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="REGISTER"
+            android:textColor="@color/black"
+            android:textSize="15dp"
+            android:paddingHorizontal="30dp"
+            android:backgroundTint="#FF7A17"/>
+
+
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

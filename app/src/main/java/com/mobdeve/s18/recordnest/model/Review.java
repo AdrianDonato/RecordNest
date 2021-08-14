@@ -5,10 +5,12 @@ public class Review {
     private int rating;
     private String username;
     private String reviewContent;
+    private int userImageId;
 
-    public Review (int reviewID, int rating, String username, String reviewContent){
-        this.reviewID = reviewID;
+    public Review (/*int reviewID,*/ int rating,  int userImageId, String username, String reviewContent){
+        /*this.reviewID = reviewID;*/
         this.rating = rating;
+        this.userImageId = userImageId;
         this.username = username;
         this.reviewContent = reviewContent;
     }
@@ -27,6 +29,10 @@ public class Review {
 
     public String getReviewContent() {
         return reviewContent;
+    }
+
+    public int getUserImageId() {
+        return userImageId;
     }
 
     public void setRating(int rating) {

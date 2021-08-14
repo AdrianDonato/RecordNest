@@ -1,146 +1,233 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#2399BF">
+    android:background="#2399BF"
+    android:nestedScrollingEnabled="true">
 
-    <LinearLayout
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/scroll"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:elevation="0dp">
 
         <LinearLayout
-            android:id="@+id/album_info"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toTopOf="parent"
-            android:weightSum="5"
-            android:orientation="horizontal"
-            android:padding="20dp"
-            android:layout_marginTop="20dp">
-
-            <ImageView
-                android:id="@+id/iv_view_album"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:src="@drawable/album1"
-                android:adjustViewBounds="true"
-                android:scaleType="centerCrop"
-                android:layout_weight="2"/>
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
             <LinearLayout
-                android:layout_width="0dp"
+                android:id="@+id/album_info"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="3"
-                android:orientation="vertical"
-                android:paddingLeft="20dp">
+                app:layout_constraintTop_toTopOf="parent"
+                android:weightSum="5"
+                android:orientation="horizontal"
+                android:padding="20dp"
+                android:layout_marginTop="20dp">
+
+                <ImageView
+                    android:id="@+id/iv_view_album"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/album1"
+                    android:adjustViewBounds="true"
+                    android:scaleType="centerCrop"
+                    android:layout_weight="2"/>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3"
+                    android:orientation="vertical"
+                    android:paddingLeft="20dp">
+
+                    <TextView
+                        android:id="@+id/tv_album_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Album name"
+                        android:textStyle="bold"
+                        android:textSize="20dp"
+                        android:textAllCaps="true"
+                        android:textColor="@color/black"/>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="by"
+                            android:paddingRight="5dp"/>
+                        <TextView
+                            android:id="@+id/tv_album_artist"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Album artist" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginTop="5dp">
+
+                        <View
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:background="@drawable/ic_baseline_star_24" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="4.7"
+                            android:layout_marginLeft="5dp"/>
+
+                    </LinearLayout>
+
+                    <Button
+                        android:layout_marginTop="20dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:text="+ Add to collection"
+                        android:backgroundTint="#e5e5e5"
+                        android:textColor="@color/black"
+                        android:textSize="10dp"
+                        android:paddingHorizontal="10dp"
+                        android:layout_gravity="right"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/tracklist_ll"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/tv_album_name"
+                    android:id="@+id/tracklist_label"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Album name"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/album_info"
+                    android:text="Tracklist"
+                    android:layout_marginLeft="20dp"
                     android:textStyle="bold"
-                    android:textSize="20dp"
-                    android:textAllCaps="true"
-                    android:textColor="@color/black"/>
+                    android:textSize="18dp"
+                    />
 
-                <LinearLayout
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_tracklist"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="by"
-                        android:paddingRight="5dp"/>
-                    <TextView
-                        android:id="@+id/tv_album_artist"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Album artist" />
+                    android:nestedScrollingEnabled="false"
+                    android:layout_marginLeft="40dp"/>
 
-                </LinearLayout>
+            </LinearLayout>
 
-                <LinearLayout
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/reviews_con"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                android:paddingTop="20dp"
+                android:paddingHorizontal="20dp"
+                android:paddingBottom="200dp">
+
+                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginTop="5dp">
+                    android:gravity="center_horizontal"
+                    android:text="Reviews"
+                    android:textSize="18dp"
+                    android:textStyle="bold" />
 
-                    <View
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:background="@drawable/ic_baseline_star_24" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="4.7"
-                        android:layout_marginLeft="5dp"/>
-
-                </LinearLayout>
-
-                <Button
-                    android:layout_marginTop="20dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="40dp"
-                    android:text="+ Add to collection"
-                    android:backgroundTint="#e5e5e5"
-                    android:textColor="@color/black"
-                    android:textSize="10dp"
-                    android:paddingHorizontal="10dp"
-                    android:layout_gravity="right"/>
-
-
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_review"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:nestedScrollingEnabled="false" />
 
             </LinearLayout>
 
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/tracklist_label"
+    </androidx.core.widget.NestedScrollView>
+
+    <LinearLayout
+        android:id="@+id/review_input_con"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:background="#e5e5e5"
+        app:layout_constraintBottom_toTopOf="@id/nav"
+        android:elevation="5dp"
+        android:padding="10dp"
+        android:orientation="vertical">
+
+        <RatingBar
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/album_info"
-            android:text="Tracklist"
-            android:layout_marginLeft="20dp"
-            android:textStyle="bold"
-            android:textSize="18dp"
-            />
-
-        <TextView
-            android:id="@+id/tracklist_item"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Track 1"
-            app:layout_constraintLeft_toLeftOf="@id/tracklist_label"
-            app:layout_constraintTop_toBottomOf="@id/tracklist_label"
-            android:layout_marginLeft="40dp"/>
-
+            android:numStars="5"
+            android:rating="5"
+            android:stepSize="1.0"
+            android:progressTint="#FF7A17"
+            android:isIndicator="false"
+            style="?android:attr/ratingBarStyleSmall"/>
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:padding="20dp"
-            android:background="@drawable/reviews_con"
-            android:layout_marginTop="20dp"
-            android:gravity="center_horizontal">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Reviews"
-                    android:textStyle="bold"
-                    android:textSize="18dp"
-                    android:gravity="center_horizontal"/>
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="10">
 
+            <EditText
+                android:id="@+id/tweetEt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:layout_marginTop="10dp"
+                android:gravity="start|top"
+                android:inputType="textLongMessage"
+                android:hint="Share your thoughts..."
+                android:background="@android:color/transparent"
+                app:layout_constraintEnd_toEndOf="@+id/tweetBtn"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toEndOf="@+id/userImageIv"
+                app:layout_constraintTop_toBottomOf="@+id/tweetBtn"
+                android:layout_weight="8"
+                android:paddingRight="20dp"/>
+
+            <Button
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:background="@android:color/transparent"
+                android:padding="0dp"
+                android:layout_marginRight="10dp"
+                android:drawableTint="@color/black"
+                android:drawableLeft="@drawable/ic_baseline_check_24"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
 
         </LinearLayout>
+
+
+
     </LinearLayout>
-
-
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:layout_width="match_parent"
@@ -150,6 +237,9 @@
         app:menu="@menu/menu_nav"
         app:itemIconTint="@drawable/nav_selector"
         app:itemTextColor="@drawable/nav_selector"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:elevation="10dp"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+
+

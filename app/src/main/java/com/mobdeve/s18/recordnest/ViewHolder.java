@@ -7,11 +7,13 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
+
 //import org.jetbrains.annotations.NotNull;
 
 public class ViewHolder extends RecyclerView.ViewHolder {
     private ImageView imgViewAlbum, imgAlbum;
-    private TextView nameAlbum, artistAlbum, nameViewAlbum, artistViewAlbum;
+    private TextView nameAlbum, artistAlbum, nameViewAlbum, artistViewAlbum, tracklistItem, viewTracklistItem;
 
     public ViewHolder(@NonNull  View itemView) {
         super(itemView);
@@ -25,8 +27,10 @@ public class ViewHolder extends RecyclerView.ViewHolder {
         this.artistViewAlbum = itemView.findViewById(R.id.tv_album_artist);
         this.artistAlbum = itemView.findViewById(R.id.tv_album_artist);
 
-        //this.imgAlbum = itemView.findViewById(R.id.iv_vinyl);
+        //this.tracklistItem = itemView.findViewById(R.id.tracklist_item);
+        //this.viewTracklistItem = itemView.findViewById(R.id.tracklist_item);
 
+        //this.imgAlbum = itemView.findViewById(R.id.iv_vinyl);
     }
 
     public void setImgViewAlbum(int imgViewAlbum) {
@@ -54,5 +58,12 @@ public class ViewHolder extends RecyclerView.ViewHolder {
         this.artistAlbum.setText(artistAlbum);
     }
 
+    public void setTracklistItem(ArrayList<String> tracklistItem) {
+        this.tracklistItem.setText((CharSequence) tracklistItem);
+    }
+
+    public void setViewTracklistItem(ArrayList<String> viewTracklistItem){
+        this.viewTracklistItem.setText((CharSequence) viewTracklistItem);
+    }
 
 }

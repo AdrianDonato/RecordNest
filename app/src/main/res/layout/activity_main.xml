@@ -161,15 +161,22 @@
     </RelativeLayout>
 
 
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_datalist"
-        android:layout_width="220dp"
-        android:layout_height="380dp"
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         app:layout_constraintLeft_toLeftOf="@+id/shelf_bg"
         app:layout_constraintRight_toRightOf="@id/shelf_bg"
-        app:layout_constraintBottom_toBottomOf="@id/shelf_bg"
-        android:nestedScrollingEnabled="false"/>
+        app:layout_constraintBottom_toBottomOf="@id/shelf_bg">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_datalist"
+            android:layout_width="220dp"
+            android:layout_height="380dp"
+
+            android:nestedScrollingEnabled="false"/>
+
+    </androidx.core.widget.NestedScrollView>
+
 
     <Button
         android:id="@+id/btn_more"

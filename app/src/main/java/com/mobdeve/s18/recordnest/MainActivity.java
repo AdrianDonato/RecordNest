@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -26,7 +25,7 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
     private int testing2;
 
     private ActivityMainBinding binding;
-    private AlbumAdapter albumAdapter;
+    public AlbumAdapter albumAdapter;
 
     private Button more;
     //private PostAdapter postAdapter;
@@ -82,6 +81,7 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
         binding.rvDatalist.setAdapter(albumAdapter);
 
 
+
     }
 
     public void openAlbumProfile(){
@@ -92,7 +92,24 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
 
 
     public ArrayList<Album> initializeData() {
+/*
+        ArrayList<String> album1TrackList = new ArrayList<>();
 
+        album1TrackList.add("ALUBUM 1 TRACK 1");
+        album1TrackList.add("ALUBUM 1 TRACK 2");
+        album1TrackList.add("ALUBUM 1 TRACK 3");
+        album1TrackList.add("ALUBUM 1 TRACK 4");
+
+
+        ArrayList<Album> data = new ArrayList<>();
+        data.add(new Album(R.drawable.album1, "Juicebox","Mac Ayres", album1TrackList));
+        data.add(new Album(R.drawable.album2, "Twentytwenty","Jake Scott",album1TrackList));
+        data.add(new Album(R.drawable.album3, "Happier than ever","Billie Eilish",album1TrackList));
+        data.add(new Album(R.drawable.album1, "Juicebox","Mac Ayres",album1TrackList));
+        data.add(new Album(R.drawable.album2, "Twentytwenty","Jake Scott",album1TrackList));
+
+
+ */
         ArrayList<Album> data = new ArrayList<>();
         data.add(new Album(R.drawable.album1, "Juicebox","Mac Ayres"));
         data.add(new Album(R.drawable.album2, "Twentytwenty","Jake Scott"));
@@ -101,6 +118,8 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
         data.add(new Album(R.drawable.album2, "Twentytwenty","Jake Scott"));
 
         Collections.shuffle(data);
+
+
 
         return data;
     }

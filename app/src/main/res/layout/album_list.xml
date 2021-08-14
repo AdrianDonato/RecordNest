@@ -31,7 +31,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/thumbnail_card"
-                card_view:cardCornerRadius="25dp"
+                card_view:cardCornerRadius="27.5dp"
                 card_view:cardElevation="0dp"
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true">

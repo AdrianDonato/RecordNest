@@ -26,6 +26,7 @@ public class AlbumAdapter extends RecyclerView.Adapter<ViewHolder> {
     public static final String KEY_PICTURE = "KEY_PICTURE";
     public static final String KEY_NAME = "KEY_NAME";
     public static final String KEY_ARTIST = "KEY_ARTIST";
+    public static final String KEY_TRACK = "KEY_TRACK";
 
     public AlbumAdapter(Context context, ArrayList<Album> albumArrayList) {
         this.albumArrayList = albumArrayList;
@@ -41,6 +42,7 @@ public class AlbumAdapter extends RecyclerView.Adapter<ViewHolder> {
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         View view = inflater.inflate(R.layout.album_list, parent, false);
+        //view = inflater.inflate(R.layout.tracklist, parent, false);
 
         ViewHolder viewHolder = new ViewHolder(view);
 
@@ -52,10 +54,13 @@ public class AlbumAdapter extends RecyclerView.Adapter<ViewHolder> {
                 i.putExtra(KEY_PICTURE, albumArrayList.get(viewHolder.getBindingAdapterPosition()).getImageId());
                 i.putExtra(KEY_NAME, albumArrayList.get(viewHolder.getBindingAdapterPosition()).getAlbumName());
                 i.putExtra(KEY_ARTIST, albumArrayList.get(viewHolder.getBindingAdapterPosition()).getArtist());
+                //i.putExtra(KEY_TRACK, albumArrayList.get(viewHolder.getBindingAdapterPosition()).getTracklist());
 
                 v.getContext().startActivity(i);
             }
         });
+
+
 
         return viewHolder;
     }
@@ -67,24 +72,8 @@ public class AlbumAdapter extends RecyclerView.Adapter<ViewHolder> {
         holder.setImgAlbum(this.albumArrayList.get(position).getImageId());
         holder.setNameAlbum(this.albumArrayList.get(position).getAlbumName());
         holder.setArtistAlbum(this.albumArrayList.get(position).getArtist());
-        //holder.iv_vinyl.setImageResource(albumArrayList.get(position).getImageId());
+        //holder.setTracklistItem(this.albumArrayList.get(position).getTracklist());
 
     }
-/*
-    protected class AlbumViewHolder extends RecyclerView.ViewHolder{
-        ImageView iv_vinyl;
-        LinearLayout parent_layout;
-
-        public AlbumViewHolder(View view) {
-            super(view);
-
-            iv_vinyl = view.findViewById(R.id.iv_vinyl);
-            parent_layout = view.findViewById(R.id.parent_layout);
-
-        }
-    }
-
- */
-
 }
 

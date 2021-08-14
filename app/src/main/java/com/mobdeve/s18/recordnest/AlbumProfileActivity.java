@@ -11,10 +11,17 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.mobdeve.s18.recordnest.adapter.AlbumAdapter;
+import com.mobdeve.s18.recordnest.adapter.ReviewAdapter;
+import com.mobdeve.s18.recordnest.adapter.TracklistAdapter;
 import com.mobdeve.s18.recordnest.databinding.ActivityAlbumProfileBinding;
+import com.mobdeve.s18.recordnest.model.Review;
+import com.mobdeve.s18.recordnest.model.Tracklist;
+
+import java.util.ArrayList;
 
 public class AlbumProfileActivity extends AppCompatActivity {
 
@@ -22,8 +29,13 @@ public class AlbumProfileActivity extends AppCompatActivity {
 
     private ImageView imgViewAlbum;
 
-    private TextView nameViewAlbum, artistViewAlbum;
+    private TextView nameViewAlbum, artistViewAlbum, trackListItem;
 
+    //private RecyclerView rvTrackList;
+
+    public TracklistAdapter tracklistAdapter;
+
+    public ReviewAdapter reviewAdapter;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,19 +52,22 @@ public class AlbumProfileActivity extends AppCompatActivity {
         this.imgViewAlbum = findViewById(R.id.iv_view_album);
         this.nameViewAlbum = findViewById(R.id.tv_album_name);
         this.artistViewAlbum = findViewById(R.id.tv_album_artist);
+        //this.trackListItem = findViewById(R.id.tracklist_item);
+        //this.rvTrackList = findViewById(R.id.rv_tracklist);
 
         Intent i = getIntent();
 
         int cover = i.getIntExtra(AlbumAdapter.KEY_PICTURE, 0);
         String name = i.getStringExtra(AlbumAdapter.KEY_NAME);
         String artist = i.getStringExtra(AlbumAdapter.KEY_ARTIST);
+        //String track = i.getStringExtra(TracklistAdapter.KEY_TRACK);
 
         this.imgViewAlbum.setImageResource(cover);
         this.nameViewAlbum.setText(name);
         this.artistViewAlbum.setText(artist);
+        //this.trackListItem.setText(track);
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.nav);
-
 
         bottomNavigationView.setSelectedItemId(R.id.invisible);
 
@@ -77,6 +92,44 @@ public class AlbumProfileActivity extends AppCompatActivity {
             }
         });
 
+        tracklistAdapter = new TracklistAdapter(getApplicationContext(), initializeDataTrack());
+        binding.rvTracklist.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+        binding.rvTracklist.setAdapter(tracklistAdapter);
+
+        reviewAdapter = new ReviewAdapter(getApplicationContext(), initializeDataReview());
+        binding.rvReview.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+        binding.rvReview.setAdapter(reviewAdapter);
+
+
+
+    }
+
+    public ArrayList<Tracklist> initializeDataTrack() {
+
+        ArrayList<Tracklist> data = new ArrayList<>();
+        data.add(new Tracklist("ALUBUM TRACK 1"));
+        data.add(new Tracklist("ALUBUM TRACK 2"));
+        data.add(new Tracklist("ALUBUM TRACK 3"));
+        data.add(new Tracklist("ALUBUM TRACK 4"));
+        data.add(new Tracklist("ALUBUM TRACK 5"));
+        data.add(new Tracklist("ALUBUM TRACK 6"));
+
+
+
+        return data;
+    }
+
+    public ArrayList<Review> initializeDataReview() {
+
+        ArrayList<Review> data = new ArrayList<>();
+        data.add(new Review(4,R.drawable.album1, "ina", "wala ako maisip"));
+        data.add(new Review(5,R.drawable.album2, "adrian", "ang tagal maglayout svsbe rgsjbhdvb fwjhbvvwhjhj"));
+        data.add(new Review(5,R.drawable.album1, "ina", "wala ako maisip"));
+        data.add(new Review(1,R.drawable.album1, "ina", "wala ako maisip"));
+        data.add(new Review(4,R.drawable.album2, "adrian", "ang tagal maglayout svsbe rgsjbhdvb fwjhbvvwhjhj"));
+        data.add(new Review(2,R.drawable.album1, "ina", "wala ako maisip"));
+
+        return data;
     }
 
 
