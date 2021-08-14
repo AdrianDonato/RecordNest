@@ -7,13 +7,13 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import org.jetbrains.annotations.NotNull;
+//import org.jetbrains.annotations.NotNull;
 
 public class ViewHolder extends RecyclerView.ViewHolder {
     private ImageView imgViewAlbum, imgAlbum;
     private TextView nameAlbum, artistAlbum, nameViewAlbum, artistViewAlbum;
 
-    public ViewHolder(@NonNull @NotNull  View itemView) {
+    public ViewHolder(@NonNull  View itemView) {
         super(itemView);
 
         this.imgViewAlbum =itemView.findViewById(R.id.iv_view_album);
