@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "564207823633",
+    "project_id": "mobdeve-s18-recordnest-db",
+    "storage_bucket": "mobdeve-s18-recordnest-db.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:564207823633:android:b05f991c84aab2b9d3fab0",
+        "android_client_info": {
+          "package_name": "com.mobdeve.s18.recordnest"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "564207823633-1ii4ek1e5o6ccj7v4vr4ljbr2rm3plte.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBloYqbFWAJ-60q_rtPRjCefs42LHPiw2s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "564207823633-1ii4ek1e5o6ccj7v4vr4ljbr2rm3plte.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
