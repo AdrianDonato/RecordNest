@@ -16,6 +16,8 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.mobdeve.s18.recordnest.adapter.AlbumAdapter;
 import com.mobdeve.s18.recordnest.databinding.ActivityMainBinding;
 import com.mobdeve.s18.recordnest.model.Album;
@@ -29,6 +31,8 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
 
     private ActivityMainBinding binding;
     public AlbumAdapter albumAdapter;
+
+    public FirebaseAuth mAuth;
 
     private Button more;
 
@@ -91,7 +95,7 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
         //binding.rvDatalist.setLayoutManager(new GridLayoutManager(getApplicationContext());
         binding.rvDatalist.setAdapter(albumAdapter);
 
-
+        mAuth = FirebaseAuth.getInstance();
 
     }
 
@@ -160,5 +164,14 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
 
         super.onResume();
 
+    }
+
+    @Override
+    public void onStart(){
+        super.onStart();
+        FirebaseUser mUser = mAuth.getCurrentUser();
+        if(mUser == null){
+            startActivity(new Intent(MainActivity.this, RegisterActivity.class));
+        }
     }
 }
