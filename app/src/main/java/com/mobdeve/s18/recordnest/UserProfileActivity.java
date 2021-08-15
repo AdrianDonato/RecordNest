@@ -62,7 +62,11 @@ public class UserProfileActivity extends AppCompatActivity {
         });
 
         collectionAdapter = new CollectionAdapter(getApplicationContext(), initializeDataCollection());
-        binding.rvCollection.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+
+        LinearLayoutManager lm = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
+
+        binding.rvCollection.setLayoutManager(lm);
+
         binding.rvCollection.setAdapter(collectionAdapter);
 
     }
