@@ -28,6 +28,9 @@ import java.util.Collections;
 public class MainActivity extends AppCompatActivity  implements View.OnClickListener{
     private int testing;
     private int testing2;
+    private String loggedName;
+    private String loggedUID;
+
 
     private ActivityMainBinding binding;
     public AlbumAdapter albumAdapter;
@@ -63,6 +66,13 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.nav);
 
+        mAuth = FirebaseAuth.getInstance();
+        FirebaseUser loggedUser = mAuth.getCurrentUser();
+        if(loggedUser != null){
+            loggedName = loggedUser.getDisplayName(); //sets user id for profile
+            loggedUID = loggedUser.getUid();
+        }
+
         //home
         bottomNavigationView.setSelectedItemId(R.id.home);
 
@@ -73,7 +83,9 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
                     case R.id.home:
                         return true;
                     case R.id.profile:
-                        startActivity(new Intent(getApplicationContext(),UserProfileActivity.class));
+                        Intent toProfile = new Intent(getApplicationContext(),UserProfileActivity.class);
+                        toProfile.putExtra("profileUID", loggedUID);
+                        startActivity(toProfile);
                         overridePendingTransition(0,0);
                         return true;
                     case R.id.search:
@@ -94,9 +106,6 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
 
         //binding.rvDatalist.setLayoutManager(new GridLayoutManager(getApplicationContext());
         binding.rvDatalist.setAdapter(albumAdapter);
-
-        mAuth = FirebaseAuth.getInstance();
-
     }
 
 
