@@ -16,6 +16,8 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.mobdeve.s18.recordnest.adapter.AlbumAdapter;
 import com.mobdeve.s18.recordnest.databinding.ActivityMainBinding;
 import com.mobdeve.s18.recordnest.model.Album;
@@ -26,9 +28,14 @@ import java.util.Collections;
 public class MainActivity extends AppCompatActivity  implements View.OnClickListener{
     private int testing;
     private int testing2;
+    private String loggedName;
+    private String loggedUID;
+
 
     private ActivityMainBinding binding;
     public AlbumAdapter albumAdapter;
+
+    public FirebaseAuth mAuth;
 
     private Button more;
 
@@ -59,6 +66,13 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.nav);
 
+        mAuth = FirebaseAuth.getInstance();
+        FirebaseUser loggedUser = mAuth.getCurrentUser();
+        if(loggedUser != null){
+            loggedName = loggedUser.getDisplayName(); //sets user id for profile
+            loggedUID = loggedUser.getUid();
+        }
+
         //home
         bottomNavigationView.setSelectedItemId(R.id.home);
 
@@ -69,7 +83,9 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
                     case R.id.home:
                         return true;
                     case R.id.profile:
-                        startActivity(new Intent(getApplicationContext(),UserProfileActivity.class));
+                        Intent toProfile = new Intent(getApplicationContext(),UserProfileActivity.class);
+                        toProfile.putExtra("profileUID", loggedUID);
+                        startActivity(toProfile);
                         overridePendingTransition(0,0);
                         return true;
                     case R.id.search:
@@ -90,9 +106,6 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
 
         //binding.rvDatalist.setLayoutManager(new GridLayoutManager(getApplicationContext());
         binding.rvDatalist.setAdapter(albumAdapter);
-
-
-
     }
 
 
@@ -160,5 +173,14 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
 
         super.onResume();
 
+    }
+
+    @Override
+    public void onStart(){
+        super.onStart();
+        FirebaseUser mUser = mAuth.getCurrentUser();
+        if(mUser == null){
+            startActivity(new Intent(MainActivity.this, RegisterActivity.class));
+        }
     }
 }

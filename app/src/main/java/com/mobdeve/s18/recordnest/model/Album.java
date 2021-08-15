@@ -7,6 +7,7 @@ public class Album {
     private int albumID;
     private String albumName;
     private String artist;
+    private String genre;
     private float avgRating;
 
     private ArrayList<String> trackList;
