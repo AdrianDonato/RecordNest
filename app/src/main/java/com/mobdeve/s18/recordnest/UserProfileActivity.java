@@ -57,6 +57,8 @@ public class UserProfileActivity extends AppCompatActivity {
         }
 
 
+
+
         BottomNavigationView bottomNavigationView = findViewById(R.id.nav);
         //home
         bottomNavigationView.setSelectedItemId(R.id.profile);

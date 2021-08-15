@@ -1,6 +1,7 @@
 package com.mobdeve.s18.recordnest.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,6 +9,7 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.mobdeve.s18.recordnest.CollectionActivity;
 import com.mobdeve.s18.recordnest.R;
 import com.mobdeve.s18.recordnest.model.Collection;
 
@@ -17,10 +19,13 @@ public class CollectionAdapter extends RecyclerView.Adapter<CollectionAdapter.Co
     private ArrayList<Collection> collectionArrayList;
     private Context context;
 
+    public static final String KEY_COLLECTION_NAME = "KEY_COLLECTION_NAME";
+
     public CollectionAdapter(Context context, ArrayList<Collection> collectionArrayList) {
         this.collectionArrayList = collectionArrayList;
         this.context = context;
     }
+
 
     @Override
     public int getItemCount() {
@@ -34,6 +39,17 @@ public class CollectionAdapter extends RecyclerView.Adapter<CollectionAdapter.Co
                 .inflate(R.layout.collection, parent, false);
 
         CollectionAdapter.CollectionViewHolder viewHolder = new CollectionAdapter.CollectionViewHolder(view);
+
+        viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(v.getContext(), CollectionActivity.class);
+
+                i.putExtra(KEY_COLLECTION_NAME, collectionArrayList.get(viewHolder.getBindingAdapterPosition()).getCollectionTitle());
+
+                v.getContext().startActivity(i);
+            }
+        });
 
         return viewHolder;
     }

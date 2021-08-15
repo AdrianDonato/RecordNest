@@ -6,7 +6,8 @@
     android:layout_marginTop="0dp"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    card_view:cardElevation="0dp">
+    card_view:cardElevation="0dp"
+    android:layout_gravity="center_horizontal">
 
     <LinearLayout
         android:orientation="horizontal"
@@ -14,7 +15,10 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="4dp"
         android:layout_marginRight="4dp"
-        android:paddingBottom="30dp">
+        android:paddingBottom="30dp"
+        card_view:layout_constraintLeft_toLeftOf="parent"
+        card_view:layout_constraintRight_toRightOf="parent"
+        card_view:layout_constraintTop_toTopOf="parent">
 
         <RelativeLayout
             android:layout_width="wrap_content"
