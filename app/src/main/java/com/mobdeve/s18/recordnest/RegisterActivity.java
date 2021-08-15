@@ -17,6 +17,8 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.mobdeve.s18.recordnest.databinding.ActivityRegisterBinding;
@@ -81,7 +83,21 @@ public class RegisterActivity extends AppCompatActivity{
                         @Override
                         public void onComplete(@NonNull @NotNull Task<AuthResult> task) {
                             if(task.isSuccessful()){
-                                startActivity(new Intent(RegisterActivity.this, MainActivity.class));
+                                FirebaseUser newUser = mAuth.getCurrentUser();
+                                UserProfileChangeRequest addUsername = new UserProfileChangeRequest.Builder()
+                                        .setDisplayName(insertUser).build();
+                                newUser.updateProfile(addUsername).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull @NotNull Task<Void> task) {
+                                        if(task.isSuccessful()){
+                                            startActivity(new Intent(RegisterActivity.this, MainActivity.class));
+                                        } else {
+                                            Toast.makeText(RegisterActivity.this, "Error! " + task.getException().getMessage(),
+                                                    Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+                                });
+
                             } else {
                                 Toast.makeText(RegisterActivity.this, "Error! " + task.getException().getMessage(),
                                         Toast.LENGTH_SHORT).show();

@@ -12,6 +12,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.mobdeve.s18.recordnest.adapter.CollectionAdapter;
 import com.mobdeve.s18.recordnest.databinding.ActivityUserProfileBinding;
 import com.mobdeve.s18.recordnest.model.Collection;
@@ -22,6 +24,8 @@ public class UserProfileActivity extends AppCompatActivity {
     private ActivityUserProfileBinding binding;
 
     private CollectionAdapter collectionAdapter;
+
+    private FirebaseUser mUser = FirebaseAuth.getInstance().getCurrentUser();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
