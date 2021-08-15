@@ -6,7 +6,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -31,6 +34,10 @@ public class AlbumProfileActivity extends AppCompatActivity {
 
     private TextView nameViewAlbum, artistViewAlbum, trackListItem;
 
+    private LinearLayout content, reviewInput;
+
+    Animation topAnim, bottomAnim;
+
     //private RecyclerView rvTrackList;
 
     public TracklistAdapter tracklistAdapter;
@@ -48,6 +55,17 @@ public class AlbumProfileActivity extends AppCompatActivity {
         //setContentView(R.layout.activity_main);
         View view = binding.getRoot();
         setContentView(view);
+
+
+        topAnim = AnimationUtils.loadAnimation(this,R.anim.top_animation);
+        bottomAnim = AnimationUtils.loadAnimation(this,R.anim.bottom_animation);
+
+        content = findViewById(R.id.content);
+        reviewInput = findViewById(R.id.review_input_con);
+
+        reviewInput.setAnimation(bottomAnim);
+        content.setAnimation(topAnim);
+
 
         this.imgViewAlbum = findViewById(R.id.iv_view_album);
         this.nameViewAlbum = findViewById(R.id.tv_album_name);
@@ -91,6 +109,7 @@ public class AlbumProfileActivity extends AppCompatActivity {
                 return false;
             }
         });
+
 
         tracklistAdapter = new TracklistAdapter(getApplicationContext(), initializeDataTrack());
         binding.rvTracklist.setLayoutManager(new LinearLayoutManager(getApplicationContext()));

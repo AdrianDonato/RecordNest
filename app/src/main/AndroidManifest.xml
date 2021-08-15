@@ -11,12 +11,12 @@
         android:theme="@style/Theme.RecordNest">
         <activity android:name=".LoginActivity"/>
         <activity android:name=".RegisterActivity"/>
-        <activity android:name=".MainActivity"/>
+        <activity android:name=".MainActivity" android:theme="@style/noAnimTheme"/>
 
-        <activity android:name=".AlbumProfileActivity" />
+        <activity android:name=".AlbumProfileActivity" android:theme="@style/noAnimTheme"/>
         <activity android:name=".SearchUserActivity" />
         <activity android:name=".UserProfileActivity" />
-        <activity android:name=".SearchByActivity" />
+        <activity android:name=".SearchByActivity" android:theme="@style/noAnimTheme"/>
         <activity android:name=".SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

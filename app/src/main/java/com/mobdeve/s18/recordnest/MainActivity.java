@@ -6,11 +6,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.mobdeve.s18.recordnest.adapter.AlbumAdapter;
@@ -28,6 +31,10 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
     public AlbumAdapter albumAdapter;
 
     private Button more;
+
+    RecyclerView rvData;
+
+    Animation topAnim;
     //private PostAdapter postAdapter;
 
     @Override
@@ -42,7 +49,11 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
         View view = binding.getRoot();
         setContentView(view);
 
+        topAnim = AnimationUtils.loadAnimation(this,R.anim.top_animation);
 
+        rvData = findViewById(R.id.rv_datalist);
+
+        rvData.setAnimation(topAnim);
 
         binding.btnMore.setOnClickListener(this);
 
@@ -84,12 +95,6 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
 
     }
 
-    public void openAlbumProfile(){
-        Intent i = new Intent(this, AlbumProfileActivity.class);
-        startActivity(i);
-    }
-
-
 
     public ArrayList<Album> initializeData() {
 /*
@@ -130,6 +135,7 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
         switch(v.getId()){
             case R.id.btn_more:
                 Intent i = new Intent(MainActivity.this, SearchByActivity.class);
+                //i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 startActivity(i);
                 break;
         }
@@ -139,6 +145,20 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
     @Override
     public void onBackPressed(){
         //super.onBackPressed();
+
+    }
+
+    @Override
+    public void onResume(){
+        //super.onBackPressed();
+
+        topAnim = AnimationUtils.loadAnimation(this,R.anim.top_animation);
+
+        rvData = findViewById(R.id.rv_datalist);
+
+        rvData.setAnimation(topAnim);
+
+        super.onResume();
 
     }
 }

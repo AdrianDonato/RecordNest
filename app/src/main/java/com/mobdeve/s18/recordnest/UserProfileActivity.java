@@ -1,6 +1,5 @@
 package com.mobdeve.s18.recordnest;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -10,13 +9,19 @@ import android.view.WindowManager;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.mobdeve.s18.recordnest.databinding.ActivityAlbumProfileBinding;
+import com.mobdeve.s18.recordnest.adapter.CollectionAdapter;
 import com.mobdeve.s18.recordnest.databinding.ActivityUserProfileBinding;
+import com.mobdeve.s18.recordnest.model.Collection;
+
+import java.util.ArrayList;
 
 public class UserProfileActivity extends AppCompatActivity {
     private ActivityUserProfileBinding binding;
+
+    private CollectionAdapter collectionAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,11 +61,30 @@ public class UserProfileActivity extends AppCompatActivity {
             }
         });
 
+        collectionAdapter = new CollectionAdapter(getApplicationContext(), initializeDataCollection());
+        binding.rvCollection.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+        binding.rvCollection.setAdapter(collectionAdapter);
+
     }
 
     @Override
     public void onBackPressed(){
         //super.onBackPressed();
 
+    }
+
+    public ArrayList<Collection> initializeDataCollection() {
+
+        ArrayList<Collection> data = new ArrayList<>();
+        data.add(new Collection("Collection"));
+        data.add(new Collection("Collection 2"));
+        data.add(new Collection("Collection 3"));
+        data.add(new Collection("Collection 4"));
+        data.add(new Collection("Collection 5"));
+        data.add(new Collection("Collection 6"));
+
+
+
+        return data;
     }
 }
