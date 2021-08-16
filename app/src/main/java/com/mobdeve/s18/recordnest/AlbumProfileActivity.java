@@ -115,7 +115,7 @@ public class AlbumProfileActivity extends AppCompatActivity {
 
 
         //sets the data of the album (albumDisplayed) then sets data to the layout views
-        setAlbumData("WkTZhhQLE8laVGAUBMzw", cover);
+        setAlbumData("unjl1YJS8nP3cYZkv2Cv", cover);
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.nav);
 
@@ -226,9 +226,7 @@ public class AlbumProfileActivity extends AppCompatActivity {
         String name = albumDisplayed.getAlbumName();
         String artist = albumDisplayed.getArtist();
         String artLink = albumDisplayed.getAlbumArtURL();
-        albumCoverStorage = FirebaseStorage.getInstance().getReferenceFromUrl(
-                "gs://mobdeve-s18-recordnest-db.appspot.com/albumcovers/WkTZhhQLE8laVGAUBMzw.jpg"
-        );
+        albumCoverStorage = FirebaseStorage.getInstance().getReferenceFromUrl(artLink);
 
         Glide.with(this).load(albumCoverStorage).into(imgViewAlbum);
         this.nameViewAlbum.setText(name);
