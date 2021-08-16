@@ -66,7 +66,8 @@ public class AlbumProfileActivity extends AppCompatActivity {
     private DocumentReference albumDocRef;
 
     private Album albumDisplayed;
-
+    private ArrayList<Tracklist> tracklistDisplayed;
+    private ArrayList<String> trackString;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -142,9 +143,6 @@ public class AlbumProfileActivity extends AppCompatActivity {
         });
 
 
-        tracklistAdapter = new TracklistAdapter(getApplicationContext(), initializeDataTrack());
-        binding.rvTracklist.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-        binding.rvTracklist.setAdapter(tracklistAdapter);
 
         reviewAdapter = new ReviewAdapter(getApplicationContext(), initializeDataReview());
         binding.rvReview.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
@@ -154,17 +152,22 @@ public class AlbumProfileActivity extends AppCompatActivity {
 
     }
 
-    public ArrayList<Tracklist> initializeDataTrack() {
+    public ArrayList<Tracklist> initializeDataTrack(ArrayList<String> tracklist) {
 
         ArrayList<Tracklist> data = new ArrayList<>();
+
+        /*
         data.add(new Tracklist("ALUBUM TRACK 1"));
         data.add(new Tracklist("ALUBUM TRACK 2"));
         data.add(new Tracklist("ALUBUM TRACK 3"));
         data.add(new Tracklist("ALUBUM TRACK 4"));
         data.add(new Tracklist("ALUBUM TRACK 5"));
         data.add(new Tracklist("ALUBUM TRACK 6"));
+        */
 
-
+        for(int i = 0; i < tracklist.size(); i++){
+            data.add(new Tracklist(tracklist.get(i)));
+        }
 
         return data;
     }
@@ -196,14 +199,17 @@ public class AlbumProfileActivity extends AppCompatActivity {
                     int retAlbumYear = value.getLong("Year").intValue();
                     float retAvgRating = value.getLong("AvgRating").floatValue();
                     int retRatingCount = value.getLong("RatingCount").intValue();
+                    ArrayList<String> retTracklist = (ArrayList<String>) value.get("Tracklist");
 
                     albumDisplayed = new Album(coverData, retAlbumTitle, retArtistName);
                     albumDisplayed.setGenre(retAlbumGenre);
                     albumDisplayed.setYear(retAlbumYear);
                     albumDisplayed.setAvgRating(retAvgRating);
                     albumDisplayed.setRatingsCount(retRatingCount);
+                    trackString = retTracklist;
 
                     setProfileViewData(coverData);
+                    initializeTrackAdapter();
                 } else {
                     Toast.makeText(AlbumProfileActivity.this, "Error! " + task.getException().getMessage(),
                             Toast.LENGTH_SHORT).show();
@@ -223,7 +229,18 @@ public class AlbumProfileActivity extends AppCompatActivity {
         this.artistViewAlbum.setText(artist);
     }
 
+    //function which initializes tracklist adapter
+    //initialize track adapter only when data for tracklist has been retrieved
+    public void initializeTrackAdapter(){
+        tracklistAdapter = new TracklistAdapter(getApplicationContext(), initializeDataTrack(trackString));
+        binding.rvTracklist.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+        binding.rvTracklist.setAdapter(tracklistAdapter);
+    }
 
+    //function which initializes reviewlist adapter
+    public void initializeReviewAdapter(){
+
+    }
 
 
 }
