@@ -5,6 +5,7 @@ import java.util.ArrayList;
 public class Album {
     private int imageId;
     private int albumID;
+    private String albumArtURL;
     private String albumName;
     private String artist;
     private String genre;
@@ -48,6 +49,9 @@ public class Album {
         this.ratingsCount = ratingsCount;
     }
 
+    public void setAlbumArtURL(String albumArtURL) {
+        this.albumArtURL = albumArtURL;
+    }
 
     //getters
     public int getImageId() {
@@ -76,6 +80,10 @@ public class Album {
 
     public int getRatingsCount() {
         return ratingsCount;
+    }
+
+    public String getAlbumArtURL(){
+        return albumArtURL;
     }
 
     /*

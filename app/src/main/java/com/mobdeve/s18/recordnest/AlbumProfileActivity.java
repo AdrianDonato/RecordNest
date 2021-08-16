@@ -18,6 +18,8 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.annotation.GlideModule;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -32,6 +34,8 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.mobdeve.s18.recordnest.adapter.AlbumAdapter;
 import com.mobdeve.s18.recordnest.adapter.ReviewAdapter;
 import com.mobdeve.s18.recordnest.adapter.TracklistAdapter;
@@ -64,6 +68,9 @@ public class AlbumProfileActivity extends AppCompatActivity {
 
     private FirebaseFirestore fStore;
     private DocumentReference albumDocRef;
+    private StorageReference albumCoverStorage;
+    private String albumArtURL;
+
 
     private Album albumDisplayed;
     private ArrayList<Tracklist> tracklistDisplayed;
@@ -106,16 +113,9 @@ public class AlbumProfileActivity extends AppCompatActivity {
         String artist = i.getStringExtra(AlbumAdapter.KEY_ARTIST);
         //String track = i.getStringExtra(TracklistAdapter.KEY_TRACK);
 
-        /*
-        this.imgViewAlbum.setImageResource(cover);
-        this.nameViewAlbum.setText(name);
-        this.artistViewAlbum.setText(artist);
-        */
-        //this.trackListItem.setText(track);
-
 
         //sets the data of the album (albumDisplayed) then sets data to the layout views
-        setAlbumData("unjl1YJS8nP3cYZkv2Cv", cover);
+        setAlbumData("WkTZhhQLE8laVGAUBMzw", cover);
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.nav);
 
@@ -196,6 +196,7 @@ public class AlbumProfileActivity extends AppCompatActivity {
                     String retAlbumTitle = value.getString("Title");
                     String retArtistName = value.getString("Artist");
                     String retAlbumGenre = value.getString("Genre");
+                    String retAlbumImg = value.getString("ImageURL");
                     int retAlbumYear = value.getLong("Year").intValue();
                     float retAvgRating = value.getLong("AvgRating").floatValue();
                     int retRatingCount = value.getLong("RatingCount").intValue();
@@ -206,6 +207,7 @@ public class AlbumProfileActivity extends AppCompatActivity {
                     albumDisplayed.setYear(retAlbumYear);
                     albumDisplayed.setAvgRating(retAvgRating);
                     albumDisplayed.setRatingsCount(retRatingCount);
+                    albumDisplayed.setAlbumArtURL(retAlbumImg);
                     trackString = retTracklist;
 
                     setProfileViewData(coverData);
@@ -223,8 +225,12 @@ public class AlbumProfileActivity extends AppCompatActivity {
         int cover = coverData;//albumDisplayed.getImageId();
         String name = albumDisplayed.getAlbumName();
         String artist = albumDisplayed.getArtist();
+        String artLink = albumDisplayed.getAlbumArtURL();
+        albumCoverStorage = FirebaseStorage.getInstance().getReferenceFromUrl(
+                "gs://mobdeve-s18-recordnest-db.appspot.com/albumcovers/WkTZhhQLE8laVGAUBMzw.jpg"
+        );
 
-        this.imgViewAlbum.setImageResource(cover);
+        Glide.with(this).load(albumCoverStorage).into(imgViewAlbum);
         this.nameViewAlbum.setText(name);
         this.artistViewAlbum.setText(artist);
     }
