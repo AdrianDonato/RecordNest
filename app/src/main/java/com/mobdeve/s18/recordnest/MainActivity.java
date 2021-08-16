@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
 import com.mobdeve.s18.recordnest.adapter.AlbumAdapter;
 import com.mobdeve.s18.recordnest.databinding.ActivityMainBinding;
 import com.mobdeve.s18.recordnest.model.Album;
@@ -43,6 +44,8 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
 
     Animation topAnim;
     //private PostAdapter postAdapter;
+
+    private DatabaseReference newReleaseDB;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

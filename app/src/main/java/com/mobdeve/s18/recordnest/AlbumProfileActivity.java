@@ -11,18 +11,36 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.mobdeve.s18.recordnest.adapter.AlbumAdapter;
 import com.mobdeve.s18.recordnest.adapter.ReviewAdapter;
 import com.mobdeve.s18.recordnest.adapter.TracklistAdapter;
 import com.mobdeve.s18.recordnest.databinding.ActivityAlbumProfileBinding;
+import com.mobdeve.s18.recordnest.model.Album;
 import com.mobdeve.s18.recordnest.model.Review;
 import com.mobdeve.s18.recordnest.model.Tracklist;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 
@@ -44,6 +62,12 @@ public class AlbumProfileActivity extends AppCompatActivity {
 
     public ReviewAdapter reviewAdapter;
 
+    private FirebaseFirestore fStore;
+    private DocumentReference albumDocRef;
+
+    private Album albumDisplayed;
+
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
@@ -56,7 +80,6 @@ public class AlbumProfileActivity extends AppCompatActivity {
         View view = binding.getRoot();
         setContentView(view);
 
-
         topAnim = AnimationUtils.loadAnimation(this,R.anim.top_animation);
         bottomAnim = AnimationUtils.loadAnimation(this,R.anim.bottom_animation);
 
@@ -66,7 +89,6 @@ public class AlbumProfileActivity extends AppCompatActivity {
         reviewInput.setAnimation(bottomAnim);
         content.setAnimation(topAnim);
 
-
         this.imgViewAlbum = findViewById(R.id.iv_view_album);
         this.nameViewAlbum = findViewById(R.id.tv_album_name);
         this.artistViewAlbum = findViewById(R.id.tv_album_artist);
@@ -75,15 +97,24 @@ public class AlbumProfileActivity extends AppCompatActivity {
 
         Intent i = getIntent();
 
+        //Firestore Initialization
+        fStore = FirebaseFirestore.getInstance();
+
         int cover = i.getIntExtra(AlbumAdapter.KEY_PICTURE, 0);
         String name = i.getStringExtra(AlbumAdapter.KEY_NAME);
         String artist = i.getStringExtra(AlbumAdapter.KEY_ARTIST);
         //String track = i.getStringExtra(TracklistAdapter.KEY_TRACK);
 
+        /*
         this.imgViewAlbum.setImageResource(cover);
         this.nameViewAlbum.setText(name);
         this.artistViewAlbum.setText(artist);
+        */
         //this.trackListItem.setText(track);
+
+
+        //sets the data of the album (albumDisplayed) then sets data to the layout views
+        setAlbumData("unjl1YJS8nP3cYZkv2Cv", cover);
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.nav);
 
@@ -149,6 +180,47 @@ public class AlbumProfileActivity extends AppCompatActivity {
         data.add(new Review(2,R.drawable.album1, "ina", "wala ako maisip"));
 
         return data;
+    }
+
+    //this function passes data from firebase to an Album class (albumDisplayed)
+    public void setAlbumData (String albumID, int coverData){
+        albumDocRef = fStore.collection("Albums").document(albumID);
+        albumDocRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull @NotNull Task<DocumentSnapshot> task) {
+                if(task.isSuccessful()){
+                    DocumentSnapshot value = task.getResult();
+                    String retAlbumTitle = value.getString("Title");
+                    String retArtistName = value.getString("Artist");
+                    String retAlbumGenre = value.getString("Genre");
+                    int retAlbumYear = value.getLong("Year").intValue();
+                    float retAvgRating = value.getLong("AvgRating").floatValue();
+                    int retRatingCount = value.getLong("RatingCount").intValue();
+
+                    albumDisplayed = new Album(coverData, retAlbumTitle, retArtistName);
+                    albumDisplayed.setGenre(retAlbumGenre);
+                    albumDisplayed.setYear(retAlbumYear);
+                    albumDisplayed.setAvgRating(retAvgRating);
+                    albumDisplayed.setRatingsCount(retRatingCount);
+
+                    setProfileViewData(coverData);
+                } else {
+                    Toast.makeText(AlbumProfileActivity.this, "Error! " + task.getException().getMessage(),
+                            Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
+    //this function sets the data of the views on album profile
+    public void setProfileViewData(int coverData){
+        int cover = coverData;//albumDisplayed.getImageId();
+        String name = albumDisplayed.getAlbumName();
+        String artist = albumDisplayed.getArtist();
+
+        this.imgViewAlbum.setImageResource(cover);
+        this.nameViewAlbum.setText(name);
+        this.artistViewAlbum.setText(artist);
     }
 
 

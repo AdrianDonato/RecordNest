@@ -81,6 +81,7 @@ public class CollectionActivity extends AppCompatActivity {
     }
 
     public ArrayList<Album> initializeData() {
+        // get data from database here?
         ArrayList<Album> data = new ArrayList<>();
         data.add(new Album(R.drawable.album1, "Juicebox","Mac Ayres"));
         data.add(new Album(R.drawable.album2, "Twentytwenty","Jake Scott"));
