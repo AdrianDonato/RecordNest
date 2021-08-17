@@ -7,6 +7,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
@@ -38,6 +40,13 @@ public class ViewHolder extends RecyclerView.ViewHolder {
 
     public void setImgViewAlbum(int imgViewAlbum) {
         this.imgViewAlbum.setImageResource(imgViewAlbum);
+    }
+
+    public void setImgViewAlbumFirebase(String imageURL){
+        albumCoverStorage = FirebaseStorage.getInstance().getReferenceFromUrl(imageURL);
+        //Glide.with(this).load(albumCoverStorage).into(imgViewAlbum);
+        //Glide.with(this.context).load(albumCoverStorage).into(imgViewAlbum);
+        Glide.with(imgViewAlbum.getContext()).load(albumCoverStorage).into(imgViewAlbum);
     }
 
     public void setImgAlbum(int imgAlbum) {

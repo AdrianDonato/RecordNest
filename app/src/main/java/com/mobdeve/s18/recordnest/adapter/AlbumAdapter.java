@@ -73,7 +73,8 @@ public class AlbumAdapter extends RecyclerView.Adapter<ViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull @NotNull ViewHolder holder, int position) {
 
-        holder.setImgAlbum(this.albumArrayList.get(position).getImageId());
+        //holder.setImgAlbum(this.albumArrayList.get(position).getImageId());
+        holder.setImgViewAlbumFirebase(albumArrayList.get(position).getAlbumArtURL());
         holder.setNameAlbum(this.albumArrayList.get(position).getAlbumName());
         holder.setArtistAlbum(this.albumArrayList.get(position).getArtist());
         //holder.setTracklistItem(this.albumArrayList.get(position).getTracklist());
