@@ -76,8 +76,17 @@ public class CollectionActivity extends AppCompatActivity {
 
         albumAdapter = new AlbumAdapter(getApplicationContext(), initializeData());
 
-        binding.rvCollectionalbum.setLayoutManager(new GridLayoutManager(getApplicationContext(),2));
+        //TextView albumName = findViewById(R.id.tv_album_name);
+        //albumName.setVisibility(View.VISIBLE);
+
+
+
+        binding.rvCollectionalbum.setLayoutManager(new GridLayoutManager(getApplicationContext(),3));
+        //findViewById(R.id.tv_album_name).setVisibility(View.VISIBLE);;
         binding.rvCollectionalbum.setAdapter(albumAdapter);
+
+
+
     }
 
     public ArrayList<Album> initializeData() {
