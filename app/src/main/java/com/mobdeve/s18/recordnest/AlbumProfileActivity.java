@@ -111,11 +111,12 @@ public class AlbumProfileActivity extends AppCompatActivity {
         int cover = i.getIntExtra(AlbumAdapter.KEY_PICTURE, 0);
         String name = i.getStringExtra(AlbumAdapter.KEY_NAME);
         String artist = i.getStringExtra(AlbumAdapter.KEY_ARTIST);
+        String obtainedId = i.getStringExtra(AlbumAdapter.KEY_ID);
         //String track = i.getStringExtra(TracklistAdapter.KEY_TRACK);
 
 
         //sets the data of the album (albumDisplayed) then sets data to the layout views
-        setAlbumData("unjl1YJS8nP3cYZkv2Cv", cover);
+        setAlbumData(obtainedId, cover);
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.nav);
 
@@ -193,6 +194,7 @@ public class AlbumProfileActivity extends AppCompatActivity {
             public void onComplete(@NonNull @NotNull Task<DocumentSnapshot> task) {
                 if(task.isSuccessful()){
                     DocumentSnapshot value = task.getResult();
+                    String retAlbumId = value.getId();
                     String retAlbumTitle = value.getString("Title");
                     String retArtistName = value.getString("Artist");
                     String retAlbumGenre = value.getString("Genre");
@@ -203,6 +205,7 @@ public class AlbumProfileActivity extends AppCompatActivity {
                     ArrayList<String> retTracklist = (ArrayList<String>) value.get("Tracklist");
 
                     albumDisplayed = new Album(coverData, retAlbumTitle, retArtistName);
+                    albumDisplayed.setAlbumID(retAlbumId);
                     albumDisplayed.setGenre(retAlbumGenre);
                     albumDisplayed.setYear(retAlbumYear);
                     albumDisplayed.setAvgRating(retAvgRating);

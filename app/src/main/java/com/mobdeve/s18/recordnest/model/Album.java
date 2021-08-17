@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class Album {
     private int imageId;
-    private int albumID;
+    private String albumID;
     private String albumArtURL;
     private String albumName;
     private String artist;
@@ -28,6 +28,8 @@ public class Album {
     public void setAlbumName(String albumName) {
         this.albumName = albumName;
     }
+
+    public void setAlbumID(String albumID){this.albumID = albumID;}
 
     public void setArtist(String artist) {
         this.artist = artist;
@@ -56,6 +58,10 @@ public class Album {
     //getters
     public int getImageId() {
         return imageId;
+    }
+
+    public String getAlbumID() {
+        return albumID;
     }
 
     public String getAlbumName(){

@@ -7,6 +7,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.storage.StorageReference;
+
 import java.util.ArrayList;
 
 //import org.jetbrains.annotations.NotNull;
@@ -14,6 +16,7 @@ import java.util.ArrayList;
 public class ViewHolder extends RecyclerView.ViewHolder {
     private ImageView imgViewAlbum, imgAlbum;
     private TextView nameAlbum, artistAlbum, nameViewAlbum, artistViewAlbum, tracklistItem, viewTracklistItem;
+    private StorageReference albumCoverStorage;
 
     public ViewHolder(@NonNull  View itemView) {
         super(itemView);

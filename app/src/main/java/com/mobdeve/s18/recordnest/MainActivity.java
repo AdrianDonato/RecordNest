@@ -9,22 +9,34 @@ import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.mobdeve.s18.recordnest.adapter.AlbumAdapter;
 import com.mobdeve.s18.recordnest.databinding.ActivityMainBinding;
 import com.mobdeve.s18.recordnest.model.Album;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity  implements View.OnClickListener{
     private int testing;
@@ -45,7 +57,8 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
     Animation topAnim;
     //private PostAdapter postAdapter;
 
-    private DatabaseReference newReleaseDB;
+    private FirebaseFirestore fStore;
+    private CollectionReference newReleases;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +71,9 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
         //setContentView(R.layout.activity_main);
         View view = binding.getRoot();
         setContentView(view);
+
+        //firestore initialization
+        fStore = FirebaseFirestore.getInstance();
 
         topAnim = AnimationUtils.loadAnimation(this,R.anim.top_animation);
 
@@ -99,8 +115,8 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
                 return false;
             }
         });
-
-
+        initializeData();
+        /*
         albumAdapter = new AlbumAdapter(getApplicationContext(), initializeData());
 
 
@@ -108,11 +124,11 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
         binding.rvDatalist.setLayoutManager(new GridLayoutManager(getApplicationContext(),2));
 
         //binding.rvDatalist.setLayoutManager(new GridLayoutManager(getApplicationContext());
-        binding.rvDatalist.setAdapter(albumAdapter);
+        binding.rvDatalist.setAdapter(albumAdapter); */
     }
 
 
-    public ArrayList<Album> initializeData() {
+    public void initializeData() {
 /*
         ArrayList<String> album1TrackList = new ArrayList<>();
 
@@ -132,17 +148,50 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
 
  */
         ArrayList<Album> data = new ArrayList<>();
+        newReleases = fStore.collection("Albums");
+        newReleases.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull @NotNull Task<QuerySnapshot> task) {
+                if(task.isSuccessful()){
+                    String toastDebugger = "";
+                    for(QueryDocumentSnapshot documentSnapshot : task.getResult()){
+                        data.add(new Album(R.drawable.album1, documentSnapshot.getString("Title"),
+                                documentSnapshot.getString("Artist")));
+                        data.get(data.size()-1).setAlbumID(documentSnapshot.getId());
+                        toastDebugger = toastDebugger.concat(documentSnapshot.getId()+"\n");
+                       // data.get(data.size()-1).setAlbumArtURL(documentSnapshot.getString("ImageURL"));
+                    }
+                    //Collections.shuffle(data);
+                    //initialize adapter
+                    Toast.makeText(MainActivity.this, toastDebugger,
+                            Toast.LENGTH_SHORT).show();
+                    initializeAlbumAdapter(data);
+                } else {
+                    Toast.makeText(MainActivity.this, "Error! " + task.getException().getMessage(),
+                            Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+        /*
         data.add(new Album(R.drawable.album1, "Juicebox","Mac Ayres"));
         data.add(new Album(R.drawable.album2, "Twentytwenty","Jake Scott"));
         data.add(new Album(R.drawable.album3, "Happier than ever","Billie Eilish"));
         data.add(new Album(R.drawable.album1, "Juicebox","Mac Ayres"));
         data.add(new Album(R.drawable.album2, "Twentytwenty","Jake Scott"));
+        */
 
-        Collections.shuffle(data);
+       // return data;
+    }
+
+    public void initializeAlbumAdapter(ArrayList<Album> albums){
+        albumAdapter = new AlbumAdapter(getApplicationContext(), albums);
 
 
+        //binding.rvDatalist.setLayoutManager(new LinearLayoutManager(getApplicationContext()))';
+        binding.rvDatalist.setLayoutManager(new GridLayoutManager(getApplicationContext(),2));
 
-        return data;
+        //binding.rvDatalist.setLayoutManager(new GridLayoutManager(getApplicationContext());
+        binding.rvDatalist.setAdapter(albumAdapter);
     }
 
 
