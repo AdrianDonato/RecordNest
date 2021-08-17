@@ -129,24 +129,6 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
 
 
     public void initializeData() {
-/*
-        ArrayList<String> album1TrackList = new ArrayList<>();
-
-        album1TrackList.add("ALUBUM 1 TRACK 1");
-        album1TrackList.add("ALUBUM 1 TRACK 2");
-        album1TrackList.add("ALUBUM 1 TRACK 3");
-        album1TrackList.add("ALUBUM 1 TRACK 4");
-
-
-        ArrayList<Album> data = new ArrayList<>();
-        data.add(new Album(R.drawable.album1, "Juicebox","Mac Ayres", album1TrackList));
-        data.add(new Album(R.drawable.album2, "Twentytwenty","Jake Scott",album1TrackList));
-        data.add(new Album(R.drawable.album3, "Happier than ever","Billie Eilish",album1TrackList));
-        data.add(new Album(R.drawable.album1, "Juicebox","Mac Ayres",album1TrackList));
-        data.add(new Album(R.drawable.album2, "Twentytwenty","Jake Scott",album1TrackList));
-
-
- */
         ArrayList<Album> data = new ArrayList<>();
         newReleases = fStore.collection("Albums");
         newReleases.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -161,8 +143,6 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
                         data.get(data.size()-1).setAlbumArtURL(documentSnapshot.getString("ImageURL"));
                         toastDebugger = toastDebugger.concat(documentSnapshot.getId()+"\n");
                     }
-                    //Collections.shuffle(data);
-                    //initialize adapter
                     Toast.makeText(MainActivity.this, toastDebugger,
                             Toast.LENGTH_SHORT).show();
                     initializeAlbumAdapter(data);
@@ -172,15 +152,6 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
                 }
             }
         });
-        /*
-        data.add(new Album(R.drawable.album1, "Juicebox","Mac Ayres"));
-        data.add(new Album(R.drawable.album2, "Twentytwenty","Jake Scott"));
-        data.add(new Album(R.drawable.album3, "Happier than ever","Billie Eilish"));
-        data.add(new Album(R.drawable.album1, "Juicebox","Mac Ayres"));
-        data.add(new Album(R.drawable.album2, "Twentytwenty","Jake Scott"));
-        */
-
-       // return data;
     }
 
     public void initializeAlbumAdapter(ArrayList<Album> albums){
