@@ -54,7 +54,7 @@ public class AlbumProfileActivity extends AppCompatActivity {
 
     private ImageView imgViewAlbum;
 
-    private TextView nameViewAlbum, artistViewAlbum, trackListItem;
+    private TextView nameViewAlbum, artistViewAlbum, yearViewAlbum, genreViewAlbum;
 
     private LinearLayout content, reviewInput;
 
@@ -100,6 +100,8 @@ public class AlbumProfileActivity extends AppCompatActivity {
         this.imgViewAlbum = findViewById(R.id.iv_view_album);
         this.nameViewAlbum = findViewById(R.id.tv_album_name);
         this.artistViewAlbum = findViewById(R.id.tv_album_artist);
+        this.yearViewAlbum = findViewById(R.id.tv_album_year);
+        this.genreViewAlbum = findViewById(R.id.tv_album_genre);
         //this.trackListItem = findViewById(R.id.tracklist_item);
         //this.rvTrackList = findViewById(R.id.rv_tracklist);
 
@@ -229,11 +231,18 @@ public class AlbumProfileActivity extends AppCompatActivity {
         String name = albumDisplayed.getAlbumName();
         String artist = albumDisplayed.getArtist();
         String artLink = albumDisplayed.getAlbumArtURL();
+        int albumYear = albumDisplayed.getYear();
+        String genre = albumDisplayed.getGenre();
         albumCoverStorage = FirebaseStorage.getInstance().getReferenceFromUrl(artLink);
 
         Glide.with(this).load(albumCoverStorage).into(imgViewAlbum);
         this.nameViewAlbum.setText(name);
         this.artistViewAlbum.setText(artist);
+        this.yearViewAlbum.setText(Integer.toString(albumYear));
+        this.genreViewAlbum.setText(genre);
+
+        /*Toast.makeText(AlbumProfileActivity.this, albumYear,
+                Toast.LENGTH_SHORT).show();*/
     }
 
     //function which initializes tracklist adapter
