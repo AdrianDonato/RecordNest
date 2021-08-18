@@ -232,7 +232,7 @@
                 android:layout_marginTop="10dp"
                 android:gravity="start|top"
                 android:inputType="textLongMessage"
-                android:hint="Share your thoughts..."
+                android:hint="Leave a rating or share a review..."
                 android:background="@android:color/transparent"
                 app:layout_constraintEnd_toEndOf="@+id/tweetBtn"
                 app:layout_constraintHorizontal_bias="0.0"
