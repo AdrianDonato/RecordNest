@@ -39,6 +39,8 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.mobdeve.s18.recordnest.adapter.AlbumAdapter;
@@ -90,6 +92,7 @@ public class AlbumProfileActivity extends AppCompatActivity {
     private Album albumDisplayed;
     private ArrayList<Tracklist> tracklistDisplayed;
     private ArrayList<String> trackString;
+    private ArrayList<Review> reviewList;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -151,6 +154,7 @@ public class AlbumProfileActivity extends AppCompatActivity {
 
         //sets the data of the album (albumDisplayed) then sets data to the layout views
         setAlbumData(obtainedId, cover);
+        initializeDataReview();
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.nav);
 
@@ -178,11 +182,11 @@ public class AlbumProfileActivity extends AppCompatActivity {
         });
 
 
-
+        /*
         reviewAdapter = new ReviewAdapter(getApplicationContext(), initializeDataReview());
         binding.rvReview.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
         binding.rvReview.setAdapter(reviewAdapter);
-
+        */
 
 
     }
@@ -197,17 +201,38 @@ public class AlbumProfileActivity extends AppCompatActivity {
         return data;
     }
 
-    public ArrayList<Review> initializeDataReview() {
-
+    public void initializeDataReview() {
         ArrayList<Review> data = new ArrayList<>();
+        reviewList = new ArrayList<>();
+        fStore.collection("Review").whereEqualTo("AlbumID", obtainedId).
+                get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull @NotNull Task<QuerySnapshot> task) {
+                if(task.isSuccessful()){
+                    for(QueryDocumentSnapshot documentSnapshot : task.getResult()){
+                        String retrievedRating = documentSnapshot.getString("Rating");
+                        double retRatingDbl = Double.parseDouble(retrievedRating);
+                        int retRatingInt = (int) retRatingDbl;
+                        reviewList.add(new Review(retRatingInt,
+                                R.drawable.album1, documentSnapshot.getString("Username"),
+                                documentSnapshot.getString("ReviewContent")));
+                    }
+                    initializeReviewAdapter();
+                } else {
+                    Toast.makeText(AlbumProfileActivity.this, "Error! " + task.getException().getMessage(),
+                            Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+        /*
         data.add(new Review(4,R.drawable.album1, "ina", "wala ako maisip"));
         data.add(new Review(5,R.drawable.album2, "adrian", "ang tagal maglayout svsbe rgsjbhdvb fwjhbvvwhjhj"));
         data.add(new Review(5,R.drawable.album1, "ina", "wala ako maisip"));
         data.add(new Review(1,R.drawable.album1, "ina", "wala ako maisip"));
         data.add(new Review(4,R.drawable.album2, "adrian", "ang tagal maglayout svsbe rgsjbhdvb fwjhbvvwhjhj"));
         data.add(new Review(2,R.drawable.album1, "ina", "wala ako maisip"));
-
-        return data;
+        */
+        // return data;
     }
 
     //this function passes data from firebase to an Album class (albumDisplayed)
@@ -282,7 +307,9 @@ public class AlbumProfileActivity extends AppCompatActivity {
 
     //function which initializes reviewlist adapter
     public void initializeReviewAdapter(){
-
+        reviewAdapter = new ReviewAdapter(getApplicationContext(), reviewList);
+        binding.rvReview.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+        binding.rvReview.setAdapter(reviewAdapter);
     }
 
     public void addToCollection(){
