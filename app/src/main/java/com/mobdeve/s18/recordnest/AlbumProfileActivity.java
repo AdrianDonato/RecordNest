@@ -265,7 +265,8 @@ public class AlbumProfileActivity extends AppCompatActivity {
         this.artistViewAlbum.setText(artist);
         this.yearViewAlbum.setText(Integer.toString(albumYear));
         this.genreViewAlbum.setText(genre);
-        this.avgRatingViewAlbum.setText(Double.toString(avgRating));
+        //format average to 2 decimal places only
+        this.avgRatingViewAlbum.setText(String.format("%.2f", avgRating));
 
         /*Toast.makeText(AlbumProfileActivity.this, albumYear,
                 Toast.LENGTH_SHORT).show();*/
