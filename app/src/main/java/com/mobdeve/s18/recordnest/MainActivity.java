@@ -21,10 +21,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -35,8 +32,6 @@ import com.mobdeve.s18.recordnest.model.Album;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity  implements View.OnClickListener{
     private int testing;
@@ -82,6 +77,7 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
         rvData.setAnimation(topAnim);
 
         binding.btnMore.setOnClickListener(this);
+        binding.btnSubmitAlbum.setOnClickListener(this);
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.nav);
 
@@ -167,6 +163,12 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
         switch(v.getId()){
             case R.id.btn_more:
                 Intent i = new Intent(MainActivity.this, SearchByActivity.class);
+                //i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                startActivity(i);
+                break;
+
+            case R.id.btn_submit_album:
+                i = new Intent(MainActivity.this, SubmitAlbumActivity.class);
                 //i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 startActivity(i);
                 break;

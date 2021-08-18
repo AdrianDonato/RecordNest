@@ -2,9 +2,6 @@ package com.mobdeve.s18.recordnest;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Matrix;
-import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -30,15 +27,6 @@ public class SubmitAlbumActivity extends AppCompatActivity{
     ImageView id_cover;
     Button btn_upload, btn_submit;
 
-    private String Document_img1="";
-
-    private Bitmap alteredImage, bitmap;
-    private Canvas canvas;
-    private Paint paint;
-    private Matrix matrix;
-
-    private float windowWidth;
-    private float windowHeight;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

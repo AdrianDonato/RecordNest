@@ -22,6 +22,18 @@
         android:textColor="@color/black"
         android:layout_alignParentTop="true"/>
 
+    <ToggleButton
+        android:layout_width="110dp"
+        android:layout_height="25dp"
+        android:textOff="Follow"
+        android:textOn="Following"
+        android:textAllCaps="false"
+        android:layout_marginTop="21dp"
+        android:paddingVertical="0dp"
+        android:background="@drawable/toggle_selector"
+        android:layout_toRightOf="@id/profile_username"
+        android:visibility="gone"/>
+
     <Button
         android:layout_width="30dp"
         android:layout_height="wrap_content"

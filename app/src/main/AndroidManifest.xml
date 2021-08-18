@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.mobdeve.s18.recordnest">
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
 
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -16,15 +16,32 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.RecordNest">
-        <activity android:name=".LoginActivity"/>
-        <activity android:name=".RegisterActivity"/>
-        <activity android:name=".MainActivity" android:theme="@style/noAnimTheme"/>
-        <activity android:name=".CollectionActivity" android:theme="@style/noAnimTheme"/>
-        <activity android:name=".AlbumProfileActivity" android:theme="@style/noAnimTheme"/>
-        <activity android:name=".SubmitAlbumActivity" android:theme="@style/noAnimTheme"/>
-        <activity android:name=".SearchUserActivity" android:theme="@style/noAnimTheme"/>
-        <activity android:name=".UserProfileActivity" android:theme="@style/noAnimTheme" />
-        <activity android:name=".SearchByActivity" android:theme="@style/noAnimTheme"/>
+        <activity android:name=".LoginActivity" />
+        <activity android:name=".RegisterActivity" />
+        <activity
+            android:name=".MainActivity"
+            android:theme="@style/noAnimTheme" />
+        <activity
+            android:name=".CollectionActivity"
+            android:theme="@style/noAnimTheme" />
+        <activity
+            android:name=".AlbumProfileActivity"
+            android:theme="@style/noAnimTheme" />
+        <activity
+            android:name=".SubmitAlbumActivity"
+            android:theme="@style/noAnimTheme" />
+        <activity
+            android:name=".SearchUserActivity"
+            android:theme="@style/noAnimTheme" />
+        <activity
+            android:name=".SearchGenreActivity"
+            android:theme="@style/noAnimTheme" />
+        <activity
+            android:name=".UserProfileActivity"
+            android:theme="@style/noAnimTheme" />
+        <activity
+            android:name=".SearchByActivity"
+            android:theme="@style/noAnimTheme" />
         <activity android:name=".SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

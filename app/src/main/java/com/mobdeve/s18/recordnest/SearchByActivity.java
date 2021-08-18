@@ -6,6 +6,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,6 +17,8 @@ import com.mobdeve.s18.recordnest.databinding.ActivitySearchByBinding;
 public class SearchByActivity extends AppCompatActivity {
 
     private ActivitySearchByBinding binding;
+
+    RelativeLayout genre;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +35,15 @@ public class SearchByActivity extends AppCompatActivity {
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.nav);
 
+        genre = findViewById(R.id.rl_genre);
+
+        genre.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(SearchByActivity.this, SearchGenreActivity.class);
+                startActivity(i);
+            }
+        });
 
         bottomNavigationView.setSelectedItemId(R.id.invisible);
 
