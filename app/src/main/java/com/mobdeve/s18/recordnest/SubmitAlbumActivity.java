@@ -28,7 +28,7 @@ public class SubmitAlbumActivity extends AppCompatActivity{
 
     public static final String KEY_User_Document1 = "doc1";
     ImageView id_cover;
-    Button btn_upload;
+    Button btn_upload, btn_submit;
 
     private String Document_img1="";
 
@@ -55,12 +55,21 @@ public class SubmitAlbumActivity extends AppCompatActivity{
 
         id_cover= findViewById(R.id.iv_cover);
         btn_upload= findViewById(R.id.btn_upload_cover);
+        btn_submit = findViewById(R.id.btn_submit_album);
 
         btn_upload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 selectImage();
 
+            }
+        });
+
+        btn_submit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(SubmitAlbumActivity.this, MainActivity.class);
+                startActivity(i);
             }
         });
 
