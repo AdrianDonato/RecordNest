@@ -320,6 +320,9 @@ public class AlbumProfileActivity extends AppCompatActivity {
                         public void onComplete(@NonNull @NotNull Task<Void> task) {
                             if(task.isSuccessful()){
                                 Toast.makeText(AlbumProfileActivity.this, "Successfully submitted your review!", Toast.LENGTH_SHORT).show();
+                                //refreshes activity to reflect changes
+                                finish();
+                                startActivity(getIntent());
                             }
                         }
                     });
