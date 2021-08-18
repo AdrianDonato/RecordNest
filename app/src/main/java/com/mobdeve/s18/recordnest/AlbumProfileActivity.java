@@ -317,49 +317,65 @@ public class AlbumProfileActivity extends AppCompatActivity {
     }
 
     public void submitReview(){
-        String reviewContent = reviewETAlbum.getText().toString().trim();
-        String rating = String.valueOf(ratingViewAlbum.getRating());
+        if(checkIfReviewed()){
+            Toast.makeText(AlbumProfileActivity.this, "You've already submitted a review!",
+                    Toast.LENGTH_SHORT).show();
+        } else {
+            String reviewContent = reviewETAlbum.getText().toString().trim();
+            String rating = String.valueOf(ratingViewAlbum.getRating());
 
-        int newAccRatings = Math.round(ratingViewAlbum.getRating()) + albumDisplayed.getAccRatingScore();
-        int newRatingsCount = albumDisplayed.getRatingsCount() + 1;
+            int newAccRatings = Math.round(ratingViewAlbum.getRating()) + albumDisplayed.getAccRatingScore();
+            int newRatingsCount = albumDisplayed.getRatingsCount() + 1;
 
-        //get new average rating thru dividing accumulated ratings by rating count
-        double newAvgRating = (double) newAccRatings / newRatingsCount;
+            //get new average rating thru dividing accumulated ratings by rating count
+            double newAvgRating = (double) newAccRatings / newRatingsCount;
 
-        Map<String, Object> updatedRating = new HashMap<>();
-        updatedRating.put("AccRatings", newAccRatings);
-        updatedRating.put("AvgRating", newAvgRating);
-        updatedRating.put("RatingCount", newRatingsCount);
+            Map<String, Object> updatedRating = new HashMap<>();
+            updatedRating.put("AccRatings", newAccRatings);
+            updatedRating.put("AvgRating", newAvgRating);
+            updatedRating.put("RatingCount", newRatingsCount);
 
-        Map<String, Object> reviewSubmitted = new HashMap<>();
-        reviewSubmitted.put("Username", mUsername);
-        reviewSubmitted.put("AlbumID", obtainedId);
-        reviewSubmitted.put("Rating", rating);
-        reviewSubmitted.put("ReviewContent", reviewContent);
-        reviewSubmitted.put("UserImageURL", "placeholder");
+            Map<String, Object> reviewSubmitted = new HashMap<>();
+            reviewSubmitted.put("Username", mUsername);
+            reviewSubmitted.put("AlbumID", obtainedId);
+            reviewSubmitted.put("Rating", rating);
+            reviewSubmitted.put("ReviewContent", reviewContent);
+            reviewSubmitted.put("UserImageURL", "placeholder");
 
-        fStore.collection("Review").add(reviewSubmitted).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
-            @Override
-            public void onComplete(@NonNull @NotNull Task<DocumentReference> task) {
-                if(task.isSuccessful()){
-                    //update album's rating data after successfully submitting review
-                    fStore.collection("Albums").document(obtainedId).update(updatedRating).addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull @NotNull Task<Void> task) {
-                            if(task.isSuccessful()){
-                                Toast.makeText(AlbumProfileActivity.this, "Successfully submitted your review!", Toast.LENGTH_SHORT).show();
-                                //refreshes activity to reflect changes
-                                finish();
-                                startActivity(getIntent());
+            fStore.collection("Review").add(reviewSubmitted).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+                @Override
+                public void onComplete(@NonNull @NotNull Task<DocumentReference> task) {
+                    if (task.isSuccessful()) {
+                        //update album's rating data after successfully submitting review
+                        fStore.collection("Albums").document(obtainedId).update(updatedRating).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull @NotNull Task<Void> task) {
+                                if (task.isSuccessful()) {
+                                    Toast.makeText(AlbumProfileActivity.this, "Successfully submitted your review!", Toast.LENGTH_SHORT).show();
+                                    //refreshes activity to reflect changes
+                                    finish();
+                                    startActivity(getIntent());
+                                }
                             }
-                        }
-                    });
-                } else {
-                    Toast.makeText(AlbumProfileActivity.this, "Error! " + task.getException().getMessage(),
-                            Toast.LENGTH_SHORT).show();
+                        });
+                    } else {
+                        Toast.makeText(AlbumProfileActivity.this, "Error! " + task.getException().getMessage(),
+                                Toast.LENGTH_SHORT).show();
+                    }
                 }
+            });
+        }
+    }
+
+    public boolean checkIfReviewed(){
+        boolean reviewCheck = false;
+        for(int i = 0; i < reviewList.size(); i++){
+            String userName = reviewList.get(i).getUsername();
+            if(userName.equals(mUsername)){
+                reviewCheck = true;
             }
-        });
+        }
+        return reviewCheck;
     }
 
 }
