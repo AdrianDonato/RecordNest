@@ -208,6 +208,7 @@
         android:orientation="vertical">
 
         <RatingBar
+            android:id="@+id/rb_review_rating"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:numStars="5"
@@ -223,7 +224,7 @@
             android:weightSum="10">
 
             <EditText
-                android:id="@+id/tweetEt"
+                android:id="@+id/et_review_content"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
@@ -240,6 +241,7 @@
                 android:paddingRight="20dp"/>
 
             <Button
+                android:id="@+id/button_submit_review"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:background="@android:color/transparent"

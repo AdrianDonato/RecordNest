@@ -135,16 +135,12 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
             @Override
             public void onComplete(@NonNull @NotNull Task<QuerySnapshot> task) {
                 if(task.isSuccessful()){
-                    String toastDebugger = "";
                     for(QueryDocumentSnapshot documentSnapshot : task.getResult()){
                         data.add(new Album(R.drawable.album1, documentSnapshot.getString("Title"),
                                 documentSnapshot.getString("Artist")));
                         data.get(data.size()-1).setAlbumID(documentSnapshot.getId());
                         data.get(data.size()-1).setAlbumArtURL(documentSnapshot.getString("ImageURL"));
-                        toastDebugger = toastDebugger.concat(documentSnapshot.getId()+"\n");
                     }
-                    Toast.makeText(MainActivity.this, toastDebugger,
-                            Toast.LENGTH_SHORT).show();
                     initializeAlbumAdapter(data);
                 } else {
                     Toast.makeText(MainActivity.this, "Error! " + task.getException().getMessage(),

@@ -8,8 +8,11 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,6 +27,8 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -47,6 +52,8 @@ import com.mobdeve.s18.recordnest.model.Tracklist;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class AlbumProfileActivity extends AppCompatActivity {
 
@@ -55,6 +62,10 @@ public class AlbumProfileActivity extends AppCompatActivity {
     private ImageView imgViewAlbum;
 
     private TextView nameViewAlbum, artistViewAlbum, yearViewAlbum, genreViewAlbum;
+    private RatingBar ratingViewAlbum;
+    private EditText reviewETAlbum;
+
+    private Button btnReviewAlbum;
 
     private LinearLayout content, reviewInput;
 
@@ -69,7 +80,11 @@ public class AlbumProfileActivity extends AppCompatActivity {
     private FirebaseFirestore fStore;
     private DocumentReference albumDocRef;
     private StorageReference albumCoverStorage;
-    private String albumArtURL;
+    private FirebaseUser mUser;
+
+    private String mUserID;
+    private String mUsername;
+    private String obtainedId;
 
 
     private Album albumDisplayed;
@@ -102,6 +117,19 @@ public class AlbumProfileActivity extends AppCompatActivity {
         this.artistViewAlbum = findViewById(R.id.tv_album_artist);
         this.yearViewAlbum = findViewById(R.id.tv_album_year);
         this.genreViewAlbum = findViewById(R.id.tv_album_genre);
+
+        //get review views
+        this.ratingViewAlbum = findViewById(R.id.rb_review_rating);
+        this.reviewETAlbum = findViewById(R.id.et_review_content);
+        this.btnReviewAlbum = findViewById(R.id.button_submit_review);
+
+        btnReviewAlbum.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                submitReview();
+            }
+        });
+
         //this.trackListItem = findViewById(R.id.tracklist_item);
         //this.rvTrackList = findViewById(R.id.rv_tracklist);
 
@@ -109,11 +137,14 @@ public class AlbumProfileActivity extends AppCompatActivity {
 
         //Firestore Initialization
         fStore = FirebaseFirestore.getInstance();
+        mUser = FirebaseAuth.getInstance().getCurrentUser();
+        mUserID = mUser.getUid();
+        mUsername = mUser.getDisplayName();
 
         int cover = i.getIntExtra(AlbumAdapter.KEY_PICTURE, 0);
         String name = i.getStringExtra(AlbumAdapter.KEY_NAME);
         String artist = i.getStringExtra(AlbumAdapter.KEY_ARTIST);
-        String obtainedId = i.getStringExtra(AlbumAdapter.KEY_ID);
+        obtainedId = i.getStringExtra(AlbumAdapter.KEY_ID);
         //String track = i.getStringExtra(TracklistAdapter.KEY_TRACK);
 
 
@@ -158,16 +189,6 @@ public class AlbumProfileActivity extends AppCompatActivity {
     public ArrayList<Tracklist> initializeDataTrack(ArrayList<String> tracklist) {
 
         ArrayList<Tracklist> data = new ArrayList<>();
-
-        /*
-        data.add(new Tracklist("ALUBUM TRACK 1"));
-        data.add(new Tracklist("ALUBUM TRACK 2"));
-        data.add(new Tracklist("ALUBUM TRACK 3"));
-        data.add(new Tracklist("ALUBUM TRACK 4"));
-        data.add(new Tracklist("ALUBUM TRACK 5"));
-        data.add(new Tracklist("ALUBUM TRACK 6"));
-        */
-
         for(int i = 0; i < tracklist.size(); i++){
             data.add(new Tracklist(tracklist.get(i)));
         }
@@ -257,6 +278,42 @@ public class AlbumProfileActivity extends AppCompatActivity {
     public void initializeReviewAdapter(){
 
     }
+
+    public void addToCollection(){
+
+    }
+
+    public void submitReview(){
+        String reviewContent = reviewETAlbum.getText().toString().trim();
+        String rating = String.valueOf(ratingViewAlbum.getRating());
+
+        Map<String, Object> reviewSubmitted = new HashMap<>();
+        reviewSubmitted.put("Username", mUsername);
+        reviewSubmitted.put("AlbumID", obtainedId);
+        reviewSubmitted.put("Rating", rating);
+        reviewSubmitted.put("ReviewContent", reviewContent);
+        reviewSubmitted.put("UserImageURL", "placeholder");
+
+        fStore.collection("Review").add(reviewSubmitted).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+            @Override
+            public void onComplete(@NonNull @NotNull Task<DocumentReference> task) {
+                if(task.isSuccessful()){
+                    DocumentReference insertedID = task.getResult();
+                    //need to update album's rating, might have to add arraylist of ratings?
+                        // update rating count
+                        // update ratings array
+                        // update average rating
+                    Toast.makeText(AlbumProfileActivity.this, "Successfully added " + insertedID.getId(),
+                            Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(AlbumProfileActivity.this, "Error! " + task.getException().getMessage(),
+                            Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
+
 
 
 }
