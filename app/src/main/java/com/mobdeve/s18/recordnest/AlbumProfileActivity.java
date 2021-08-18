@@ -61,7 +61,7 @@ public class AlbumProfileActivity extends AppCompatActivity {
 
     private ImageView imgViewAlbum;
 
-    private TextView nameViewAlbum, artistViewAlbum, yearViewAlbum, genreViewAlbum;
+    private TextView nameViewAlbum, artistViewAlbum, yearViewAlbum, genreViewAlbum, avgRatingViewAlbum;
     private RatingBar ratingViewAlbum;
     private EditText reviewETAlbum;
 
@@ -117,6 +117,7 @@ public class AlbumProfileActivity extends AppCompatActivity {
         this.artistViewAlbum = findViewById(R.id.tv_album_artist);
         this.yearViewAlbum = findViewById(R.id.tv_album_year);
         this.genreViewAlbum = findViewById(R.id.tv_album_genre);
+        this.avgRatingViewAlbum = findViewById(R.id.tv_album_avgrating);
 
         //get review views
         this.ratingViewAlbum = findViewById(R.id.rb_review_rating);
@@ -223,8 +224,9 @@ public class AlbumProfileActivity extends AppCompatActivity {
                     String retAlbumGenre = value.getString("Genre");
                     String retAlbumImg = value.getString("ImageURL");
                     int retAlbumYear = value.getLong("Year").intValue();
-                    float retAvgRating = value.getLong("AvgRating").floatValue();
+                    double retAvgRating = value.getDouble("AvgRating");
                     int retRatingCount = value.getLong("RatingCount").intValue();
+                    int retAccRating = value.getLong("AccRatings").intValue();
                     ArrayList<String> retTracklist = (ArrayList<String>) value.get("Tracklist");
 
                     albumDisplayed = new Album(coverData, retAlbumTitle, retArtistName);
@@ -233,6 +235,7 @@ public class AlbumProfileActivity extends AppCompatActivity {
                     albumDisplayed.setYear(retAlbumYear);
                     albumDisplayed.setAvgRating(retAvgRating);
                     albumDisplayed.setRatingsCount(retRatingCount);
+                    albumDisplayed.setAccRatingScore(retAccRating);
                     albumDisplayed.setAlbumArtURL(retAlbumImg);
                     trackString = retTracklist;
 
@@ -253,6 +256,7 @@ public class AlbumProfileActivity extends AppCompatActivity {
         String artist = albumDisplayed.getArtist();
         String artLink = albumDisplayed.getAlbumArtURL();
         int albumYear = albumDisplayed.getYear();
+        double avgRating = albumDisplayed.getAvgRating();
         String genre = albumDisplayed.getGenre();
         albumCoverStorage = FirebaseStorage.getInstance().getReferenceFromUrl(artLink);
 
@@ -261,6 +265,7 @@ public class AlbumProfileActivity extends AppCompatActivity {
         this.artistViewAlbum.setText(artist);
         this.yearViewAlbum.setText(Integer.toString(albumYear));
         this.genreViewAlbum.setText(genre);
+        this.avgRatingViewAlbum.setText(Double.toString(avgRating));
 
         /*Toast.makeText(AlbumProfileActivity.this, albumYear,
                 Toast.LENGTH_SHORT).show();*/
@@ -287,6 +292,17 @@ public class AlbumProfileActivity extends AppCompatActivity {
         String reviewContent = reviewETAlbum.getText().toString().trim();
         String rating = String.valueOf(ratingViewAlbum.getRating());
 
+        int newAccRatings = Math.round(ratingViewAlbum.getRating()) + albumDisplayed.getAccRatingScore();
+        int newRatingsCount = albumDisplayed.getRatingsCount() + 1;
+
+        //get new average rating thru dividing accumulated ratings by rating count
+        double newAvgRating = (double) newAccRatings / newRatingsCount;
+
+        Map<String, Object> updatedRating = new HashMap<>();
+        updatedRating.put("AccRatings", newAccRatings);
+        updatedRating.put("AvgRating", newAvgRating);
+        updatedRating.put("RatingCount", newRatingsCount);
+
         Map<String, Object> reviewSubmitted = new HashMap<>();
         reviewSubmitted.put("Username", mUsername);
         reviewSubmitted.put("AlbumID", obtainedId);
@@ -298,13 +314,15 @@ public class AlbumProfileActivity extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull @NotNull Task<DocumentReference> task) {
                 if(task.isSuccessful()){
-                    DocumentReference insertedID = task.getResult();
-                    //need to update album's rating, might have to add arraylist of ratings?
-                        // update rating count
-                        // update ratings array
-                        // update average rating
-                    Toast.makeText(AlbumProfileActivity.this, "Successfully added " + insertedID.getId(),
-                            Toast.LENGTH_SHORT).show();
+                    //update album's rating data after successfully submitting review
+                    fStore.collection("Albums").document(obtainedId).update(updatedRating).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull @NotNull Task<Void> task) {
+                            if(task.isSuccessful()){
+                                Toast.makeText(AlbumProfileActivity.this, "Successfully submitted your review!", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
                 } else {
                     Toast.makeText(AlbumProfileActivity.this, "Error! " + task.getException().getMessage(),
                             Toast.LENGTH_SHORT).show();
@@ -312,8 +330,5 @@ public class AlbumProfileActivity extends AppCompatActivity {
             }
         });
     }
-
-
-
 
 }

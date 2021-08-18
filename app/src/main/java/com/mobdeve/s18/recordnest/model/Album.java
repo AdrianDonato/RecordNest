@@ -9,8 +9,9 @@ public class Album {
     private String albumName;
     private String artist;
     private String genre;
-    private float avgRating;
+    private double avgRating;
     private int ratingsCount;
+    private int accRatingScore;
     private int year;
 
     private ArrayList<String> trackList;
@@ -39,7 +40,7 @@ public class Album {
         this.genre = genre;
     }
 
-    public void setAvgRating(float avgRating) {
+    public void setAvgRating(double avgRating) {
         this.avgRating = avgRating;
     }
 
@@ -53,6 +54,10 @@ public class Album {
 
     public void setAlbumArtURL(String albumArtURL) {
         this.albumArtURL = albumArtURL;
+    }
+
+    public void setAccRatingScore(int accRatingScore) {
+        this.accRatingScore = accRatingScore;
     }
 
     //getters
@@ -76,7 +81,7 @@ public class Album {
         return genre;
     }
 
-    public float getAvgRating() {
+    public double getAvgRating() {
         return avgRating;
     }
 
@@ -86,6 +91,10 @@ public class Album {
 
     public int getRatingsCount() {
         return ratingsCount;
+    }
+
+    public int getAccRatingScore() {
+        return accRatingScore;
     }
 
     public String getAlbumArtURL(){
