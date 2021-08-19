@@ -40,6 +40,9 @@
             android:name=".UserProfileActivity"
             android:theme="@style/noAnimTheme" />
         <activity
+            android:name=".EditProfileActivity"
+            android:theme="@style/noAnimTheme" />
+        <activity
             android:name=".SearchByActivity"
             android:theme="@style/noAnimTheme" />
         <activity android:name=".SplashActivity">

@@ -6,6 +6,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -30,6 +31,8 @@ public class UserProfileActivity extends AppCompatActivity {
     private String profileID;
     private TextView profileUsername;
 
+    Button btn_edit;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,6 +46,16 @@ public class UserProfileActivity extends AppCompatActivity {
         View view = binding.getRoot();
         setContentView(view);
 
+        btn_edit = findViewById(R.id.btn_edit_profile);
+
+        btn_edit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(UserProfileActivity.this, EditProfileActivity.class);
+                startActivity(i);
+            }
+        });
+
 
         //sets username of profile page (not finished yet, only works on logged in user's profile)
         mUser = FirebaseAuth.getInstance().getCurrentUser();
@@ -52,6 +65,8 @@ public class UserProfileActivity extends AppCompatActivity {
         profileID = prevPage.getStringExtra("profileUID");
         profileUsername = (TextView)findViewById(R.id.profile_username);
         profileUsername.setText(mUsername);
+
+
         if(profileID == mUserID){
             profileUsername.setText(mUser.getDisplayName());
         }

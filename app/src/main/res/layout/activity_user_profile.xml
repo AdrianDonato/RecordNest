@@ -35,6 +35,7 @@
         android:visibility="gone"/>
 
     <Button
+        android:id="@+id/btn_edit_profile"
         android:layout_width="30dp"
         android:layout_height="wrap_content"
         android:drawableRight="@android:drawable/ic_menu_edit"

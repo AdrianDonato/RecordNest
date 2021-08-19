@@ -24,7 +24,7 @@ public class SubmitAlbumActivity extends AppCompatActivity{
     private ActivitySubmitAlbumBinding binding;
 
     public static final String KEY_User_Document1 = "doc1";
-    ImageView id_cover;
+    ImageView iv_cover;
     Button btn_upload, btn_submit;
 
 
@@ -41,7 +41,7 @@ public class SubmitAlbumActivity extends AppCompatActivity{
         setContentView(view);
 
 
-        id_cover= findViewById(R.id.iv_cover);
+        iv_cover= findViewById(R.id.iv_cover);
         btn_upload= findViewById(R.id.btn_upload_cover);
         btn_submit = findViewById(R.id.btn_submit_album);
 
@@ -60,9 +60,6 @@ public class SubmitAlbumActivity extends AppCompatActivity{
                 startActivity(i);
             }
         });
-
-        //btn_upload.setOnClickListener(this);
-
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.nav);
 
@@ -109,7 +106,7 @@ public class SubmitAlbumActivity extends AppCompatActivity{
         try {
             Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImage);
             bitmap = Bitmap.createScaledBitmap(bitmap,  600 ,600, true);
-            id_cover.setImageBitmap(bitmap); //trying bitmap
+            iv_cover.setImageBitmap(bitmap); //trying bitmap
         } catch (IOException e) {
             e.printStackTrace();
         }

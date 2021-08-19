@@ -27,7 +27,6 @@
         android:layout_height="0dp"
         android:paddingHorizontal="15dp"
         android:orientation="vertical"
-        tools:context="com.codeplayon.Uplode_Reg_Photo"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/activity_title"
