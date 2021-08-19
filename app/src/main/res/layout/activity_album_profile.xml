@@ -125,6 +125,8 @@
                     </LinearLayout>
 
                     <Button
+                        android:id="@+id/btn_album_add_to_collection"
+                        android:onClick="ShowPopup"
                         android:layout_marginTop="20dp"
                         android:layout_width="wrap_content"
                         android:layout_height="40dp"

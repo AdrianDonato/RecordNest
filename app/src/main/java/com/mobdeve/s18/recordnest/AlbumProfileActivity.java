@@ -1,5 +1,6 @@
 package com.mobdeve.s18.recordnest;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -17,28 +18,18 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.annotation.GlideModule;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
@@ -67,7 +58,7 @@ public class AlbumProfileActivity extends AppCompatActivity {
     private RatingBar ratingViewAlbum;
     private EditText reviewETAlbum;
 
-    private Button btnReviewAlbum;
+    private Button btnReviewAlbum, btnAlbumAddCollection;
 
     private LinearLayout content, reviewInput;
 
@@ -94,6 +85,8 @@ public class AlbumProfileActivity extends AppCompatActivity {
     private ArrayList<String> trackString;
     private ArrayList<Review> reviewList;
 
+    Dialog myDialog;
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
@@ -105,6 +98,18 @@ public class AlbumProfileActivity extends AppCompatActivity {
         //setContentView(R.layout.activity_main);
         View view = binding.getRoot();
         setContentView(view);
+/*
+        btnAlbumAddCollection = findViewById(R.id.btn_album_add_to_collection);
+
+        btnAlbumAddCollection.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new
+            }
+        });
+
+ */
+        myDialog = new Dialog(this);
 
         topAnim = AnimationUtils.loadAnimation(this,R.anim.top_animation);
         bottomAnim = AnimationUtils.loadAnimation(this,R.anim.bottom_animation);
@@ -188,6 +193,24 @@ public class AlbumProfileActivity extends AppCompatActivity {
         binding.rvReview.setAdapter(reviewAdapter);
         */
 
+
+    }
+
+    public void ShowPopup(View v){
+        Button btn_close, btn_add;
+
+        myDialog.setContentView(R.layout.activity_add_to_collection);
+        btn_close = myDialog.findViewById(R.id.btn_close_add_collection);
+        btn_add = myDialog.findViewById(R.id.btn_album_add_to_collection);
+
+        btn_close.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                myDialog.dismiss();
+            }
+        });
+
+        myDialog.show();
 
     }
 
