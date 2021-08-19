@@ -7,10 +7,28 @@
     tools:context=".SearchUserActivity"
     android:background="#E5E5E5">
 
-    <TextView
+    <SearchView
+        android:id="@+id/sv_user"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:queryHint="Search user"
+        android:iconifiedByDefault="false"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="20dp">
+
+    </SearchView>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_user"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="SEARCH"/>
+        android:layout_marginTop="76dp"
+        android:nestedScrollingEnabled="false"
+        android:padding="20dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/sv_user" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:layout_width="match_parent"

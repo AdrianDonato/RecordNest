@@ -1,8 +1,5 @@
 package com.mobdeve.s18.recordnest;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -10,13 +7,22 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.mobdeve.s18.recordnest.databinding.ActivityAlbumProfileBinding;
+import com.mobdeve.s18.recordnest.adapter.UserListAdapter;
 import com.mobdeve.s18.recordnest.databinding.ActivitySearchUserBinding;
+import com.mobdeve.s18.recordnest.model.UserList;
+
+import java.util.ArrayList;
 
 public class SearchUserActivity extends AppCompatActivity {
 
     private ActivitySearchUserBinding binding;
+
+    private UserListAdapter userListAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,10 +61,26 @@ public class SearchUserActivity extends AppCompatActivity {
                 return false;
             }
         });
+
+        userListAdapter = new UserListAdapter(getApplicationContext(), initializeData());
+        binding.rvUser.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+
+        //findViewById(R.id.tv_album_name).setVisibility(View.VISIBLE);;
+        binding.rvUser.setAdapter(userListAdapter);
     }
     @Override
     public void onBackPressed(){
         //super.onBackPressed();
 
+    }
+
+    public ArrayList<UserList> initializeData() {
+        // get data from database here?
+        ArrayList<UserList> data = new ArrayList<>();
+        data.add(new UserList(R.drawable.album1, "ina"));
+        data.add(new UserList(R.drawable.album2, "pat"));
+        data.add(new UserList(R.drawable.album3, "eva"));
+
+        return data;
     }
 }
