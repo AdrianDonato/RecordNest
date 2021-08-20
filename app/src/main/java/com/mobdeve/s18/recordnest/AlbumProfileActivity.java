@@ -185,15 +185,6 @@ public class AlbumProfileActivity extends AppCompatActivity {
                 return false;
             }
         });
-
-
-        /*
-        reviewAdapter = new ReviewAdapter(getApplicationContext(), initializeDataReview());
-        binding.rvReview.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-        binding.rvReview.setAdapter(reviewAdapter);
-        */
-
-
     }
 
     public void ShowPopup(View v){
@@ -224,8 +215,8 @@ public class AlbumProfileActivity extends AppCompatActivity {
         return data;
     }
 
+    //function for getting list of reviews for the album
     public void initializeDataReview() {
-        ArrayList<Review> data = new ArrayList<>();
         reviewList = new ArrayList<>();
         fStore.collection("Review").whereEqualTo("AlbumID", obtainedId).
                 get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -247,15 +238,6 @@ public class AlbumProfileActivity extends AppCompatActivity {
                 }
             }
         });
-        /*
-        data.add(new Review(4,R.drawable.album1, "ina", "wala ako maisip"));
-        data.add(new Review(5,R.drawable.album2, "adrian", "ang tagal maglayout svsbe rgsjbhdvb fwjhbvvwhjhj"));
-        data.add(new Review(5,R.drawable.album1, "ina", "wala ako maisip"));
-        data.add(new Review(1,R.drawable.album1, "ina", "wala ako maisip"));
-        data.add(new Review(4,R.drawable.album2, "adrian", "ang tagal maglayout svsbe rgsjbhdvb fwjhbvvwhjhj"));
-        data.add(new Review(2,R.drawable.album1, "ina", "wala ako maisip"));
-        */
-        // return data;
     }
 
     //this function passes data from firebase to an Album class (albumDisplayed)
@@ -315,9 +297,6 @@ public class AlbumProfileActivity extends AppCompatActivity {
         this.genreViewAlbum.setText(genre);
         //format average to 2 decimal places only
         this.avgRatingViewAlbum.setText(String.format("%.2f", avgRating));
-
-        /*Toast.makeText(AlbumProfileActivity.this, albumYear,
-                Toast.LENGTH_SHORT).show();*/
     }
 
     //function which initializes tracklist adapter
@@ -339,6 +318,7 @@ public class AlbumProfileActivity extends AppCompatActivity {
 
     }
 
+    //function for submitting a review to the firestore database
     public void submitReview(){
         if(checkIfReviewed()){
             Toast.makeText(AlbumProfileActivity.this, "You've already submitted a review!",
@@ -364,7 +344,6 @@ public class AlbumProfileActivity extends AppCompatActivity {
             reviewSubmitted.put("Rating", rating);
             reviewSubmitted.put("ReviewContent", reviewContent);
             reviewSubmitted.put("UserImageURL", "placeholder");
-
             fStore.collection("Review").add(reviewSubmitted).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
                 @Override
                 public void onComplete(@NonNull @NotNull Task<DocumentReference> task) {
@@ -390,6 +369,7 @@ public class AlbumProfileActivity extends AppCompatActivity {
         }
     }
 
+    //function to check if the user has already reviewed the album
     public boolean checkIfReviewed(){
         boolean reviewCheck = false;
         for(int i = 0; i < reviewList.size(); i++){

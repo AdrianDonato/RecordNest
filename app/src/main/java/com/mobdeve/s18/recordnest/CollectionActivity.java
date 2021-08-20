@@ -7,19 +7,30 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.mobdeve.s18.recordnest.adapter.AlbumAdapter;
 import com.mobdeve.s18.recordnest.adapter.CollectionAdapter;
 import com.mobdeve.s18.recordnest.databinding.ActivityCollectionBinding;
 import com.mobdeve.s18.recordnest.model.Album;
+import com.mobdeve.s18.recordnest.model.Collection;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 public class CollectionActivity extends AppCompatActivity {
 
@@ -28,6 +39,13 @@ public class CollectionActivity extends AppCompatActivity {
 
     public AlbumAdapter albumAdapter;
     MainActivity mainActivity;
+
+    private FirebaseFirestore fStore;
+    private DocumentReference collRef;
+    private ArrayList<DocumentReference> collAlbumsRef;
+    private ArrayList<Album> retAlbums;
+    private Collection retCollection;
+    private String collectionID;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,6 +58,9 @@ public class CollectionActivity extends AppCompatActivity {
         //setContentView(R.layout.activity_main);
         View view = binding.getRoot();
         setContentView(view);
+
+        //initialize fStore
+        fStore = FirebaseFirestore.getInstance();
 
         this.collectionName = findViewById(R.id.collection_item);
 
@@ -74,19 +95,19 @@ public class CollectionActivity extends AppCompatActivity {
             }
         });
 
+        /*
         albumAdapter = new AlbumAdapter(getApplicationContext(), initializeData());
 
         //TextView albumName = findViewById(R.id.tv_album_name);
         //albumName.setVisibility(View.VISIBLE);
 
-
-
         binding.rvCollectionalbum.setLayoutManager(new GridLayoutManager(getApplicationContext(),3));
         //findViewById(R.id.tv_album_name).setVisibility(View.VISIBLE);;
         binding.rvCollectionalbum.setAdapter(albumAdapter);
+        */
 
-
-
+        String collIntentID = "zH1kiEn1eIDtZjrCOTsH";
+        initializeCollection(collIntentID);
     }
 
     public ArrayList<Album> initializeData() {
@@ -105,5 +126,56 @@ public class CollectionActivity extends AppCompatActivity {
         return data;
     }
 
+    public void initializeCollection (String obtainedCollID){
+        collRef = fStore.collection("AlbumCollection").document(obtainedCollID);
+        collRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull @NotNull Task<DocumentSnapshot> task) {
+                if(task.isSuccessful()){
+                    DocumentSnapshot snapshot = task.getResult();
+                    String snapshotCollId = snapshot.getId();
+                    String snapshotUsername = snapshot.getString("Username");
+                    String snapshotDesc = snapshot.getString("Description");
+                    ArrayList<String> snapshotAlbums = (ArrayList<String>) snapshot.get("AlbumIDList");
+                    ArrayList<String> snapshotImgs = (ArrayList<String>) snapshot.get("ImageURLList");
 
+
+                    retCollection = new Collection(snapshot.getString("Title"));
+                    retCollection.setCollectionID(snapshotCollId);
+                    retCollection.setUsername(snapshotUsername);
+                    retCollection.setDescription(snapshotDesc);
+
+                    retAlbums = new ArrayList<>();
+
+                    //initialize album data
+                    for(int i = 0; i < snapshotAlbums.size(); i++){
+
+                        String retAlbumID = snapshotAlbums.get(i);
+                        String retImgURL = snapshotImgs.get(i);
+
+                        retAlbums.add(new Album(R.drawable.album1, "Title", "Artist"));
+                        retAlbums.get(i).setAlbumID(retAlbumID);
+                        retAlbums.get(i).setAlbumArtURL(retImgURL);
+                    }
+                    initializeAlbumAdapter();
+                } else {
+                    Toast.makeText(CollectionActivity.this, "Error! " + task.getException().getMessage(),
+                            Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
+
+    //function to initialize album adapter
+    public void initializeAlbumAdapter(){
+        albumAdapter = new AlbumAdapter(getApplicationContext(), retAlbums);
+
+        //TextView albumName = findViewById(R.id.tv_album_name);
+        //albumName.setVisibility(View.VISIBLE);
+
+        binding.rvCollectionalbum.setLayoutManager(new GridLayoutManager(getApplicationContext(),3));
+        //findViewById(R.id.tv_album_name).setVisibility(View.VISIBLE);;
+        binding.rvCollectionalbum.setAdapter(albumAdapter);
+    }
+
+}
