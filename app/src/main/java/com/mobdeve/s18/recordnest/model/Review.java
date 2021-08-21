@@ -3,6 +3,7 @@ package com.mobdeve.s18.recordnest.model;
 public class Review {
     private int reviewID;
     private int rating;
+    private String reviewIDString;
     private String username;
     private String reviewContent;
     private int userImageId;
@@ -31,6 +32,10 @@ public class Review {
         return reviewContent;
     }
 
+    public String getReviewIDString() {
+        return reviewIDString;
+    }
+
     public int getUserImageId() {
         return userImageId;
     }
@@ -45,5 +50,9 @@ public class Review {
 
     public void setReviewID(int reviewID) {
         this.reviewID = reviewID;
+    }
+
+    public void setReviewIDString(String reviewIDString) {
+        this.reviewIDString = reviewIDString;
     }
 }

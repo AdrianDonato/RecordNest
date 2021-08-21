@@ -84,6 +84,7 @@ public class AlbumProfileActivity extends AppCompatActivity {
     private ArrayList<Tracklist> tracklistDisplayed;
     private ArrayList<String> trackString;
     private ArrayList<Review> reviewList;
+    private int userReviewIndex;
 
     Dialog myDialog;
 
@@ -224,13 +225,16 @@ public class AlbumProfileActivity extends AppCompatActivity {
             public void onComplete(@NonNull @NotNull Task<QuerySnapshot> task) {
                 if(task.isSuccessful()){
                     for(QueryDocumentSnapshot documentSnapshot : task.getResult()){
+                        String reviewID = documentSnapshot.getId();
                         String retrievedRating = documentSnapshot.getString("Rating");
                         double retRatingDbl = Double.parseDouble(retrievedRating);
                         int retRatingInt = (int) retRatingDbl;
                         reviewList.add(new Review(retRatingInt,
                                 R.drawable.album1, documentSnapshot.getString("Username"),
                                 documentSnapshot.getString("ReviewContent")));
+                        reviewList.get(reviewList.size()-1).setReviewIDString(reviewID);
                     }
+                    setEditReview();
                     initializeReviewAdapter();
                 } else {
                     Toast.makeText(AlbumProfileActivity.this, "Error! " + task.getException().getMessage(),
@@ -321,8 +325,51 @@ public class AlbumProfileActivity extends AppCompatActivity {
     //function for submitting a review to the firestore database
     public void submitReview(){
         if(checkIfReviewed()){
-            Toast.makeText(AlbumProfileActivity.this, "You've already submitted a review!",
-                    Toast.LENGTH_SHORT).show();
+            //edit review
+            String reviewContent = reviewETAlbum.getText().toString().trim();
+            String rating = String.valueOf(ratingViewAlbum.getRating());
+            String reviewId = reviewList.get(userReviewIndex).getReviewIDString();
+
+            int RatingsCount = albumDisplayed.getRatingsCount();
+            int oldRating = reviewList.get(userReviewIndex).getRating();
+            int newAccRatings = albumDisplayed.getAccRatingScore() - oldRating;
+            newAccRatings = newAccRatings + Math.round(ratingViewAlbum.getRating());
+            double newAvgRating = (double) newAccRatings / RatingsCount;
+
+            Map<String, Object> updatedRating = new HashMap<>();
+            updatedRating.put("AccRatings", newAccRatings);
+            updatedRating.put("AvgRating", newAvgRating);
+            updatedRating.put("RatingCount", RatingsCount);
+
+            Map<String, Object> reviewSubmitted = new HashMap<>();
+            reviewSubmitted.put("Username", mUsername);
+            reviewSubmitted.put("AlbumID", obtainedId);
+            reviewSubmitted.put("Rating", rating);
+            reviewSubmitted.put("ReviewContent", reviewContent);
+            reviewSubmitted.put("UserImageURL", "placeholder");
+
+            fStore.collection("Review").document(reviewId).update(reviewSubmitted).addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull @NotNull Task<Void> task) {
+                    if (task.isSuccessful()) {
+                        //update album's rating data after successfully submitting review
+                        fStore.collection("Albums").document(obtainedId).update(updatedRating).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull @NotNull Task<Void> task) {
+                                if (task.isSuccessful()) {
+                                    Toast.makeText(AlbumProfileActivity.this, "Successfully updated your review!", Toast.LENGTH_SHORT).show();
+                                    //refreshes activity to reflect changes
+                                    finish();
+                                    startActivity(getIntent());
+                                }
+                            }
+                        });
+                    } else {
+                        Toast.makeText(AlbumProfileActivity.this, "Error! " + task.getException().getMessage(),
+                                Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
         } else {
             String reviewContent = reviewETAlbum.getText().toString().trim();
             String rating = String.valueOf(ratingViewAlbum.getRating());
@@ -369,12 +416,22 @@ public class AlbumProfileActivity extends AppCompatActivity {
         }
     }
 
+    //function to set edit text data if user has already reviewed album
+    public void setEditReview(){
+        if(checkIfReviewed()){
+            float currRating = (float) reviewList.get(userReviewIndex).getRating();
+            reviewETAlbum.setText(reviewList.get(userReviewIndex).getReviewContent());
+            ratingViewAlbum.setRating(currRating);
+        }
+    }
+
     //function to check if the user has already reviewed the album
     public boolean checkIfReviewed(){
         boolean reviewCheck = false;
         for(int i = 0; i < reviewList.size(); i++){
             String userName = reviewList.get(i).getUsername();
             if(userName.equals(mUsername)){
+                userReviewIndex = i;
                 reviewCheck = true;
             }
         }
