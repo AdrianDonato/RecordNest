@@ -20,6 +20,7 @@ public class CollectionAdapter extends RecyclerView.Adapter<CollectionAdapter.Co
     private Context context;
 
     public static final String KEY_COLLECTION_NAME = "KEY_COLLECTION_NAME";
+    public static final String KEY_COLLECTION_ID = "KEY_COLLECTION_ID";
 
     public CollectionAdapter(Context context, ArrayList<Collection> collectionArrayList) {
         this.collectionArrayList = collectionArrayList;
@@ -46,7 +47,7 @@ public class CollectionAdapter extends RecyclerView.Adapter<CollectionAdapter.Co
                 Intent i = new Intent(v.getContext(), CollectionActivity.class);
 
                 i.putExtra(KEY_COLLECTION_NAME, collectionArrayList.get(viewHolder.getBindingAdapterPosition()).getCollectionTitle());
-
+                i.putExtra(KEY_COLLECTION_ID, collectionArrayList.get(viewHolder.getBindingAdapterPosition()).getCollectionID());
                 v.getContext().startActivity(i);
             }
         });

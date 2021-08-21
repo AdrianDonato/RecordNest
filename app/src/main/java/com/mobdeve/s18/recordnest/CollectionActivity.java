@@ -42,7 +42,6 @@ public class CollectionActivity extends AppCompatActivity {
 
     private FirebaseFirestore fStore;
     private DocumentReference collRef;
-    private ArrayList<DocumentReference> collAlbumsRef;
     private ArrayList<Album> retAlbums;
     private Collection retCollection;
     private String collectionID;
