@@ -105,7 +105,7 @@ public class CollectionActivity extends AppCompatActivity {
         binding.rvCollectionalbum.setAdapter(albumAdapter);
         */
 
-        String collIntentID = "zH1kiEn1eIDtZjrCOTsH";
+        String collIntentID = i.getStringExtra(CollectionAdapter.KEY_COLLECTION_ID);
         initializeCollection(collIntentID);
     }
 
