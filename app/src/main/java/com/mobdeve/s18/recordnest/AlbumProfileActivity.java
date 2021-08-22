@@ -33,6 +33,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -349,10 +350,6 @@ public class AlbumProfileActivity extends AppCompatActivity {
         binding.rvReview.setAdapter(reviewAdapter);
     }
 
-    public void addToCollection(){
-
-    }
-
     //function for submitting a review to the firestore database
     public void submitReview(){
         if(checkIfReviewed()){
@@ -515,9 +512,10 @@ public class AlbumProfileActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         if(!spinner.getSelectedItem().toString().equalsIgnoreCase("Choose a collection...")){
-                            Toast.makeText(AlbumProfileActivity.this,
+                            addToCollectionDB(spinner.getSelectedItem().toString());
+                            /*Toast.makeText(AlbumProfileActivity.this,
                                     spinner.getSelectedItem().toString(),
-                                    Toast.LENGTH_SHORT).show();
+                                    Toast.LENGTH_SHORT).show(); */
                             myDialog.dismiss();
                         }
                     }
@@ -544,6 +542,38 @@ public class AlbumProfileActivity extends AppCompatActivity {
             }
         }
         return reviewCheck;
+    }
+
+    public void addToCollectionDB(String collTitle){
+        int titleIndex = arrayListCollection.indexOf(collTitle);
+        String collId = collIDs.get(titleIndex);
+        String albumId = albumDisplayed.getAlbumID();
+        String imageURL = albumDisplayed.getAlbumArtURL();
+
+        fStore.collection("AlbumCollection").document(collId).update("AlbumIDList",
+                FieldValue.arrayUnion(albumId)).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull @NotNull Task<Void> task) {
+                if (task.isSuccessful()) {
+                    fStore.collection("AlbumCollection").document(collId).update("ImageURLList",
+                            FieldValue.arrayUnion(imageURL)).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull @NotNull Task<Void> task) {
+                            if (task.isSuccessful()) {
+                                Toast.makeText(AlbumProfileActivity.this, "Successfully added to " + collTitle + "!",
+                                        Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(AlbumProfileActivity.this, "Error! " + task.getException().getMessage(),
+                                        Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+                } else {
+                    Toast.makeText(AlbumProfileActivity.this, "Error! " + task.getException().getMessage(),
+                            Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 
 }
