@@ -89,6 +89,7 @@ public class AlbumProfileActivity extends AppCompatActivity {
     private Album albumDisplayed;
     private ArrayList<Tracklist> tracklistDisplayed;
     private ArrayList<String> trackString;
+    ArrayList<String> arrayListCollection;
     private ArrayList<Review> reviewList;
     private int userReviewIndex;
 
@@ -130,10 +131,17 @@ public class AlbumProfileActivity extends AppCompatActivity {
                 //createAddToCollectionDialog();
                 AlertDialog.Builder builder = new AlertDialog.Builder(AlbumProfileActivity.this);
                 View view = getLayoutInflater().inflate(R.layout.activity_add_to_collection,null);
+
                 Spinner spinner = view.findViewById(R.id.spinner_collection);
+
+                arrayListCollection = new ArrayList<>();
+                arrayListCollection.add("Collection 1");
+                arrayListCollection.add("Collection 2");
+                arrayListCollection.add("Collection 3");
+
                 ArrayAdapter<String> adapter = new ArrayAdapter<String>(AlbumProfileActivity.this,
                         android.R.layout.simple_spinner_item,
-                        getResources().getStringArray(R.array.collections));
+                        arrayListCollection);
 
                 adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 spinner.setAdapter(adapter);
