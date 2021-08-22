@@ -133,8 +133,8 @@ public class AlbumProfileActivity extends AppCompatActivity {
                 adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 spinner.setAdapter(adapter);
 
-                btn_close = view.findViewById(R.id.btn_close_add_collection);
-                btn_add = view.findViewById(R.id.btn_add_collection);
+                btn_close = view.findViewById(R.id.btn_close_add_to_collection);
+                btn_add = view.findViewById(R.id.btn_add_to_collection);
 
                 builder.setView(view);
                 AlertDialog myDialog = builder.create();

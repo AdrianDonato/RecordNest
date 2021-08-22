@@ -7,7 +7,7 @@
     android:background="#efefef"
     android:layout_gravity="center"
     android:paddingBottom="15dp"
-    tools:context=".AddToCollectionActivity">
+    tools:context=".AddCollectionActivity">
 
     <TextView
         android:layout_width="wrap_content"
@@ -15,12 +15,12 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        android:text="ADD TO COLLECTION"
+        android:text="ADD COLLECTION"
         android:layout_marginTop="20dp"
         android:textColor="@color/black"/>
 
     <Button
-        android:id="@+id/btn_close_add_to_collection"
+        android:id="@+id/btn_close_add_collection"
         android:layout_width="24dp"
         android:layout_height="24dp"
         android:padding="0dp"
@@ -33,28 +33,27 @@
         app:layout_constraintTop_toTopOf="parent"
         android:visibility="visible"/>
 
-    <Spinner
-        android:id="@+id/spinner_collection"
+    <EditText
+        android:id="@+id/et_addcollection"
         android:layout_width="250dp"
         android:layout_height="35dp"
         android:background="@drawable/popup"
         android:backgroundTint="@color/white"
-        android:dropDownWidth="100dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginTop="60dp"
-        android:spinnerMode="dialog"/>
+        android:paddingHorizontal="10dp"/>
 
 
     <Button
-        android:id="@+id/btn_add_to_collection"
+        android:id="@+id/btn_save_collection"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:backgroundTint="#FF7A17"
         android:text="DONE"
         android:textColor="@color/black"
-        app:layout_constraintTop_toBottomOf="@id/spinner_collection"
+        app:layout_constraintTop_toBottomOf="@id/et_addcollection"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         android:layout_marginTop="20dp"

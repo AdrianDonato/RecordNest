@@ -7,10 +7,12 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
@@ -19,14 +21,12 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.mobdeve.s18.recordnest.adapter.CollectionAdapter;
 import com.mobdeve.s18.recordnest.databinding.ActivityUserProfileBinding;
 import com.mobdeve.s18.recordnest.model.Collection;
-import com.mobdeve.s18.recordnest.model.Review;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -43,7 +43,10 @@ public class UserProfileActivity extends AppCompatActivity {
     private String profileID;
     private TextView profileUsername;
 
-    Button btn_edit;
+    Button btn_edit, btn_addcol, btn_close, btn_save;
+    EditText et_col;
+
+    AlertDialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +70,18 @@ public class UserProfileActivity extends AppCompatActivity {
                 startActivity(i);
             }
         });
+
+
+        btn_addcol = view.findViewById(R.id.btn_add_collection);
+
+        btn_addcol.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                createAddToCollectionDialog();
+            }
+        });
+
+
 
         //sets username of profile page (not finished yet, only works on logged in user's profile)
         mUser = FirebaseAuth.getInstance().getCurrentUser();
@@ -114,6 +129,45 @@ public class UserProfileActivity extends AppCompatActivity {
     @Override
     public void onBackPressed(){
         //super.onBackPressed();
+
+    }
+
+    public void createAddToCollectionDialog(){
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+        final View addToCollPopup = getLayoutInflater().inflate(R.layout.activity_add_collection, null);
+
+        btn_close = addToCollPopup.findViewById(R.id.btn_close_add_collection);
+        btn_save = addToCollPopup.findViewById(R.id.btn_save_collection);
+        et_col = addToCollPopup.findViewById(R.id.et_addcollection);
+
+        dialogBuilder.setView(addToCollPopup);
+        dialog = dialogBuilder.create();
+        dialog.show();
+
+        btn_save.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(!et_col.getText().toString().equalsIgnoreCase("")){
+                    Toast.makeText(UserProfileActivity.this,
+                            et_col.getText().toString(),
+                            Toast.LENGTH_SHORT).show();
+                    dialog.dismiss();
+                }
+
+                else{
+                    Toast.makeText(UserProfileActivity.this,
+                            "Please enter collection name",
+                            Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        btn_close.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
 
     }
 
