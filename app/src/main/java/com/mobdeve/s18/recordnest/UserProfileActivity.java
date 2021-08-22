@@ -23,6 +23,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -33,6 +34,8 @@ import com.mobdeve.s18.recordnest.model.Collection;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class UserProfileActivity extends AppCompatActivity {
     private ActivityUserProfileBinding binding;
@@ -43,6 +46,8 @@ public class UserProfileActivity extends AppCompatActivity {
     private FirebaseFirestore fStore;
     private ArrayList<Collection> collArray;
     private String profileID;
+    private String mUsername;
+    private String mUserID;
     private TextView profileUsername;
 
     Button btn_edit, btn_addcol, btn_close, btn_save, btn_logout;
@@ -99,8 +104,9 @@ public class UserProfileActivity extends AppCompatActivity {
         mUser = FirebaseAuth.getInstance().getCurrentUser();
         fStore = FirebaseFirestore.getInstance();
 
-        String mUserID = mUser.getUid();
-        String mUsername = mUser.getDisplayName();
+        mUserID = mUser.getUid();
+        mUsername = mUser.getDisplayName();
+
         Intent prevPage = getIntent();
         profileID = prevPage.getStringExtra("profileUID");
         profileUsername = (TextView)findViewById(R.id.profile_username);
@@ -163,9 +169,10 @@ public class UserProfileActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(!et_col.getText().toString().equalsIgnoreCase("")){
-                    Toast.makeText(UserProfileActivity.this,
+                   /* Toast.makeText(UserProfileActivity.this,
                             et_col.getText().toString(),
-                            Toast.LENGTH_SHORT).show();
+                            Toast.LENGTH_SHORT).show(); */
+                    createNewCollection(et_col.getText().toString(), "placeholder");
                     dialog.dismiss();
                 }
 
@@ -245,6 +252,7 @@ public class UserProfileActivity extends AppCompatActivity {
                 });
     }
 
+    //initializes collection adapter
     public void initCollAdapter(){
         collectionAdapter = new CollectionAdapter(getApplicationContext(), collArray);
 
@@ -253,5 +261,33 @@ public class UserProfileActivity extends AppCompatActivity {
         binding.rvCollection.setLayoutManager(lm);
 
         binding.rvCollection.setAdapter(collectionAdapter);
+    }
+
+
+    public void createNewCollection(String collTitle, String collDesc){
+        Map<String, Object> newColl = new HashMap<>();
+        ArrayList<String> newCollAlbumID = new ArrayList<>();
+        ArrayList<String> newCollImgURL = new ArrayList<>();
+
+        newColl.put("Title", collTitle);
+        newColl.put("Description", collDesc);
+        newColl.put("Username", mUsername);
+        newColl.put("AlbumIDList", newCollAlbumID);
+        newColl.put("ImageURLList", newCollImgURL);
+
+        fStore.collection("AlbumCollection").add(newColl).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+            @Override
+            public void onComplete(@NonNull @NotNull Task<DocumentReference> task) {
+                if(task.isSuccessful()){
+                    Toast.makeText(UserProfileActivity.this, "Successfully added " + collTitle + "!",
+                            Toast.LENGTH_SHORT).show();
+                    finish();
+                    startActivity(getIntent());
+                } else {
+                    Toast.makeText(UserProfileActivity.this, "Error! " + task.getException().getMessage(),
+                            Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 }
