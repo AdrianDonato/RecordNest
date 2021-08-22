@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">Record Nest</string>
+
+    <string-array name="collections">
+        <item>Choose a collection</item>
+        <item>Collection 1</item>
+        <item>Collection 2</item>
+        <item>Collection 3</item>
+    </string-array>
 </resources>

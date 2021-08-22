@@ -1,6 +1,8 @@
 package com.mobdeve.s18.recordnest;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -9,11 +11,13 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -62,6 +66,8 @@ public class AlbumProfileActivity extends AppCompatActivity {
 
     private LinearLayout content, reviewInput;
 
+    Spinner spinner;
+
     Animation topAnim, bottomAnim;
 
     //private RecyclerView rvTrackList;
@@ -87,6 +93,11 @@ public class AlbumProfileActivity extends AppCompatActivity {
     private int userReviewIndex;
 
     Dialog myDialog;
+    private AlertDialog.Builder dialogBuilder;
+    private AlertDialog dialog;
+
+
+    Button btn_add_to_col, btn_close, btn_add;;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -110,7 +121,81 @@ public class AlbumProfileActivity extends AppCompatActivity {
         });
 
  */
-        myDialog = new Dialog(this);
+        //myDialog = new Dialog(AlbumProfileActivity.this);
+
+        btn_add_to_col = findViewById(R.id.btn_album_add_to_collection);
+        btn_add_to_col.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //createAddToCollectionDialog();
+                AlertDialog.Builder builder = new AlertDialog.Builder(AlbumProfileActivity.this);
+                View view = getLayoutInflater().inflate(R.layout.activity_add_to_collection,null);
+                Spinner spinner = view.findViewById(R.id.spinner_collection);
+                ArrayAdapter<String> adapter = new ArrayAdapter<String>(AlbumProfileActivity.this,
+                        android.R.layout.simple_spinner_item,
+                        getResources().getStringArray(R.array.collections));
+
+                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                spinner.setAdapter(adapter);
+
+                btn_close = view.findViewById(R.id.btn_close_add_collection);
+                btn_add = view.findViewById(R.id.btn_add_collection);
+/*
+                btn_add.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if(!spinner.getSelectedItem().toString().equalsIgnoreCase("Choose a collection")){
+                            Toast.makeText(AlbumProfileActivity.this,
+                                    spinner.getSelectedItem().toString(),
+                                    Toast.LENGTH_SHORT).show();
+                            //Intent i = new Intent(AlbumProfileActivity.this, AlbumProfileActivity.class);
+                        }
+                    }
+                });
+
+                btn_close.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        //view.setVisibility(View.GONE);
+                        //Intent i = new Intent(AlbumProfileActivity.this, AlbumProfileActivity.class);
+                    }
+                });
+
+
+ */
+
+
+
+                builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        if(!spinner.getSelectedItem().toString().equalsIgnoreCase("Choose a collection")){
+                            Toast.makeText(AlbumProfileActivity.this,
+                                    spinner.getSelectedItem().toString(),
+                                    Toast.LENGTH_SHORT).show();
+                            dialog.dismiss();
+                        }
+                    }
+                });
+
+                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener(){
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+
+                builder.setView(view);
+
+                AlertDialog myDialog = builder.create();
+                myDialog.show();
+
+            }
+        });
+
+
 
         topAnim = AnimationUtils.loadAnimation(this,R.anim.top_animation);
         bottomAnim = AnimationUtils.loadAnimation(this,R.anim.bottom_animation);
@@ -205,6 +290,30 @@ public class AlbumProfileActivity extends AppCompatActivity {
         myDialog.show();
 
     }
+
+
+    /*
+    public void createAddToCollectionDialog(){
+        dialogBuilder = new AlertDialog.Builder(this);
+        final View addToCollPopup = getLayoutInflater().inflate(R.layout.activity_add_to_collection, null);
+
+        btn_close = addToCollPopup.findViewById(R.id.btn_close_add_collection);
+        btn_add = addToCollPopup.findViewById(R.id.btn_album_add_to_collection);
+
+        dialogBuilder.setView(addToCollPopup);
+        dialog = dialogBuilder.create();
+        dialog.show();
+
+        btn_close.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+    }
+
+     */
 
     public ArrayList<Tracklist> initializeDataTrack(ArrayList<String> tracklist) {
 

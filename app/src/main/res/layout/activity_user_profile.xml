@@ -139,6 +139,15 @@
         tools:orientation="horizontal"
         android:layout_centerHorizontal="true"/>
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="+ add collection"
+        android:layout_above="@id/nav"
+        android:layout_alignParentRight="true"
+        android:textColor="@color/black"
+        android:background="@android:color/transparent"/>
+
 
 
     <View
