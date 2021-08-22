@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="320dp"
     android:layout_height="wrap_content"
-    android:background="#efefef"
+    android:background="@drawable/popup"
     android:layout_gravity="center"
     android:paddingBottom="15dp"
     tools:context=".AddToCollectionActivity">

@@ -1,6 +1,8 @@
 package com.mobdeve.s18.recordnest;
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -43,8 +45,9 @@ public class UserProfileActivity extends AppCompatActivity {
     private String profileID;
     private TextView profileUsername;
 
-    Button btn_edit, btn_addcol, btn_close, btn_save;
+    Button btn_edit, btn_addcol, btn_close, btn_save, btn_logout;
     EditText et_col;
+    TextView tv_username;
 
     AlertDialog dialog;
 
@@ -77,7 +80,16 @@ public class UserProfileActivity extends AppCompatActivity {
         btn_addcol.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                createAddToCollectionDialog();
+                createAddCollectionDialog();
+            }
+        });
+
+        tv_username = view.findViewById(R.id.profile_username);
+
+        tv_username.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                createLogoutDialog();
             }
         });
 
@@ -132,17 +144,20 @@ public class UserProfileActivity extends AppCompatActivity {
 
     }
 
-    public void createAddToCollectionDialog(){
+    public void createAddCollectionDialog(){
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
-        final View addToCollPopup = getLayoutInflater().inflate(R.layout.activity_add_collection, null);
+        final View addCollPopup = getLayoutInflater().inflate(R.layout.activity_add_collection, null);
 
-        btn_close = addToCollPopup.findViewById(R.id.btn_close_add_collection);
-        btn_save = addToCollPopup.findViewById(R.id.btn_save_collection);
-        et_col = addToCollPopup.findViewById(R.id.et_addcollection);
+        btn_close = addCollPopup.findViewById(R.id.btn_close_add_collection);
+        btn_save = addCollPopup.findViewById(R.id.btn_save_collection);
+        et_col = addCollPopup.findViewById(R.id.et_addcollection);
 
-        dialogBuilder.setView(addToCollPopup);
+        dialogBuilder.setView(addCollPopup);
         dialog = dialogBuilder.create();
         dialog.show();
+
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
 
         btn_save.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -168,7 +183,42 @@ public class UserProfileActivity extends AppCompatActivity {
                 dialog.dismiss();
             }
         });
+    }
 
+    public void createLogoutDialog(){
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+        final View addLogoutPopup = getLayoutInflater().inflate(R.layout.activity_logout, null);
+
+        btn_close = addLogoutPopup.findViewById(R.id.btn_close_logout);
+        btn_logout = addLogoutPopup.findViewById(R.id.btn_logout);
+
+        dialogBuilder.setView(addLogoutPopup);
+        dialog = dialogBuilder.create();
+        dialog.show();
+
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        int width = (int)(getResources().getDisplayMetrics().widthPixels*0.50);
+        int height = (int)(getResources().getDisplayMetrics().heightPixels*0.2);
+
+        dialog.getWindow().setLayout(width,height);
+
+        btn_logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(UserProfileActivity.this,
+                       "Logout",
+                        Toast.LENGTH_SHORT).show();
+                dialog.dismiss();
+            }
+        });
+
+        btn_close.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
     }
 
     public void initializeDataCollection() {
