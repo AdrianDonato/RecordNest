@@ -1,8 +1,6 @@
 package com.mobdeve.s18.recordnest;
 
 import android.app.AlertDialog;
-import android.app.Dialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -93,7 +91,7 @@ public class AlbumProfileActivity extends AppCompatActivity {
     private ArrayList<Review> reviewList;
     private int userReviewIndex;
 
-    Dialog myDialog;
+    //Dialog myDialog;
     private AlertDialog.Builder dialogBuilder;
     private AlertDialog dialog;
 
@@ -111,30 +109,19 @@ public class AlbumProfileActivity extends AppCompatActivity {
         //setContentView(R.layout.activity_main);
         View view = binding.getRoot();
         setContentView(view);
-/*
-        btnAlbumAddCollection = findViewById(R.id.btn_album_add_to_collection);
 
-        btnAlbumAddCollection.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new
-            }
-        });
-
- */
-        //myDialog = new Dialog(AlbumProfileActivity.this);
 
         btn_add_to_col = findViewById(R.id.btn_album_add_to_collection);
         btn_add_to_col.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //createAddToCollectionDialog();
                 AlertDialog.Builder builder = new AlertDialog.Builder(AlbumProfileActivity.this);
                 View view = getLayoutInflater().inflate(R.layout.activity_add_to_collection,null);
 
                 Spinner spinner = view.findViewById(R.id.spinner_collection);
 
                 arrayListCollection = new ArrayList<>();
+                arrayListCollection.add("Choose a collection...");
                 arrayListCollection.add("Collection 1");
                 arrayListCollection.add("Collection 2");
                 arrayListCollection.add("Collection 3");
@@ -148,15 +135,20 @@ public class AlbumProfileActivity extends AppCompatActivity {
 
                 btn_close = view.findViewById(R.id.btn_close_add_collection);
                 btn_add = view.findViewById(R.id.btn_add_collection);
-/*
+
+                builder.setView(view);
+                AlertDialog myDialog = builder.create();
+                myDialog.show();
+
+
                 btn_add.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if(!spinner.getSelectedItem().toString().equalsIgnoreCase("Choose a collection")){
+                        if(!spinner.getSelectedItem().toString().equalsIgnoreCase("Choose a collection...")){
                             Toast.makeText(AlbumProfileActivity.this,
                                     spinner.getSelectedItem().toString(),
                                     Toast.LENGTH_SHORT).show();
-                            //Intent i = new Intent(AlbumProfileActivity.this, AlbumProfileActivity.class);
+                            myDialog.dismiss();
                         }
                     }
                 });
@@ -164,42 +156,9 @@ public class AlbumProfileActivity extends AppCompatActivity {
                 btn_close.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        //view.setVisibility(View.GONE);
-                        //Intent i = new Intent(AlbumProfileActivity.this, AlbumProfileActivity.class);
+                        myDialog.dismiss();
                     }
                 });
-
-
- */
-
-
-
-                builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-
-                        if(!spinner.getSelectedItem().toString().equalsIgnoreCase("Choose a collection")){
-                            Toast.makeText(AlbumProfileActivity.this,
-                                    spinner.getSelectedItem().toString(),
-                                    Toast.LENGTH_SHORT).show();
-                            dialog.dismiss();
-                        }
-                    }
-                });
-
-                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener(){
-
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
-
-                builder.setView(view);
-
-                AlertDialog myDialog = builder.create();
-                myDialog.show();
-
             }
         });
 
@@ -280,7 +239,7 @@ public class AlbumProfileActivity extends AppCompatActivity {
             }
         });
     }
-
+/*
     public void ShowPopup(View v){
         Button btn_close, btn_add;
 
@@ -298,6 +257,8 @@ public class AlbumProfileActivity extends AppCompatActivity {
         myDialog.show();
 
     }
+
+ */
 
 
     /*

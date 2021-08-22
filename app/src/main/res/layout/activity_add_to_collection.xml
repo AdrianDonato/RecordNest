@@ -6,6 +6,7 @@
     android:layout_height="wrap_content"
     android:background="@color/white"
     android:layout_gravity="center"
+    android:paddingBottom="15dp"
     tools:context=".AddToCollectionActivity">
 
     <TextView
@@ -30,7 +31,7 @@
         android:drawableTint="@color/black"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:visibility="gone"/>
+        android:visibility="visible"/>
 
     <Spinner
         android:id="@+id/spinner_collection"
@@ -54,6 +55,6 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         android:layout_marginTop="20dp"
-        android:visibility="gone"/>
+        android:visibility="visible"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
