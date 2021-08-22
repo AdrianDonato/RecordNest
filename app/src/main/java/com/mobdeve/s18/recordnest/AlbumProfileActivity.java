@@ -43,6 +43,7 @@ import com.mobdeve.s18.recordnest.adapter.ReviewAdapter;
 import com.mobdeve.s18.recordnest.adapter.TracklistAdapter;
 import com.mobdeve.s18.recordnest.databinding.ActivityAlbumProfileBinding;
 import com.mobdeve.s18.recordnest.model.Album;
+import com.mobdeve.s18.recordnest.model.Collection;
 import com.mobdeve.s18.recordnest.model.Review;
 import com.mobdeve.s18.recordnest.model.Tracklist;
 
@@ -89,7 +90,8 @@ public class AlbumProfileActivity extends AppCompatActivity {
     private Album albumDisplayed;
     private ArrayList<Tracklist> tracklistDisplayed;
     private ArrayList<String> trackString;
-    ArrayList<String> arrayListCollection;
+    private ArrayList<String> arrayListCollection;
+    private ArrayList<String> collIDs;
     private ArrayList<Review> reviewList;
     private int userReviewIndex;
 
@@ -111,62 +113,6 @@ public class AlbumProfileActivity extends AppCompatActivity {
         //setContentView(R.layout.activity_main);
         View view = binding.getRoot();
         setContentView(view);
-
-
-        btn_add_to_col = findViewById(R.id.btn_album_add_to_collection);
-        btn_add_to_col.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(AlbumProfileActivity.this);
-                View view = getLayoutInflater().inflate(R.layout.activity_add_to_collection,null);
-
-                Spinner spinner = view.findViewById(R.id.spinner_collection);
-
-                arrayListCollection = new ArrayList<>();
-                arrayListCollection.add("Choose a collection...");
-                arrayListCollection.add("Collection 1");
-                arrayListCollection.add("Collection 2");
-                arrayListCollection.add("Collection 3");
-
-                ArrayAdapter<String> adapter = new ArrayAdapter<String>(AlbumProfileActivity.this,
-                        android.R.layout.simple_spinner_item,
-                        arrayListCollection);
-
-                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                spinner.setAdapter(adapter);
-
-                btn_close = view.findViewById(R.id.btn_close_add_to_collection);
-                btn_add = view.findViewById(R.id.btn_add_to_collection);
-
-                builder.setView(view);
-                AlertDialog myDialog = builder.create();
-                myDialog.show();
-
-                myDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-
-
-                btn_add.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if(!spinner.getSelectedItem().toString().equalsIgnoreCase("Choose a collection...")){
-                            Toast.makeText(AlbumProfileActivity.this,
-                                    spinner.getSelectedItem().toString(),
-                                    Toast.LENGTH_SHORT).show();
-                            myDialog.dismiss();
-                        }
-                    }
-                });
-
-                btn_close.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        myDialog.dismiss();
-                    }
-                });
-            }
-        });
-
-
 
         topAnim = AnimationUtils.loadAnimation(this,R.anim.top_animation);
         bottomAnim = AnimationUtils.loadAnimation(this,R.anim.bottom_animation);
@@ -217,6 +163,9 @@ public class AlbumProfileActivity extends AppCompatActivity {
         //sets the data of the album (albumDisplayed) then sets data to the layout views
         setAlbumData(obtainedId, cover);
         initializeDataReview();
+
+        btn_add_to_col = findViewById(R.id.btn_album_add_to_collection);
+        initializeAddtoCollection();
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.nav);
 
@@ -505,6 +454,83 @@ public class AlbumProfileActivity extends AppCompatActivity {
             reviewETAlbum.setText(reviewList.get(userReviewIndex).getReviewContent());
             ratingViewAlbum.setRating(currRating);
         }
+    }
+
+    public void initializeAddtoCollection(){
+        arrayListCollection = new ArrayList<>();
+        collIDs = new ArrayList<>();
+
+        arrayListCollection.add("Choose a collection...");
+        collIDs.add("placeholder"); //filler data, ensures both arrays have same size and indexes
+
+        fStore.collection("AlbumCollection")
+                .whereEqualTo("Username", mUsername).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull @NotNull Task<QuerySnapshot> task) {
+                if(task.isSuccessful()){
+                    for(QueryDocumentSnapshot documentSnapshot : task.getResult()){
+                        String collID = documentSnapshot.getId();
+                        String collTitle = documentSnapshot.getString("Title");
+
+                        arrayListCollection.add(collTitle);
+                        collIDs.add(collID);
+                    }
+                    initializeAddtoCollListener();
+                } else {
+                    Toast.makeText(AlbumProfileActivity.this, "Error! " + task.getException().getMessage(),
+                            Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
+    //function to initialize add to collection button listener
+    public void initializeAddtoCollListener(){
+        btn_add_to_col.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(AlbumProfileActivity.this);
+                View view = getLayoutInflater().inflate(R.layout.activity_add_to_collection,null);
+
+                Spinner spinner = view.findViewById(R.id.spinner_collection);
+
+                ArrayAdapter<String> adapter = new ArrayAdapter<String>(AlbumProfileActivity.this,
+                        android.R.layout.simple_spinner_item,
+                        arrayListCollection);
+
+                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                spinner.setAdapter(adapter);
+
+                btn_close = view.findViewById(R.id.btn_close_add_to_collection);
+                btn_add = view.findViewById(R.id.btn_add_to_collection);
+
+                builder.setView(view);
+                AlertDialog myDialog = builder.create();
+                myDialog.show();
+
+                myDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+
+                btn_add.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if(!spinner.getSelectedItem().toString().equalsIgnoreCase("Choose a collection...")){
+                            Toast.makeText(AlbumProfileActivity.this,
+                                    spinner.getSelectedItem().toString(),
+                                    Toast.LENGTH_SHORT).show();
+                            myDialog.dismiss();
+                        }
+                    }
+                });
+
+                btn_close.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        myDialog.dismiss();
+                    }
+                });
+            }
+        });
     }
 
     //function to check if the user has already reviewed the album
