@@ -95,6 +95,7 @@ public class AlbumProfileActivity extends AppCompatActivity {
     private ArrayList<String> collIDs;
     private ArrayList<Review> reviewList;
     private int userReviewIndex;
+    private boolean isInColl; //for checking if the album is in a collection
 
     //Dialog myDialog;
     private AlertDialog.Builder dialogBuilder;
@@ -512,11 +513,20 @@ public class AlbumProfileActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         if(!spinner.getSelectedItem().toString().equalsIgnoreCase("Choose a collection...")){
-                            addToCollectionDB(spinner.getSelectedItem().toString());
-                            /*Toast.makeText(AlbumProfileActivity.this,
+                            checkIfInCollection(spinner.getSelectedItem().toString());
+                            //runs checkIfInCollection AFTER if else statement kasi async? idk pa ang fix
+                            if(isInColl) {
+                                String errorMsg = albumDisplayed.getAlbumName() + " is already in " + spinner.getSelectedItem().toString() + "!";
+                                Toast.makeText(AlbumProfileActivity.this,
+                                        errorMsg,
+                                        Toast.LENGTH_SHORT).show();
+                            } else {
+                              addToCollectionDB(spinner.getSelectedItem().toString());
+                              Toast.makeText(AlbumProfileActivity.this,
                                     spinner.getSelectedItem().toString(),
-                                    Toast.LENGTH_SHORT).show(); */
-                            myDialog.dismiss();
+                                    Toast.LENGTH_SHORT).show();
+                                myDialog.dismiss();
+                            }
                         }
                     }
                 });
@@ -583,6 +593,32 @@ public class AlbumProfileActivity extends AppCompatActivity {
                             }
                         }
                     });
+                } else {
+                    Toast.makeText(AlbumProfileActivity.this, "Error! " + task.getException().getMessage(),
+                            Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
+    //function to check if the album is already in a selected collection
+    //void not bool because of async nature of firebase
+    public void checkIfInCollection(String collTitle){
+        int titleIndex = arrayListCollection.indexOf(collTitle);
+        String collId = collIDs.get(titleIndex);
+        String albumId = albumDisplayed.getAlbumID();
+
+        fStore.collection("AlbumCollection").document(collId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull @NotNull Task<DocumentSnapshot> task) {
+                if(task.isSuccessful()){
+                    DocumentSnapshot snapshot = task.getResult();
+                    ArrayList<String> albumIDList = (ArrayList<String>) snapshot.get("AlbumIDList");
+
+                    isInColl = albumIDList.contains(albumId);
+                    String listofIds = albumIDList.toString() + Boolean.toString(isInColl);
+                    Toast.makeText(AlbumProfileActivity.this, listofIds,
+                            Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(AlbumProfileActivity.this, "Error! " + task.getException().getMessage(),
                             Toast.LENGTH_SHORT).show();
