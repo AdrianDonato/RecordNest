@@ -21,14 +21,20 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.mobdeve.s18.recordnest.databinding.ActivityRegisterBinding;
 import com.mobdeve.s18.recordnest.model.User;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
 public class RegisterActivity extends AppCompatActivity{
     private ActivityRegisterBinding binding;
     private DatabaseReference registerref;
+    private FirebaseFirestore fStore;
     private FirebaseAuth mAuth;
     private User registeruser;
     // might need firebase auth instead?
@@ -51,7 +57,8 @@ public class RegisterActivity extends AppCompatActivity{
         EditText regUsername = (EditText)findViewById(R.id.et_register_username);
         EditText regEmail = (EditText)findViewById(R.id.et_register_email);
         EditText regPassword = (EditText)findViewById(R.id.et_register_password);
-        registerref = FirebaseDatabase.getInstance().getReference().child("User");
+        //registerref = FirebaseDatabase.getInstance().getReference().child("User");
+        fStore = FirebaseFirestore.getInstance();
         mAuth = FirebaseAuth.getInstance();
 
         btn.setOnClickListener(new View.OnClickListener() {
@@ -84,13 +91,31 @@ public class RegisterActivity extends AppCompatActivity{
                         public void onComplete(@NonNull @NotNull Task<AuthResult> task) {
                             if(task.isSuccessful()){
                                 FirebaseUser newUser = mAuth.getCurrentUser();
+                                String newUserID = mAuth.getUid();
                                 UserProfileChangeRequest addUsername = new UserProfileChangeRequest.Builder()
                                         .setDisplayName(insertUser).build();
                                 newUser.updateProfile(addUsername).addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
                                     public void onComplete(@NonNull @NotNull Task<Void> task) {
                                         if(task.isSuccessful()){
-                                            startActivity(new Intent(RegisterActivity.this, MainActivity.class));
+                                            Map<String, Object> newUserDetails = new HashMap<>();
+                                            ArrayList<String> emptyArray = new ArrayList<>();
+                                            newUserDetails.put("FollowerCount", 0);
+                                            newUserDetails.put("FollowingCount", 0);
+                                            newUserDetails.put("FollowerList", emptyArray);
+                                            newUserDetails.put("FollowingList", emptyArray);
+
+                                            fStore.collection("UserDetails").document(newUserID).set(newUserDetails).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                @Override
+                                                public void onComplete(@NonNull @NotNull Task<Void> task) {
+                                                    if(task.isSuccessful()){
+                                                        startActivity(new Intent(RegisterActivity.this, MainActivity.class));
+                                                    } else {
+                                                        Toast.makeText(RegisterActivity.this, "Error! " + task.getException().getMessage(),
+                                                                Toast.LENGTH_SHORT).show();
+                                                    }
+                                                }
+                                            });
                                         } else {
                                             Toast.makeText(RegisterActivity.this, "Error! " + task.getException().getMessage(),
                                                     Toast.LENGTH_SHORT).show();
