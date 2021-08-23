@@ -75,7 +75,7 @@
         android:layout_marginBottom="20dp">
 
         <EditText
-            android:id="@+id/et_username"
+            android:id="@+id/et_edit_username"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="start|top"
@@ -88,7 +88,7 @@
             />
 
         <EditText
-            android:id="@+id/et_email"
+            android:id="@+id/et_edit_email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="start|top"
@@ -100,11 +100,11 @@
             android:layout_marginBottom="20dp"/>
 
         <EditText
-            android:id="@+id/et_password"
+            android:id="@+id/et_edit_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="start|top"
-            android:inputType="textEmailAddress"
+            android:inputType="textPassword"
             android:hint="PASSWORD"
             android:background="@color/white"
             android:paddingHorizontal="15dp"

@@ -100,6 +100,8 @@ public class RegisterActivity extends AppCompatActivity{
                                         if(task.isSuccessful()){
                                             Map<String, Object> newUserDetails = new HashMap<>();
                                             ArrayList<String> emptyArray = new ArrayList<>();
+                                            newUserDetails.put("Username", insertUser);
+                                            newUserDetails.put("ProfPicURL", "");
                                             newUserDetails.put("FollowerCount", 0);
                                             newUserDetails.put("FollowingCount", 0);
                                             newUserDetails.put("FollowerList", emptyArray);
