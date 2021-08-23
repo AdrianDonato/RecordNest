@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#2399BF"
+    android:nestedScrollingEnabled="true"
+    tools:context=".EditAlbumActivity">
+
+
+    <LinearLayout
+        android:id="@+id/content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:id="@+id/album_info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            android:weightSum="5"
+            android:orientation="horizontal"
+            android:padding="20dp"
+            android:layout_marginTop="20dp">
+
+            <ImageView
+                android:id="@+id/iv_edit_album_img"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:src="@drawable/album1"
+                android:adjustViewBounds="true"
+                android:scaleType="centerCrop"
+                android:layout_weight="2"/>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:orientation="vertical"
+                android:paddingLeft="20dp">
+
+                <TextView
+                    android:id="@+id/tv_edit_album_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Album name"
+                    android:textStyle="bold"
+                    android:textSize="20dp"
+                    android:textAllCaps="true"
+                    android:textColor="@color/black"/>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="by"
+                        android:paddingRight="5dp"/>
+                    <TextView
+                        android:id="@+id/tv_edit_album_artist"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Album artist" />
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/tv_edit_album_year"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="2021"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingHorizontal="5dp"
+                        android:text=" | "/>
+
+                    <TextView
+                        android:id="@+id/tv_edit_album_genre"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Genre"
+                        android:textStyle="bold"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="5dp">
+
+                    <View
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:background="@drawable/ic_baseline_star_24" />
+
+                    <TextView
+                        android:id="@+id/tv_edit_album_avgrating"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="4.7"
+                        android:layout_marginLeft="5dp"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tv_move_to_col"
+        android:layout_marginTop="20dp"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:text="MOVE TO COLLECTION"
+        android:backgroundTint="#FF7A17"
+        android:textColor="@color/black"
+        android:textSize="15dp"
+
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/content"/>
+
+    <Spinner
+        android:id="@+id/spinner_move_to_collection"
+        android:layout_width="250dp"
+        android:layout_height="35dp"
+        android:background="@drawable/popup"
+        android:dropDownWidth="100dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_move_to_col"
+        android:spinnerMode="dialog"/>
+
+    <Button
+        android:id="@+id/btn_delete_album"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="DELETE"
+        android:backgroundTint="#e5e5e5"
+        android:textColor="@color/black"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/nav"
+        android:layout_marginBottom="20dp"
+        android:layout_marginLeft="20dp"/>
+
+    <Button
+        android:id="@+id/btn_save_edit_album"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="DONE"
+        app:layout_constraintRight_toRightOf="parent"
+        android:backgroundTint="#FF7A17"
+        android:textColor="@color/black"
+        app:layout_constraintBottom_toTopOf="@id/nav"
+        android:layout_marginBottom="20dp"
+        android:layout_marginRight="20dp"/>
+
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:layout_width="match_parent"
+        android:layout_height="42dp"
+        android:id="@+id/nav"
+        android:background="#E5E5E5"
+        app:menu="@menu/menu_nav"
+        app:itemIconTint="@drawable/nav_selector"
+        app:itemTextColor="@drawable/nav_selector"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:elevation="10dp"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+
+

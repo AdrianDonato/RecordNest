@@ -2,10 +2,14 @@ package com.mobdeve.s18.recordnest;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.ArrayAdapter;
+import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -23,6 +27,11 @@ public class SearchUserActivity extends AppCompatActivity {
     private ActivitySearchUserBinding binding;
 
     private UserListAdapter userListAdapter;
+
+    ArrayAdapter<String> adapter;
+    ArrayList<UserList> userListArrayList;
+
+    EditText et_search;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,15 +71,51 @@ public class SearchUserActivity extends AppCompatActivity {
             }
         });
 
+
         userListAdapter = new UserListAdapter(getApplicationContext(), initializeData());
         binding.rvUser.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
 
         //findViewById(R.id.tv_album_name).setVisibility(View.VISIBLE);;
         binding.rvUser.setAdapter(userListAdapter);
+
+        et_search = findViewById(R.id.et_search);
+        et_search.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                filter(s.toString());
+            }
+        });
+
+
+
+
     }
+
     @Override
     public void onBackPressed(){
         //super.onBackPressed();
+
+    }
+
+    private void filter(String text){
+        ArrayList<UserList> filteredList = new ArrayList<>();
+
+        for(UserList item : initializeData()){
+            if(item.getUserName().toLowerCase().contains(text.toLowerCase())){
+                filteredList.add(item);
+            }
+        }
+        userListAdapter.filterList(filteredList);
 
     }
 

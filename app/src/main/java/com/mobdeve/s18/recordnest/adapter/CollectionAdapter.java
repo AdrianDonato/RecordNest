@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -49,6 +50,14 @@ public class CollectionAdapter extends RecyclerView.Adapter<CollectionAdapter.Co
                 i.putExtra(KEY_COLLECTION_NAME, collectionArrayList.get(viewHolder.getBindingAdapterPosition()).getCollectionTitle());
                 i.putExtra(KEY_COLLECTION_ID, collectionArrayList.get(viewHolder.getBindingAdapterPosition()).getCollectionID());
                 v.getContext().startActivity(i);
+            }
+        });
+
+        viewHolder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                Toast.makeText(context, "long clicked " + collectionArrayList.get(viewHolder.getBindingAdapterPosition()).getCollectionTitle(), Toast.LENGTH_SHORT).show();
+                return true;
             }
         });
 

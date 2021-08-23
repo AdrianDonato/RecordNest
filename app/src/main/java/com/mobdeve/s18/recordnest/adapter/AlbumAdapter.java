@@ -9,9 +9,9 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.mobdeve.s18.recordnest.AlbumProfileActivity;
+import com.mobdeve.s18.recordnest.EditAlbumActivity;
 import com.mobdeve.s18.recordnest.R;
 import com.mobdeve.s18.recordnest.ViewHolder;
 import com.mobdeve.s18.recordnest.model.Album;
@@ -30,6 +30,7 @@ public class AlbumAdapter extends RecyclerView.Adapter<ViewHolder> {
     public static final String KEY_PICTURE = "KEY_PICTURE";
     public static final String KEY_NAME = "KEY_NAME";
     public static final String KEY_ARTIST = "KEY_ARTIST";
+
 
     public AlbumAdapter(Context context, ArrayList<Album> albumArrayList) {
         this.albumArrayList = albumArrayList;
@@ -61,6 +62,23 @@ public class AlbumAdapter extends RecyclerView.Adapter<ViewHolder> {
                 //i.putExtra(KEY_TRACK, albumArrayList.get(viewHolder.getBindingAdapterPosition()).getTracklist());
 
                 v.getContext().startActivity(i);
+            }
+        });
+
+        viewHolder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                //Toast.makeText(context, "long clicked " + albumArrayList.get(viewHolder.getBindingAdapterPosition()).getAlbumName(), Toast.LENGTH_SHORT).show();
+                Intent i = new Intent(v.getContext(), EditAlbumActivity.class);
+
+                i.putExtra(KEY_PICTURE, albumArrayList.get(viewHolder.getBindingAdapterPosition()).getImageId());
+                i.putExtra(KEY_NAME, albumArrayList.get(viewHolder.getBindingAdapterPosition()).getAlbumName());
+                i.putExtra(KEY_ARTIST, albumArrayList.get(viewHolder.getBindingAdapterPosition()).getArtist());
+                i.putExtra(KEY_ID, albumArrayList.get(viewHolder.getBindingAdapterPosition()).getAlbumID());
+                v.getContext().startActivity(i);
+
+                return true;
+
             }
         });
 

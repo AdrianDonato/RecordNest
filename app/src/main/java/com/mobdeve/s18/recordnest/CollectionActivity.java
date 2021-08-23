@@ -1,5 +1,6 @@
 package com.mobdeve.s18.recordnest;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -29,8 +30,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 
 public class CollectionActivity extends AppCompatActivity {
 
@@ -45,6 +44,8 @@ public class CollectionActivity extends AppCompatActivity {
     private ArrayList<Album> retAlbums;
     private Collection retCollection;
     private String collectionID;
+
+    Dialog dialog;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -178,5 +179,7 @@ public class CollectionActivity extends AppCompatActivity {
         //findViewById(R.id.tv_album_name).setVisibility(View.VISIBLE);;
         binding.rvCollectionalbum.setAdapter(albumAdapter);
     }
+
+
 
 }

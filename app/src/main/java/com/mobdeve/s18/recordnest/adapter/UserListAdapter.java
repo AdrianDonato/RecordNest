@@ -28,6 +28,11 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.UserLi
         return userArrayList.size();
     }
 
+    public void filterList(ArrayList<UserList> filteredList){
+        userArrayList = filteredList;
+        notifyDataSetChanged();
+    }
+
     @Override
     public UserListAdapter.UserListViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
