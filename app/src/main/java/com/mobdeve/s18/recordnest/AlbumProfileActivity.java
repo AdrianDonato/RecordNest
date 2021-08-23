@@ -549,19 +549,34 @@ public class AlbumProfileActivity extends AppCompatActivity {
         String collId = collIDs.get(titleIndex);
         String albumId = albumDisplayed.getAlbumID();
         String imageURL = albumDisplayed.getAlbumArtURL();
+        String albumTitle = albumDisplayed.getAlbumName();
 
+        //save album id
         fStore.collection("AlbumCollection").document(collId).update("AlbumIDList",
                 FieldValue.arrayUnion(albumId)).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull @NotNull Task<Void> task) {
                 if (task.isSuccessful()) {
+                    //save album image url
                     fStore.collection("AlbumCollection").document(collId).update("ImageURLList",
                             FieldValue.arrayUnion(imageURL)).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull @NotNull Task<Void> task) {
                             if (task.isSuccessful()) {
-                                Toast.makeText(AlbumProfileActivity.this, "Successfully added to " + collTitle + "!",
-                                        Toast.LENGTH_SHORT).show();
+                                fStore.collection("AlbumCollection").document(collId).update("AlbumTitleList",
+                                        FieldValue.arrayUnion(albumTitle)).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull @NotNull Task<Void> task) {
+                                        if(task.isSuccessful()){
+                                            String successMSG = "Successfully added " + albumTitle + " to " + collTitle + "!";
+                                            Toast.makeText(AlbumProfileActivity.this, successMSG,
+                                                    Toast.LENGTH_SHORT).show();
+                                        } else {
+                                            Toast.makeText(AlbumProfileActivity.this, "Error! " + task.getException().getMessage(),
+                                                    Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+                                });
                             } else {
                                 Toast.makeText(AlbumProfileActivity.this, "Error! " + task.getException().getMessage(),
                                         Toast.LENGTH_SHORT).show();

@@ -137,6 +137,7 @@ public class CollectionActivity extends AppCompatActivity {
                     String snapshotDesc = snapshot.getString("Description");
                     ArrayList<String> snapshotAlbums = (ArrayList<String>) snapshot.get("AlbumIDList");
                     ArrayList<String> snapshotImgs = (ArrayList<String>) snapshot.get("ImageURLList");
+                    ArrayList<String> snapshotTitles = (ArrayList<String>) snapshot.get("AlbumTitleList");
 
 
                     retCollection = new Collection(snapshot.getString("Title"));
@@ -151,8 +152,9 @@ public class CollectionActivity extends AppCompatActivity {
 
                         String retAlbumID = snapshotAlbums.get(i);
                         String retImgURL = snapshotImgs.get(i);
+                        String retAlbumTitle = snapshotTitles.get(i);
 
-                        retAlbums.add(new Album(R.drawable.album1, "Title", "Artist"));
+                        retAlbums.add(new Album(R.drawable.album1, retAlbumTitle, "Artist"));
                         retAlbums.get(i).setAlbumID(retAlbumID);
                         retAlbums.get(i).setAlbumArtURL(retImgURL);
                     }
