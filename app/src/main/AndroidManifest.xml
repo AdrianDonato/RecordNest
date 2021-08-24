@@ -16,6 +16,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.RecordNest">
+        <activity android:name=".OtherUserProfileActivity"></activity>
+
         <activity android:name=".LogoutActivity" />
         <activity android:name=".LoginActivity" />
         <activity android:name=".RegisterActivity" />
@@ -30,16 +32,21 @@
             android:theme="@style/noAnimTheme" />
         <activity
             android:name=".EditAlbumActivity"
-            android:theme="@style/noAnimTheme" >
-        </activity>
+            android:theme="@style/noAnimTheme" />
         <activity
             android:name=".SubmitAlbumActivity"
             android:theme="@style/noAnimTheme" />
+        <activity
+            android:name=".SearchArtistActivity"
+            android:theme="@style/noAnimTheme"/>
         <activity
             android:name=".SearchUserActivity"
             android:theme="@style/noAnimTheme" />
         <activity
             android:name=".SearchGenreActivity"
+            android:theme="@style/noAnimTheme" />
+        <activity
+            android:name=".SearchYearActivity"
             android:theme="@style/noAnimTheme" />
         <activity
             android:name=".UserProfileActivity"

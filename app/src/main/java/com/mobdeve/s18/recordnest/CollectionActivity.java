@@ -102,7 +102,7 @@ public class CollectionActivity extends AppCompatActivity {
         //albumName.setVisibility(View.VISIBLE);
 
         binding.rvCollectionalbum.setLayoutManager(new GridLayoutManager(getApplicationContext(),3));
-        //findViewById(R.id.tv_album_name).setVisibility(View.VISIBLE);;
+        //findViewById(R.id.tv_album_name).setVisibility(View.  VISIBLE);;
         binding.rvCollectionalbum.setAdapter(albumAdapter);
         */
 

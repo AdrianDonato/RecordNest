@@ -39,9 +39,7 @@ public class EditProfileActivity extends AppCompatActivity {
 
     ImageView iv_profilepic;
     Button btn_editpic, btn_save;
-
-
-
+    
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 

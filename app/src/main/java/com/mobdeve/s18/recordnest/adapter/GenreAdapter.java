@@ -18,8 +18,6 @@ public class GenreAdapter extends RecyclerView.Adapter<GenreAdapter.GenreViewHol
     private ArrayList<Genre> genreArrayList;
     private Context context;
 
-    public static final String KEY_GENRE = "KEY_GENRE";
-
     public GenreAdapter(Context context, ArrayList<Genre> genreArrayList) {
             this.genreArrayList = genreArrayList;
             this.context = context;

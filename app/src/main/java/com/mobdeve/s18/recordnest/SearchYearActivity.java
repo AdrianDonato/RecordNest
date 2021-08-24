@@ -13,24 +13,24 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.mobdeve.s18.recordnest.adapter.GenreAdapter;
-import com.mobdeve.s18.recordnest.databinding.ActivitySearchGenreBinding;
-import com.mobdeve.s18.recordnest.model.Genre;
+import com.mobdeve.s18.recordnest.adapter.YearAdapter;
+import com.mobdeve.s18.recordnest.databinding.ActivitySearchYearBinding;
+import com.mobdeve.s18.recordnest.model.Year;
 
 import java.util.ArrayList;
 
-public class SearchGenreActivity extends AppCompatActivity {
+public class SearchYearActivity extends AppCompatActivity {
 
-    private ActivitySearchGenreBinding binding;
+    private ActivitySearchYearBinding binding;
 
-    public GenreAdapter genreAdapter;
+    public YearAdapter yearAdapter;
 
-    TextView genre;
+    TextView year;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivitySearchGenreBinding.inflate(getLayoutInflater());
+        binding = ActivitySearchYearBinding.inflate(getLayoutInflater());
 
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -63,25 +63,28 @@ public class SearchGenreActivity extends AppCompatActivity {
                 return false;
             }
         });
+        yearAdapter = new YearAdapter(getApplicationContext(), initializeData());
 
-        genreAdapter = new GenreAdapter(getApplicationContext(), initializeData());
-
-        binding.rvGenre.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+        binding.rvYear.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
 
         LinearLayoutManager lm = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
 
-        binding.rvGenre.setLayoutManager(lm);
+        binding.rvYear.setLayoutManager(lm);
         //findViewById(R.id.tv_album_name).setVisibility(View.VISIBLE);;
-        binding.rvGenre.setAdapter(genreAdapter);
+        binding.rvYear.setAdapter(yearAdapter);
     }
 
-    public ArrayList<Genre> initializeData() {
+    public ArrayList<Year> initializeData() {
         // get data from database here?
-        ArrayList<Genre> data = new ArrayList<>();
-        data.add(new Genre("Pop"));
-        data.add(new Genre("Indie"));
-        data.add(new Genre("Hip Hop"));
-        data.add(new Genre("Jazz"));
+        ArrayList<Year> data = new ArrayList<>();
+        data.add(new Year("2021"));
+        data.add(new Year("2020-2011"));
+        data.add(new Year("2010-2001"));
+        data.add(new Year("2000-1991"));
+        data.add(new Year("1990-1981"));
+        data.add(new Year("1980-1971"));
+        data.add(new Year("1970-1961"));
+        data.add(new Year("Before 1960"));
 
         return data;
     }

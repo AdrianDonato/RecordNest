@@ -18,7 +18,7 @@ public class SearchByActivity extends AppCompatActivity {
 
     private ActivitySearchByBinding binding;
 
-    RelativeLayout genre;
+    RelativeLayout genre, year, artist;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +41,26 @@ public class SearchByActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(SearchByActivity.this, SearchGenreActivity.class);
+                startActivity(i);
+            }
+        });
+
+        year = findViewById(R.id.rl_year);
+
+        year.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(SearchByActivity.this, SearchYearActivity.class);
+                startActivity(i);
+            }
+        });
+
+        artist = findViewById(R.id.rl_artist);
+
+        artist.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(SearchByActivity.this, SearchArtistActivity.class);
                 startActivity(i);
             }
         });

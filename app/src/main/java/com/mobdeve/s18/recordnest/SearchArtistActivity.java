@@ -13,24 +13,24 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.mobdeve.s18.recordnest.adapter.GenreAdapter;
-import com.mobdeve.s18.recordnest.databinding.ActivitySearchGenreBinding;
-import com.mobdeve.s18.recordnest.model.Genre;
+import com.mobdeve.s18.recordnest.adapter.ArtistAdapter;
+import com.mobdeve.s18.recordnest.databinding.ActivitySearchArtistBinding;
+import com.mobdeve.s18.recordnest.model.Artist;
 
 import java.util.ArrayList;
 
-public class SearchGenreActivity extends AppCompatActivity {
+public class SearchArtistActivity extends AppCompatActivity {
 
-    private ActivitySearchGenreBinding binding;
+    private ActivitySearchArtistBinding binding;
 
-    public GenreAdapter genreAdapter;
+    public ArtistAdapter artistAdapter;
 
-    TextView genre;
+    TextView artist;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivitySearchGenreBinding.inflate(getLayoutInflater());
+        binding = ActivitySearchArtistBinding.inflate(getLayoutInflater());
 
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -63,26 +63,24 @@ public class SearchGenreActivity extends AppCompatActivity {
                 return false;
             }
         });
+        artistAdapter = new ArtistAdapter(getApplicationContext(), initializeData());
 
-        genreAdapter = new GenreAdapter(getApplicationContext(), initializeData());
-
-        binding.rvGenre.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+        binding.rvArtist.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
 
         LinearLayoutManager lm = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
 
-        binding.rvGenre.setLayoutManager(lm);
+        binding.rvArtist.setLayoutManager(lm);
         //findViewById(R.id.tv_album_name).setVisibility(View.VISIBLE);;
-        binding.rvGenre.setAdapter(genreAdapter);
+        binding.rvArtist.setAdapter(artistAdapter);
     }
 
-    public ArrayList<Genre> initializeData() {
+    public ArrayList<Artist> initializeData() {
         // get data from database here?
-        ArrayList<Genre> data = new ArrayList<>();
-        data.add(new Genre("Pop"));
-        data.add(new Genre("Indie"));
-        data.add(new Genre("Hip Hop"));
-        data.add(new Genre("Jazz"));
-
+        ArrayList<Artist> data = new ArrayList<>();
+        data.add(new Artist("0-9"));
+        data.add(new Artist("A-Z"));
+        data.add(new Artist("Symbols/Special Characters"));
+        data.add(new Artist("Others"));
         return data;
     }
 }
