@@ -9,6 +9,7 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -21,6 +22,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -33,6 +35,8 @@ import com.mobdeve.s18.recordnest.model.User;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class OtherUserProfileActivity extends AppCompatActivity {
 
@@ -40,10 +44,12 @@ public class OtherUserProfileActivity extends AppCompatActivity {
 
     private TextView username, followercount, followingcount;
     private ImageView userimg;
+    private ToggleButton tbFollow;
     private ArrayList<Collection> collArray;
     private FirebaseFirestore fStore;
     private FirebaseUser fUser;
-    private String userID;
+    private String userID, otherUserName; //id and name of other user in profile
+    private int ownFollowingCount, targFollowerCount;
 
     CollectionAdapter collectionAdapter;
 
@@ -65,6 +71,7 @@ public class OtherUserProfileActivity extends AppCompatActivity {
         this.userimg = findViewById(R.id.iv_other_userImage);
         this.followercount = findViewById(R.id.tv_ou_followers);
         this.followingcount = findViewById(R.id.tv_ou_following);
+        this.tbFollow = findViewById(R.id.btn_follow);
 
         Intent i = getIntent();
 
@@ -81,7 +88,14 @@ public class OtherUserProfileActivity extends AppCompatActivity {
         }
 
         initializeUserData(userID);
+        checkOwnFollows();
 
+        tbFollow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                followUser(tbFollow.isChecked());
+            }
+        });
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.nav);
 
@@ -121,7 +135,8 @@ public class OtherUserProfileActivity extends AppCompatActivity {
                     String retImgURL = snapshot.getString("ProfPicURL");
                     int retFollowers = snapshot.getLong("FollowerCount").intValue();
                     int retFollowing = snapshot.getLong("FollowingCount").intValue();
-
+                    targFollowerCount = retFollowers;
+                    otherUserName = retUsername;
                     username.setText(retUsername);
                     followercount.setText(Integer.toString(retFollowers));
                     followingcount.setText(Integer.toString(retFollowing));
@@ -183,7 +198,75 @@ public class OtherUserProfileActivity extends AppCompatActivity {
         return data;
     }
 
-    public void followUser(){
+    //function to check if current user follows this user, also gets curr user's following count
+    public void checkOwnFollows(){
+        fStore.collection("UserDetails").document(fUser.getUid()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull @NotNull Task<DocumentSnapshot> task) {
+                if(task.isSuccessful()){
+                    DocumentSnapshot snapshot = task.getResult();
+                    ArrayList<String> followList = (ArrayList<String>) snapshot.get("FollowingList");
+                    ownFollowingCount = followList.size();
+                    tbFollow.setChecked(followList.contains(userID));
+                } else {
+                    Toast.makeText(OtherUserProfileActivity.this, "Error! " + task.getException().getMessage(),
+                            Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
 
+    public void followUser(boolean followOrNot){
+        Map<String, Object> addedOwnFollowing = new HashMap<>();
+        Map<String, Object> addedTargFollower = new HashMap<>();
+
+        if(followOrNot) {
+            //to be added in current logged in user's following list
+            addedOwnFollowing.put("FollowingList", FieldValue.arrayUnion(userID));
+            ownFollowingCount = ownFollowingCount + 1;
+
+            //to be added in the target user's follower list
+            addedTargFollower.put("FollowerList", FieldValue.arrayUnion(fUser.getUid()));
+            targFollowerCount = targFollowerCount + 1;
+        } else {
+            //to be added in current logged in user's following list
+            addedOwnFollowing.put("FollowingList", FieldValue.arrayRemove(userID));
+            ownFollowingCount = ownFollowingCount - 1;
+
+            //to be added in the target user's follower list
+            addedTargFollower.put("FollowerList", FieldValue.arrayRemove(fUser.getUid()));
+            targFollowerCount = targFollowerCount - 1;
+        }
+        addedOwnFollowing.put("FollowingCount", ownFollowingCount);
+        addedTargFollower.put("FollowerCount", targFollowerCount);
+        //update own following count first
+        fStore.collection("UserDetails").document(fUser.getUid()).update(addedOwnFollowing).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull @NotNull Task<Void> task) {
+                if(task.isSuccessful()){
+                    fStore.collection("UserDetails").document(userID).update(addedTargFollower).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull @NotNull Task<Void> task) {
+                            if(task.isSuccessful()){
+                                if(followOrNot) {
+                                    Toast.makeText(OtherUserProfileActivity.this, "You're now following " + otherUserName + "!",
+                                            Toast.LENGTH_SHORT).show();
+                                } else {
+                                    Toast.makeText(OtherUserProfileActivity.this, "You've unfollowed " + otherUserName + ".",
+                                            Toast.LENGTH_SHORT).show();
+                                }
+                                followercount.setText(Integer.toString(targFollowerCount));
+                            } else {
+                                Toast.makeText(OtherUserProfileActivity.this, "Error! " + task.getException().getMessage(),
+                                        Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+                } else {
+                    Toast.makeText(OtherUserProfileActivity.this, "Error! " + task.getException().getMessage(),
+                            Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 }
