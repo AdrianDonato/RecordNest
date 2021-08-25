@@ -1,6 +1,7 @@
 package com.mobdeve.s18.recordnest.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.mobdeve.s18.recordnest.OtherUserProfileActivity;
 import com.mobdeve.s18.recordnest.R;
 import com.mobdeve.s18.recordnest.model.Review;
 
@@ -65,6 +67,7 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewView
             public void onComplete(@NonNull @NotNull Task<DocumentSnapshot> task) {
                 if(task.isSuccessful()){
                     DocumentSnapshot snapshot = task.getResult();
+                    String retUserID = snapshot.getId();
                     String retUsername = snapshot.getString("Username");
                     String retImgLink = snapshot.getString("ProfPicURL");
 
@@ -73,9 +76,28 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewView
                     } else {
                         holder.review_userImage.setImageResource(reviewArrayList.get(position).getUserImageId());
                     }
+
                     holder.review.setText(reviewArrayList.get(position).getReviewContent());
                     holder.review_username.setText(retUsername);
                     holder.rating.setText(String.valueOf(reviewArrayList.get(position).getRating()));
+
+                    holder.review_userImage.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent i = new Intent(v.getContext(), OtherUserProfileActivity.class);
+                            i.putExtra("KEY_OTHER_USERID", retUserID);
+                            v.getContext().startActivity(i);
+                        }
+                    });
+
+                    holder.review_username.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent i = new Intent(v.getContext(), OtherUserProfileActivity.class);
+                            i.putExtra("KEY_OTHER_USERID", retUserID);
+                            v.getContext().startActivity(i);
+                        }
+                    });
                 }
             }
         });

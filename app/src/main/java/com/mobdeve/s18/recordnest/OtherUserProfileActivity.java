@@ -18,6 +18,8 @@ import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -40,6 +42,7 @@ public class OtherUserProfileActivity extends AppCompatActivity {
     private ImageView userimg;
     private ArrayList<Collection> collArray;
     private FirebaseFirestore fStore;
+    private FirebaseUser fUser;
     private String userID;
 
     CollectionAdapter collectionAdapter;
@@ -71,7 +74,12 @@ public class OtherUserProfileActivity extends AppCompatActivity {
         this.username.setText(name);
         this.userimg.setImageResource(cover);
 
-        this.userID = "4F41MMsEjSWDxzkVHcTDvlj8BLD3";
+        this.userID = i.getStringExtra(UserListAdapter.KEY_OTHER_USERID);
+        fUser = FirebaseAuth.getInstance().getCurrentUser();
+        if(userID.equals(fUser.getUid())){
+            startActivity(new Intent(getApplicationContext(), UserProfileActivity.class));
+        }
+
         initializeUserData(userID);
 
 

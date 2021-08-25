@@ -95,9 +95,9 @@ public class FollowingActivity extends AppCompatActivity {
     public ArrayList<UserList> initializeData() {
         // get data from database here?
         ArrayList<UserList> data = new ArrayList<>();
-        data.add(new UserList(R.drawable.album1, "ina"));
-        data.add(new UserList(R.drawable.album2, "pat"));
-        data.add(new UserList(R.drawable.album3, "eva"));
+        data.add(new UserList(R.drawable.album1, "ina", "qbvxJbLdBXWq0CYqEeoSqV91ALs2"));
+        data.add(new UserList(R.drawable.album2, "pat", "sGMkuJr9S3TiTRfAg4inkCO5DnH2"));
+        data.add(new UserList(R.drawable.album3, "eva", "4F41MMsEjSWDxzkVHcTDvlj8BLD3"));
 
         return data;
     }

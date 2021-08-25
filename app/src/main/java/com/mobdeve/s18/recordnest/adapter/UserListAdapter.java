@@ -22,6 +22,7 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.UserLi
 
     public static final String KEY_OTHER_USERNAME = "KEY_OTHER_USERNAME";
     public static final String KEY_OTHER_USERIMG = "KEY_OTHER_USERIMG";
+    public static final String KEY_OTHER_USERID = "KEY_OTHER_USERID";
 
     public UserListAdapter(Context context, ArrayList<UserList> userArrayList) {
         this.userArrayList = userArrayList;
@@ -53,6 +54,7 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.UserLi
 
                 i.putExtra(KEY_OTHER_USERNAME, userArrayList.get(viewHolder.getBindingAdapterPosition()).getUserName());
                 i.putExtra(KEY_OTHER_USERIMG, userArrayList.get(viewHolder.getBindingAdapterPosition()).getUserImage());
+                i.putExtra(KEY_OTHER_USERID, userArrayList.get(viewHolder.getBindingAdapterPosition()).getUserID());
                 v.getContext().startActivity(i);
             }
         });
