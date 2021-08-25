@@ -27,7 +27,6 @@
         android:layout_height="match_parent"
         android:layout_marginTop="76dp"
         android:nestedScrollingEnabled="false"
-        android:padding="20dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@id/et_search"/>
 

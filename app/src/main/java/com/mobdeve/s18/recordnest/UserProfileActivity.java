@@ -10,6 +10,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -53,6 +54,7 @@ public class UserProfileActivity extends AppCompatActivity {
     Button btn_edit, btn_addcol, btn_close, btn_save, btn_logout;
     EditText et_col;
     TextView tv_username;
+    LinearLayout following;
 
     AlertDialog dialog;
 
@@ -75,6 +77,16 @@ public class UserProfileActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(UserProfileActivity.this, EditProfileActivity.class);
+                startActivity(i);
+            }
+        });
+
+        following = findViewById(R.id.ll_following);
+
+        following.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(UserProfileActivity.this, FollowingActivity.class);
                 startActivity(i);
             }
         });
@@ -142,6 +154,8 @@ public class UserProfileActivity extends AppCompatActivity {
                 return false;
             }
         });
+
+
     }
 
     @Override
