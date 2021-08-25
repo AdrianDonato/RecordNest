@@ -7,15 +7,24 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.mobdeve.s18.recordnest.R;
 import com.mobdeve.s18.recordnest.model.Review;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 
 public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewViewHolder> {
     private ArrayList<Review> reviewArrayList;
+    private DocumentReference usernameDocRef;
     private Context context;
 
     public ReviewAdapter(Context context, ArrayList<Review> reviewArrayList) {
@@ -48,10 +57,20 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewView
         //holder.setArtistAlbum(this.albumArrayList.get(position).getArtist());
         //holder.setTracklistItem(this.tracklistArrayList.get(position).getTrackTitle());
 
-        holder.review_userImage.setImageResource(reviewArrayList.get(position).getUserImageId());
-        holder.review.setText(reviewArrayList.get(position).getReviewContent());
-        holder.review_username.setText(reviewArrayList.get(position).getUsername());
-        holder.rating.setText(String.valueOf(reviewArrayList.get(position).getRating()));
+        FirebaseFirestore.getInstance().collection("UserDetails").document(
+                reviewArrayList.get(position).getUsername()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull @NotNull Task<DocumentSnapshot> task) {
+                if(task.isSuccessful()){
+                    DocumentSnapshot snapshot = task.getResult();
+                    String retUsername = snapshot.getString("Username");
+                    holder.review_userImage.setImageResource(reviewArrayList.get(position).getUserImageId());
+                    holder.review.setText(reviewArrayList.get(position).getReviewContent());
+                    holder.review_username.setText(retUsername);
+                    holder.rating.setText(String.valueOf(reviewArrayList.get(position).getRating()));
+                }
+            }
+        });
     }
 
     protected class ReviewViewHolder extends RecyclerView.ViewHolder{

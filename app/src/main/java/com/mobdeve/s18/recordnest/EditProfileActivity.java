@@ -24,18 +24,23 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.mobdeve.s18.recordnest.databinding.ActivityEditProfileBinding;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 public class EditProfileActivity extends AppCompatActivity {
     private ActivityEditProfileBinding binding;
     private Uri newPicURL;
+    private String userID;
     private String newUsername, newEmail, newPassword;
     private TextView etUsername, etEmail, etPassword;
     private FirebaseUser fUser;
+    private FirebaseFirestore fStore;
 
     ImageView iv_profilepic;
     Button btn_editpic, btn_save;
@@ -139,12 +144,14 @@ public class EditProfileActivity extends AppCompatActivity {
 
     public void readCurrUserData(){
         fUser = FirebaseAuth.getInstance().getCurrentUser();
+        fStore = FirebaseFirestore.getInstance();
         String currUsername = fUser.getDisplayName();
         String currEmail = fUser.getEmail();
+        userID = fUser.getUid();
 
         etUsername.setText(currUsername);
         etEmail.setText(currEmail);
-
+        /*
         if(fUser.getPhotoUrl() != null){
             Uri currPic = fUser.getPhotoUrl();
             try {
@@ -154,7 +161,7 @@ public class EditProfileActivity extends AppCompatActivity {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }
+        } */
     }
 
     public void updateUserProfile(){
@@ -162,10 +169,12 @@ public class EditProfileActivity extends AppCompatActivity {
         newPassword = etPassword.getText().toString().trim();
         newEmail = etEmail.getText().toString().trim();
 
-
         UserProfileChangeRequest profileUpdate = new UserProfileChangeRequest.Builder()
                 .setDisplayName(newUsername)
                 .setPhotoUri(newPicURL).build();
+
+        Map<String, Object> userDetailsUpdates = new HashMap<>();
+        userDetailsUpdates.put("Username", newUsername);
 
         fUser.updateProfile(profileUpdate).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
@@ -174,22 +183,27 @@ public class EditProfileActivity extends AppCompatActivity {
                     fUser.updateEmail(newEmail).addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void unused) {
-                            if(!(newPassword.equals(""))){
-                                fUser.updatePassword(newPassword).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                    @Override
-                                    public void onSuccess(Void unused) {
+                            fStore.collection("UserDetails").document(userID).update(userDetailsUpdates).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void unused) {
+                                    if(!(newPassword.equals(""))){
+                                        fUser.updatePassword(newPassword).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void unused) {
+                                                Toast.makeText(EditProfileActivity.this, "Successfully edited profile!",
+                                                        Toast.LENGTH_SHORT).show();
+                                                Intent i = new Intent(EditProfileActivity.this, UserProfileActivity.class);
+                                                startActivity(i);
+                                            }
+                                        });
+                                    } else {
                                         Toast.makeText(EditProfileActivity.this, "Successfully edited profile!",
                                                 Toast.LENGTH_SHORT).show();
                                         Intent i = new Intent(EditProfileActivity.this, UserProfileActivity.class);
                                         startActivity(i);
                                     }
-                                });
-                            } else {
-                                Toast.makeText(EditProfileActivity.this, "Successfully edited profile!",
-                                        Toast.LENGTH_SHORT).show();
-                                Intent i = new Intent(EditProfileActivity.this, UserProfileActivity.class);
-                                startActivity(i);
-                            }
+                                }
+                            });
                         }
                     });
                 } else {

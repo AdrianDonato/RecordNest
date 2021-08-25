@@ -263,7 +263,7 @@ public class AlbumProfileActivity extends AppCompatActivity {
                         double retRatingDbl = Double.parseDouble(retrievedRating);
                         int retRatingInt = (int) retRatingDbl;
                         reviewList.add(new Review(retRatingInt,
-                                R.drawable.album1, documentSnapshot.getString("Username"),
+                                R.drawable.album1, documentSnapshot.getString("UserID"),
                                 documentSnapshot.getString("ReviewContent")));
                         reviewList.get(reviewList.size()-1).setReviewIDString(reviewID);
                     }
@@ -371,7 +371,7 @@ public class AlbumProfileActivity extends AppCompatActivity {
             updatedRating.put("RatingCount", RatingsCount);
 
             Map<String, Object> reviewSubmitted = new HashMap<>();
-            reviewSubmitted.put("Username", mUsername);
+            reviewSubmitted.put("UserID", mUserID);
             reviewSubmitted.put("AlbumID", obtainedId);
             reviewSubmitted.put("Rating", rating);
             reviewSubmitted.put("ReviewContent", reviewContent);
@@ -415,7 +415,7 @@ public class AlbumProfileActivity extends AppCompatActivity {
             updatedRating.put("RatingCount", newRatingsCount);
 
             Map<String, Object> reviewSubmitted = new HashMap<>();
-            reviewSubmitted.put("Username", mUsername);
+            reviewSubmitted.put("UserID", mUserID);
             reviewSubmitted.put("AlbumID", obtainedId);
             reviewSubmitted.put("Rating", rating);
             reviewSubmitted.put("ReviewContent", reviewContent);
@@ -462,7 +462,7 @@ public class AlbumProfileActivity extends AppCompatActivity {
         collIDs.add("placeholder"); //filler data, ensures both arrays have same size and indexes
 
         fStore.collection("AlbumCollection")
-                .whereEqualTo("Username", mUsername).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                .whereEqualTo("UserID", mUserID).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull @NotNull Task<QuerySnapshot> task) {
                 if(task.isSuccessful()){
@@ -546,7 +546,7 @@ public class AlbumProfileActivity extends AppCompatActivity {
         boolean reviewCheck = false;
         for(int i = 0; i < reviewList.size(); i++){
             String userName = reviewList.get(i).getUsername();
-            if(userName.equals(mUsername)){
+            if(userName.equals(mUserID)){
                 userReviewIndex = i;
                 reviewCheck = true;
             }
