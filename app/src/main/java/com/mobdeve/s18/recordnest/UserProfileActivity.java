@@ -1,15 +1,19 @@
 package com.mobdeve.s18.recordnest;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,6 +37,7 @@ import com.mobdeve.s18.recordnest.model.Collection;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -53,6 +58,7 @@ public class UserProfileActivity extends AppCompatActivity {
     Button btn_edit, btn_addcol, btn_close, btn_save, btn_logout;
     EditText et_col;
     TextView tv_username;
+    ImageView ivProfilePic;
 
     AlertDialog dialog;
 
@@ -90,6 +96,7 @@ public class UserProfileActivity extends AppCompatActivity {
         });
 
         tv_username = view.findViewById(R.id.profile_username);
+        ivProfilePic = view.findViewById(R.id.profile_userImage);
 
         tv_username.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -289,5 +296,18 @@ public class UserProfileActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    public void setProfilePic(){
+        if(mUser.getPhotoUrl() != null){
+            Uri currPic = mUser.getPhotoUrl();
+            try {
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), currPic);
+                bitmap = Bitmap.createScaledBitmap(bitmap,  600 ,600, true);
+                ivProfilePic.setImageBitmap(bitmap); //trying bitmap
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }
