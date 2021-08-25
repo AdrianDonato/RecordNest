@@ -462,7 +462,7 @@ public class AlbumProfileActivity extends AppCompatActivity {
         collIDs.add("placeholder"); //filler data, ensures both arrays have same size and indexes
 
         fStore.collection("AlbumCollection")
-                .whereEqualTo("Username", mUsername).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                .whereEqualTo("UserID", mUserID).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull @NotNull Task<QuerySnapshot> task) {
                 if(task.isSuccessful()){

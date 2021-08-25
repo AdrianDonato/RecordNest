@@ -238,7 +238,7 @@ public class UserProfileActivity extends AppCompatActivity {
     public void initializeDataCollection() {
         collArray = new ArrayList<>();
         fStore.collection("AlbumCollection")
-                .whereEqualTo("Username", mUser.getDisplayName()).get()
+                .whereEqualTo("UserID", mUserID).get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull @NotNull Task<QuerySnapshot> task) {
@@ -278,7 +278,7 @@ public class UserProfileActivity extends AppCompatActivity {
 
         newColl.put("Title", collTitle);
         newColl.put("Description", collDesc);
-        newColl.put("Username", mUsername);
+        newColl.put("UserID", mUserID);
         newColl.put("AlbumIDList", newCollAlbumID);
         newColl.put("ImageURLList", newCollImgURL);
 
