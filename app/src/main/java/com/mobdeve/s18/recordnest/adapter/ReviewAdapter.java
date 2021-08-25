@@ -10,6 +10,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
@@ -64,7 +65,13 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewView
                 if(task.isSuccessful()){
                     DocumentSnapshot snapshot = task.getResult();
                     String retUsername = snapshot.getString("Username");
-                    holder.review_userImage.setImageResource(reviewArrayList.get(position).getUserImageId());
+                    String retImgLink = snapshot.getString("ProfPicURL");
+
+                    if(!(retImgLink.equals("placeholder"))){
+                        Glide.with(holder.review_userImage.getContext()).load(retImgLink).into(holder.review_userImage);
+                    } else {
+                        holder.review_userImage.setImageResource(reviewArrayList.get(position).getUserImageId());
+                    }
                     holder.review.setText(reviewArrayList.get(position).getReviewContent());
                     holder.review_username.setText(retUsername);
                     holder.rating.setText(String.valueOf(reviewArrayList.get(position).getRating()));

@@ -17,6 +17,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -24,11 +26,16 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.mobdeve.s18.recordnest.databinding.ActivityEditProfileBinding;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -41,6 +48,8 @@ public class EditProfileActivity extends AppCompatActivity {
     private TextView etUsername, etEmail, etPassword;
     private FirebaseUser fUser;
     private FirebaseFirestore fStore;
+    private FirebaseStorage fStorage;
+    private Bitmap bitmap;
 
     ImageView iv_profilepic;
     Button btn_editpic, btn_save;
@@ -56,6 +65,8 @@ public class EditProfileActivity extends AppCompatActivity {
         //setContentView(R.layout.activity_main);
         View view = binding.getRoot();
         setContentView(view);
+
+        fStorage = FirebaseStorage.getInstance();
 
         iv_profilepic = findViewById(R.id.iv_profile_picture);
         btn_save = findViewById(R.id.btn_save_edit_profile);
@@ -131,14 +142,12 @@ public class EditProfileActivity extends AppCompatActivity {
         selectedImage = data == null ? null : data.getData();
         newPicURL = selectedImage;
         try {
-            Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImage);
+            bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImage);
             bitmap = Bitmap.createScaledBitmap(bitmap,  600 ,600, true);
             iv_profilepic.setImageBitmap(bitmap); //trying bitmap
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-
 
     }
 
@@ -151,6 +160,16 @@ public class EditProfileActivity extends AppCompatActivity {
 
         etUsername.setText(currUsername);
         etEmail.setText(currEmail);
+
+        fStore.collection("UserDetails").document(userID).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                String picURL = documentSnapshot.getString("ProfPicURL");
+                if(!(picURL.equals("placeholder"))) {
+                    Glide.with(getApplicationContext()).load(picURL).into(iv_profilepic);
+                }
+            }
+        });
         /*
         if(fUser.getPhotoUrl() != null){
             Uri currPic = fUser.getPhotoUrl();
@@ -169,43 +188,78 @@ public class EditProfileActivity extends AppCompatActivity {
         newPassword = etPassword.getText().toString().trim();
         newEmail = etEmail.getText().toString().trim();
 
-        UserProfileChangeRequest profileUpdate = new UserProfileChangeRequest.Builder()
-                .setDisplayName(newUsername)
-                .setPhotoUri(newPicURL).build();
+        String pathLoc = "profilepics/" + userID + ".jpg";
 
-        Map<String, Object> userDetailsUpdates = new HashMap<>();
-        userDetailsUpdates.put("Username", newUsername);
+        StorageReference storeRef = fStorage.getReference().child(pathLoc);
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 80, baos);
+        byte[] profPicData = baos.toByteArray();
 
-        fUser.updateProfile(profileUpdate).addOnCompleteListener(new OnCompleteListener<Void>() {
+        UploadTask uploadTask = storeRef.putBytes(profPicData);
+
+        Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
             @Override
-            public void onComplete(@NonNull @NotNull Task<Void> task) {
+            public Task<Uri> then(@NonNull @NotNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                if (!task.isSuccessful()) {
+                    throw task.getException();
+                }
+
+                // Continue with the task to get the download URL
+                return storeRef.getDownloadUrl();
+
+            }
+        }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+            @Override
+            public void onComplete(@NonNull @NotNull Task<Uri> task) {
                 if(task.isSuccessful()){
-                    fUser.updateEmail(newEmail).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    Uri picURL = task.getResult();
+                    String picURLStr = picURL.toString();
+
+                    UserProfileChangeRequest profileUpdate = new UserProfileChangeRequest.Builder()
+                            .setDisplayName(newUsername).setPhotoUri(picURL)
+                            .build();
+
+                    Map<String, Object> userDetailsUpdates = new HashMap<>();
+                    userDetailsUpdates.put("Username", newUsername);
+                    userDetailsUpdates.put("ProfPicURL", picURLStr);
+
+                    fUser.updateProfile(profileUpdate).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
-                        public void onSuccess(Void unused) {
-                            fStore.collection("UserDetails").document(userID).update(userDetailsUpdates).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                @Override
-                                public void onSuccess(Void unused) {
-                                    if(!(newPassword.equals(""))){
-                                        fUser.updatePassword(newPassword).addOnSuccessListener(new OnSuccessListener<Void>() {
+                        public void onComplete(@NonNull @NotNull Task<Void> task) {
+                            if(task.isSuccessful()){
+                                fUser.updateEmail(newEmail).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void unused) {
+                                        fStore.collection("UserDetails").document(userID).update(userDetailsUpdates).addOnSuccessListener(new OnSuccessListener<Void>() {
                                             @Override
                                             public void onSuccess(Void unused) {
-                                                Toast.makeText(EditProfileActivity.this, "Successfully edited profile!",
-                                                        Toast.LENGTH_SHORT).show();
-                                                Intent i = new Intent(EditProfileActivity.this, UserProfileActivity.class);
-                                                startActivity(i);
+                                                if(!(newPassword.equals(""))){
+                                                    fUser.updatePassword(newPassword).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                        @Override
+                                                        public void onSuccess(Void unused) {
+                                                            Toast.makeText(EditProfileActivity.this, "Successfully edited profile!",
+                                                                    Toast.LENGTH_SHORT).show();
+                                                            Intent i = new Intent(EditProfileActivity.this, UserProfileActivity.class);
+                                                            startActivity(i);
+                                                        }
+                                                    });
+                                                } else {
+                                                    Toast.makeText(EditProfileActivity.this, "Successfully edited profile!",
+                                                            Toast.LENGTH_SHORT).show();
+                                                    Intent i = new Intent(EditProfileActivity.this, UserProfileActivity.class);
+                                                    startActivity(i);
+                                                }
                                             }
                                         });
-                                    } else {
-                                        Toast.makeText(EditProfileActivity.this, "Successfully edited profile!",
-                                                Toast.LENGTH_SHORT).show();
-                                        Intent i = new Intent(EditProfileActivity.this, UserProfileActivity.class);
-                                        startActivity(i);
                                     }
-                                }
-                            });
+                                });
+                            } else {
+                                Toast.makeText(EditProfileActivity.this, "Error! " + task.getException().getMessage(),
+                                        Toast.LENGTH_SHORT).show();
+                            }
                         }
                     });
+
                 } else {
                     Toast.makeText(EditProfileActivity.this, "Error! " + task.getException().getMessage(),
                             Toast.LENGTH_SHORT).show();

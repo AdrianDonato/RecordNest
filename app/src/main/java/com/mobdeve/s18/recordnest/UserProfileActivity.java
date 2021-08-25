@@ -22,12 +22,15 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -97,7 +100,6 @@ public class UserProfileActivity extends AppCompatActivity {
 
         tv_username = view.findViewById(R.id.profile_username);
         ivProfilePic = view.findViewById(R.id.profile_userImage);
-
         tv_username.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -113,6 +115,7 @@ public class UserProfileActivity extends AppCompatActivity {
 
         mUserID = mUser.getUid();
         mUsername = mUser.getDisplayName();
+        setProfilePic();
 
         Intent prevPage = getIntent();
         profileID = prevPage.getStringExtra("profileUID");
@@ -299,15 +302,14 @@ public class UserProfileActivity extends AppCompatActivity {
     }
 
     public void setProfilePic(){
-        if(mUser.getPhotoUrl() != null){
-            Uri currPic = mUser.getPhotoUrl();
-            try {
-                Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), currPic);
-                bitmap = Bitmap.createScaledBitmap(bitmap,  600 ,600, true);
-                ivProfilePic.setImageBitmap(bitmap); //trying bitmap
-            } catch (IOException e) {
-                e.printStackTrace();
+        fStore.collection("UserDetails").document(mUserID).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                String profURL = documentSnapshot.getString("ProfPicURL");
+                if(!(profURL.equals("placeholder"))){
+                    Glide.with(getApplicationContext()).load(profURL).into(ivProfilePic);
+                }
             }
-        }
+        });
     }
 }
