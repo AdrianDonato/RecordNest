@@ -43,11 +43,6 @@ public class GenreAdapter extends RecyclerView.Adapter<GenreAdapter.GenreViewHol
     @Override
     public void onBindViewHolder(GenreAdapter.GenreViewHolder holder, int position) {
 
-        //holder.setImgAlbum(this.albumArrayList.get(position).getImageId());
-        //holder.setNameAlbum(this.albumArrayList.get(position).getAlbumName());
-        //holder.setArtistAlbum(this.albumArrayList.get(position).getArtist());
-        //holder.setGenreItem(this.genreArrayList.get(position).getTrackTitle());
-
         holder.genre_item.setText(genreArrayList.get(position).getGenre());
     }
 

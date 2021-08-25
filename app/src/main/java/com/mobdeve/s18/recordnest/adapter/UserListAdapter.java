@@ -1,6 +1,7 @@
 package com.mobdeve.s18.recordnest.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +10,7 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.mobdeve.s18.recordnest.OtherUserProfileActivity;
 import com.mobdeve.s18.recordnest.R;
 import com.mobdeve.s18.recordnest.model.UserList;
 
@@ -17,6 +19,9 @@ import java.util.ArrayList;
 public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.UserListViewHolder> {
     private ArrayList<UserList> userArrayList;
     private Context context;
+
+    public static final String KEY_OTHER_USERNAME = "KEY_OTHER_USERNAME";
+    public static final String KEY_OTHER_USERIMG = "KEY_OTHER_USERIMG";
 
     public UserListAdapter(Context context, ArrayList<UserList> userArrayList) {
         this.userArrayList = userArrayList;
@@ -41,16 +46,22 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.UserLi
 
         UserListAdapter.UserListViewHolder viewHolder = new UserListAdapter.UserListViewHolder(view);
 
+        viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(v.getContext(), OtherUserProfileActivity.class);
+
+                i.putExtra(KEY_OTHER_USERNAME, userArrayList.get(viewHolder.getBindingAdapterPosition()).getUserName());
+                i.putExtra(KEY_OTHER_USERIMG, userArrayList.get(viewHolder.getBindingAdapterPosition()).getUserImage());
+                v.getContext().startActivity(i);
+            }
+        });
+
         return viewHolder;
     }
 
     @Override
     public void onBindViewHolder(UserListAdapter.UserListViewHolder holder, int position) {
-
-        //holder.setImgAlbum(this.albumArrayList.get(position).getImageId());
-        //holder.setNameAlbum(this.albumArrayList.get(position).getAlbumName());
-        //holder.setArtistAlbum(this.albumArrayList.get(position).getArtist());
-        //holder.setTracklistItem(this.tracklistArrayList.get(position).getTrackTitle());
 
         holder.search_userImage.setImageResource(userArrayList.get(position).getUserImage());
         holder.search_userName.setText(userArrayList.get(position).getUserName());

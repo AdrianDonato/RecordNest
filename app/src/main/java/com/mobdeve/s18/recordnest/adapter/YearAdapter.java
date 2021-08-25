@@ -43,11 +43,6 @@ public class YearAdapter extends RecyclerView.Adapter<YearAdapter.YearViewHolder
     @Override
     public void onBindViewHolder(YearAdapter.YearViewHolder holder, int position) {
 
-        //holder.setImgAlbum(this.albumArrayList.get(position).getImageId());
-        //holder.setNameAlbum(this.albumArrayList.get(position).getAlbumName());
-        //holder.setArtistAlbum(this.albumArrayList.get(position).getArtist());
-        //holder.setYearItem(this.yearArrayList.get(position).getTrackTitle());
-
         holder.year_item.setText(yearArrayList.get(position).getYear());
     }
 
