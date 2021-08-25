@@ -71,6 +71,7 @@
             android:layout_marginRight="10dp">
 
             <TextView
+                android:id="@+id/tv_ou_followers"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="104"
@@ -96,6 +97,7 @@
             android:layout_marginLeft="10dp">
 
             <TextView
+                android:id="@+id/tv_ou_following"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="104"
