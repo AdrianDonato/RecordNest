@@ -158,6 +158,7 @@ public class EditProfileActivity extends AppCompatActivity {
         String currEmail = fUser.getEmail();
         userID = fUser.getUid();
 
+
         etUsername.setText(currUsername);
         etEmail.setText(currEmail);
 

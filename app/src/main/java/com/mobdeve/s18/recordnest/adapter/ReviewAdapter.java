@@ -58,6 +58,7 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewView
         //holder.setArtistAlbum(this.albumArrayList.get(position).getArtist());
         //holder.setTracklistItem(this.tracklistArrayList.get(position).getTrackTitle());
 
+
         FirebaseFirestore.getInstance().collection("UserDetails").document(
                 reviewArrayList.get(position).getUsername()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override

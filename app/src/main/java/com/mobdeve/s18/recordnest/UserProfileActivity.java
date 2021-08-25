@@ -312,6 +312,7 @@ public class UserProfileActivity extends AppCompatActivity {
                 }
             }
         });
+
     }
 
     public void setProfilePic(){
