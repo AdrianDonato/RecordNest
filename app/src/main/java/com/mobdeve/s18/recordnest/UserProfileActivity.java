@@ -61,7 +61,7 @@ public class UserProfileActivity extends AppCompatActivity {
 
     Button btn_edit, btn_addcol, btn_close, btn_save, btn_logout;
     EditText et_col;
-    TextView tv_username;
+    TextView tv_username, tv_followers, tv_following;
     ImageView ivProfilePic;
     LinearLayout following;
 
@@ -91,6 +91,7 @@ public class UserProfileActivity extends AppCompatActivity {
         });
 
 
+
         following = findViewById(R.id.ll_following);
 
         following.setOnClickListener(new View.OnClickListener() {
@@ -101,6 +102,8 @@ public class UserProfileActivity extends AppCompatActivity {
             }
         });
 
+        tv_followers = findViewById(R.id.tv_own_followers);
+        tv_following = findViewById(R.id.tv_own_following);
 
         btn_addcol = view.findViewById(R.id.btn_add_collection);
 
@@ -128,7 +131,7 @@ public class UserProfileActivity extends AppCompatActivity {
 
         mUserID = mUser.getUid();
         mUsername = mUser.getDisplayName();
-        setProfilePic();
+        setProfileDataFStore();
 
         Intent prevPage = getIntent();
         profileID = prevPage.getStringExtra("profileUID");
@@ -315,14 +318,20 @@ public class UserProfileActivity extends AppCompatActivity {
 
     }
 
-    public void setProfilePic(){
+    public void setProfileDataFStore(){
         fStore.collection("UserDetails").document(mUserID).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 String profURL = documentSnapshot.getString("ProfPicURL");
+                int followercount = documentSnapshot.getLong("FollowerCount").intValue();
+                int followingcount= documentSnapshot.getLong("FollowingCount").intValue();
+
                 if(!(profURL.equals("placeholder"))){
                     Glide.with(getApplicationContext()).load(profURL).into(ivProfilePic);
                 }
+
+                tv_followers.setText(Integer.toString(followercount));
+                tv_following.setText(Integer.toString(followingcount));
             }
         });
     }

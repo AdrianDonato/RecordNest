@@ -83,9 +83,10 @@
             android:layout_marginRight="10dp">
 
             <TextView
+                android:id="@+id/tv_own_followers"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="104"
+                android:text="-"
                 android:background="@drawable/followers_text_con"
                 android:textAlignment="center"/>
 
@@ -109,9 +110,10 @@
             android:layout_marginLeft="10dp">
 
             <TextView
+                android:id="@+id/tv_own_following"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="104"
+                android:text="-"
                 android:background="@drawable/followers_text_con"
                 android:textAlignment="center"/>
 
