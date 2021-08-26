@@ -1,20 +1,25 @@
 package com.mobdeve.s18.recordnest;
 
 import android.content.Intent;
+import android.media.Image;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -32,6 +37,8 @@ public class FollowingActivity extends AppCompatActivity {
 
     private UserListAdapter userListAdapter;
     private ArrayList<UserList> followingUsers;
+    private ImageView ownImage;
+    private TextView ownUsername, ownFollowers, ownFollowing;
 
     private FirebaseFirestore fStore;
     private String ownUserID;
@@ -96,10 +103,43 @@ public class FollowingActivity extends AppCompatActivity {
                 return false;
             }
         });
-
+        initOwnProfile(ownUserID);
         initializeUserData(ownUserID);
     }
 
+    //initialize own profile (username, profile picture, etc)
+    public void initOwnProfile(String userID){
+        this.ownImage = findViewById(R.id.following_own_image);
+        this.ownUsername = findViewById(R.id.profile_username);
+        this.ownFollowers = findViewById(R.id.following_own_follower);
+        this.ownFollowing = findViewById(R.id.following_own_following);
+
+        fStore.collection("UserDetails").document(userID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull @NotNull Task<DocumentSnapshot> task) {
+                if(task.isSuccessful()){
+                    DocumentSnapshot snapshot = task.getResult();
+                    String retImg = snapshot.getString("ProfPicURL");
+                    String retUsername = snapshot.getString("Username");
+                    int fercount = snapshot.getLong("FollowerCount").intValue();
+                    int fingcount= snapshot.getLong("FollowingCount").intValue();
+
+                    ownUsername.setText(retUsername);
+                    ownFollowers.setText(Integer.toString(fercount));
+                    ownFollowing.setText(Integer.toString(fingcount));
+
+                    if(!(retImg.equals("placeholder"))){
+                        Glide.with(getApplicationContext())
+                                .load(retImg).into(ownImage);
+                    }
+                } else {
+
+                }
+            }
+        });
+    }
+
+    //generate followed users from database with this function
     public void initializeUserData(String userID){
         followingUsers = new ArrayList<>();
         fStore.collection("UserDetails").whereArrayContains("FollowerList", userID).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -123,6 +163,7 @@ public class FollowingActivity extends AppCompatActivity {
         });
     }
 
+    //initialize user adapter after getting users from db
     public void initUsersAdapter(){
         userListAdapter = new UserListAdapter(getApplicationContext(), followingUsers);
 
@@ -132,16 +173,6 @@ public class FollowingActivity extends AppCompatActivity {
         binding.rvFollowinglist.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
         //findViewById(R.id.tv_album_name).setVisibility(View.VISIBLE);;
         binding.rvFollowinglist.setAdapter(userListAdapter);
-    }
-
-    public ArrayList<UserList> initializeData() {
-        // get data from database here?
-        ArrayList<UserList> data = new ArrayList<>();
-        data.add(new UserList(R.drawable.album1, "ina", "qbvxJbLdBXWq0CYqEeoSqV91ALs2"));
-        data.add(new UserList(R.drawable.album2, "pat", "sGMkuJr9S3TiTRfAg4inkCO5DnH2"));
-        data.add(new UserList(R.drawable.album3, "eva", "4F41MMsEjSWDxzkVHcTDvlj8BLD3"));
-
-        return data;
     }
 /*
     public void onBackPressed(){
