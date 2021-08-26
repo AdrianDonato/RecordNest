@@ -5,12 +5,18 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.text.InputFilter;
+import android.text.InputType;
+import android.util.TypedValue;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -24,8 +30,12 @@ public class SubmitAlbumActivity extends AppCompatActivity{
     private ActivitySubmitAlbumBinding binding;
 
     public static final String KEY_User_Document1 = "doc1";
+
     ImageView iv_cover;
-    Button btn_upload, btn_submit;
+    Button btn_upload, btn_submit, btn_tracklist;
+    LinearLayout ll_tracklist;
+
+    private int hint=0;
 
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +71,18 @@ public class SubmitAlbumActivity extends AppCompatActivity{
             }
         });
 
+        btn_tracklist = findViewById(R.id.btn_addtracklist);
+        ll_tracklist = findViewById(R.id.ll_tracklist);
+
+        btn_tracklist.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                createEditTextView();
+            }
+        });
+
+
+
         BottomNavigationView bottomNavigationView = findViewById(R.id.nav);
 
         bottomNavigationView.setSelectedItemId(R.id.invisible);
@@ -90,6 +112,27 @@ public class SubmitAlbumActivity extends AppCompatActivity{
 
     }
 
+    protected void createEditTextView() {
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams (
+                RelativeLayout.LayoutParams.WRAP_CONTENT,
+                RelativeLayout.LayoutParams.WRAP_CONTENT);
+        params.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+        params.setMargins(0,10,0,10);
+        EditText edittTxt = new EditText(this);
+        //edittTxt = findViewById(R.id.et_tracklist);
+        int maxLength = 100;
+        hint++;
+        edittTxt.setHint("Track "+hint);
+        edittTxt.setLayoutParams(params);
+        // edtTxt.setBackgroundColor(Color.WHITE);
+        edittTxt.setInputType(InputType.TYPE_CLASS_TEXT);
+        edittTxt.setTextSize(TypedValue.COMPLEX_UNIT_SP,18);
+        edittTxt.setId(hint);
+        InputFilter[] fArray = new InputFilter[1];
+        fArray[0] = new InputFilter.LengthFilter(maxLength);
+        edittTxt.setFilters(fArray);
+        ll_tracklist.addView(edittTxt);
+    }
 
     private void selectImage() {
         Intent intent = new   Intent(Intent.ACTION_PICK,android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
