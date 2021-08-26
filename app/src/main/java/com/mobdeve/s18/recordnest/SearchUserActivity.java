@@ -10,15 +10,23 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.mobdeve.s18.recordnest.adapter.UserListAdapter;
 import com.mobdeve.s18.recordnest.databinding.ActivitySearchUserBinding;
 import com.mobdeve.s18.recordnest.model.UserList;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 
@@ -27,6 +35,9 @@ public class SearchUserActivity extends AppCompatActivity {
     private ActivitySearchUserBinding binding;
 
     private UserListAdapter userListAdapter;
+
+    private FirebaseFirestore fStore;
+    private ArrayList<UserList> allUsersList;
 
     ArrayAdapter<String> adapter;
     ArrayList<UserList> userListArrayList;
@@ -45,6 +56,8 @@ public class SearchUserActivity extends AppCompatActivity {
         //setContentView(R.layout.activity_main);
         View view = binding.getRoot();
         setContentView(view);
+
+        fStore = FirebaseFirestore.getInstance();
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.nav);
 
@@ -71,12 +84,14 @@ public class SearchUserActivity extends AppCompatActivity {
             }
         });
 
-
+        /*
         userListAdapter = new UserListAdapter(getApplicationContext(), initializeData());
         binding.rvUser.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
 
         //findViewById(R.id.tv_album_name).setVisibility(View.VISIBLE);;
-        binding.rvUser.setAdapter(userListAdapter);
+        binding.rvUser.setAdapter(userListAdapter); */
+
+        initializeUserData();
 
         et_search = findViewById(R.id.et_search);
         et_search.addTextChangedListener(new TextWatcher() {
@@ -110,13 +125,49 @@ public class SearchUserActivity extends AppCompatActivity {
     private void filter(String text){
         ArrayList<UserList> filteredList = new ArrayList<>();
 
-        for(UserList item : initializeData()){
+        for(UserList item : allUsersList){
             if(item.getUserName().toLowerCase().contains(text.toLowerCase())){
                 filteredList.add(item);
             }
         }
         userListAdapter.filterList(filteredList);
 
+    }
+
+    public void searchUser(String searchText){
+        //fStore.collection("UserDetails").where
+    }
+
+    public void initializeUserData(){
+        allUsersList = new ArrayList<>();
+        fStore.collection("UserDetails").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull @NotNull Task<QuerySnapshot> task) {
+                if(task.isSuccessful()){
+                    for(QueryDocumentSnapshot documentSnapshot : task.getResult()){
+                        String retUID = documentSnapshot.getId();
+                        String retUsername = documentSnapshot.getString("Username");
+                        String retImgURL = documentSnapshot.getString("ProfPicURL");
+
+                        //set userlist instance with image url string
+                        allUsersList.add(new UserList(retImgURL, retUsername, retUID));
+                    }
+                    initUsersAdapter();
+                } else {
+                    Toast.makeText(SearchUserActivity.this, "Error! " + task.getException().getMessage(),
+                            Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
+    //initialize user adapter after getting users from db
+    public void initUsersAdapter(){
+        userListAdapter = new UserListAdapter(getApplicationContext(), allUsersList);
+        binding.rvUser.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+
+        //findViewById(R.id.tv_album_name).setVisibility(View.VISIBLE);;
+        binding.rvUser.setAdapter(userListAdapter);
     }
 
     public ArrayList<UserList> initializeData() {
