@@ -23,6 +23,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.mobdeve.s18.recordnest.adapter.AlbumAdapter;
@@ -127,7 +128,7 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
     public void initializeData() {
         ArrayList<Album> data = new ArrayList<>();
         newReleases = fStore.collection("Albums");
-        newReleases.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        newReleases.orderBy("Year", Query.Direction.DESCENDING).limit(6).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull @NotNull Task<QuerySnapshot> task) {
                 if(task.isSuccessful()){
