@@ -323,6 +323,7 @@ public class AlbumProfileActivity extends AppCompatActivity {
         String artist = albumDisplayed.getArtist();
         String artLink = albumDisplayed.getAlbumArtURL();
         int albumYear = albumDisplayed.getYear();
+        int rateCount = albumDisplayed.getRatingsCount();
         double avgRating = albumDisplayed.getAvgRating();
         String genre = albumDisplayed.getGenre();
         albumCoverStorage = FirebaseStorage.getInstance().getReferenceFromUrl(artLink);
@@ -332,8 +333,14 @@ public class AlbumProfileActivity extends AppCompatActivity {
         this.artistViewAlbum.setText(artist);
         this.yearViewAlbum.setText(Integer.toString(albumYear));
         this.genreViewAlbum.setText(genre);
-        //format average to 2 decimal places only
-        this.avgRatingViewAlbum.setText(String.format("%.2f", avgRating));
+
+        //don't display average rating if no review has been made yet
+        if(rateCount > 0) {
+            //format average to 2 decimal places only
+            this.avgRatingViewAlbum.setText(String.format("%.2f", avgRating));
+        } else {
+            this.avgRatingViewAlbum.setText("No Ratings Yet");
+        }
     }
 
     //function which initializes tracklist adapter
