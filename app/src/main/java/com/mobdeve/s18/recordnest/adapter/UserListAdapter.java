@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.mobdeve.s18.recordnest.OtherUserProfileActivity;
 import com.mobdeve.s18.recordnest.R;
 import com.mobdeve.s18.recordnest.model.UserList;
@@ -64,8 +65,13 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.UserLi
 
     @Override
     public void onBindViewHolder(UserListAdapter.UserListViewHolder holder, int position) {
-
-        holder.search_userImage.setImageResource(userArrayList.get(position).getUserImage());
+        if(!(userArrayList.get(position).getImageURL().equals("placeholder"))){
+            Glide.with(holder.search_userImage.getContext())
+                    .load(userArrayList.get(position).getImageURL())
+                    .into(holder.search_userImage);
+        } else {
+            holder.search_userImage.setImageResource(userArrayList.get(position).getUserImage());
+        }
         holder.search_userName.setText(userArrayList.get(position).getUserName());
     }
 

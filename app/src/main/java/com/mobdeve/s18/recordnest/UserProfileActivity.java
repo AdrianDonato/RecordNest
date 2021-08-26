@@ -80,6 +80,12 @@ public class UserProfileActivity extends AppCompatActivity {
         View view = binding.getRoot();
         setContentView(view);
 
+        mUser = FirebaseAuth.getInstance().getCurrentUser();
+        fStore = FirebaseFirestore.getInstance();
+
+        mUserID = mUser.getUid();
+        mUsername = mUser.getDisplayName();
+
         btn_edit = findViewById(R.id.btn_edit_profile);
 
         btn_edit.setOnClickListener(new View.OnClickListener() {
@@ -98,6 +104,7 @@ public class UserProfileActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(UserProfileActivity.this, FollowingActivity.class);
+                i.putExtra("USER_ID", mUserID);
                 startActivity(i);
             }
         });
@@ -126,11 +133,6 @@ public class UserProfileActivity extends AppCompatActivity {
 
 
         //sets username of profile page (not finished yet, only works on logged in user's profile)
-        mUser = FirebaseAuth.getInstance().getCurrentUser();
-        fStore = FirebaseFirestore.getInstance();
-
-        mUserID = mUser.getUid();
-        mUsername = mUser.getDisplayName();
         setProfileDataFStore();
 
         Intent prevPage = getIntent();

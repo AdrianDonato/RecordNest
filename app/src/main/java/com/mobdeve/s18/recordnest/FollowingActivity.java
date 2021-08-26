@@ -6,15 +6,23 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.mobdeve.s18.recordnest.adapter.UserListAdapter;
 import com.mobdeve.s18.recordnest.databinding.ActivityFollowingBinding;
 import com.mobdeve.s18.recordnest.model.UserList;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 
@@ -23,6 +31,10 @@ public class FollowingActivity extends AppCompatActivity {
     private ActivityFollowingBinding binding;
 
     private UserListAdapter userListAdapter;
+    private ArrayList<UserList> followingUsers;
+
+    private FirebaseFirestore fStore;
+    private String ownUserID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +48,10 @@ public class FollowingActivity extends AppCompatActivity {
         //setContentView(R.layout.activity_main);
         View view = binding.getRoot();
         setContentView(view);
+
+        fStore = FirebaseFirestore.getInstance();
+        Intent i = getIntent();
+        ownUserID = i.getStringExtra("USER_ID");
 
         BottomNavigationView bottomNavigationViewFollowing = findViewById(R.id.nav_following);
         //home
@@ -81,7 +97,34 @@ public class FollowingActivity extends AppCompatActivity {
             }
         });
 
-        userListAdapter = new UserListAdapter(getApplicationContext(), initializeData());
+        initializeUserData(ownUserID);
+    }
+
+    public void initializeUserData(String userID){
+        followingUsers = new ArrayList<>();
+        fStore.collection("UserDetails").whereArrayContains("FollowerList", userID).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull @NotNull Task<QuerySnapshot> task) {
+                if(task.isSuccessful()){
+                    for(QueryDocumentSnapshot documentSnapshot : task.getResult()){
+                        String retUID = documentSnapshot.getId();
+                        String retUsername = documentSnapshot.getString("Username");
+                        String retImgURL = documentSnapshot.getString("ProfPicURL");
+
+                        //set userlist instance with image url string
+                        followingUsers.add(new UserList(retImgURL, retUsername, retUID));
+                    }
+                    initUsersAdapter();
+                } else {
+                    Toast.makeText(FollowingActivity.this, "Error! " + task.getException().getMessage(),
+                            Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
+    public void initUsersAdapter(){
+        userListAdapter = new UserListAdapter(getApplicationContext(), followingUsers);
 
         //TextView albumName = findViewById(R.id.tv_album_name);
         //albumName.setVisibility(View.VISIBLE);
@@ -89,7 +132,6 @@ public class FollowingActivity extends AppCompatActivity {
         binding.rvFollowinglist.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
         //findViewById(R.id.tv_album_name).setVisibility(View.VISIBLE);;
         binding.rvFollowinglist.setAdapter(userListAdapter);
-
     }
 
     public ArrayList<UserList> initializeData() {
