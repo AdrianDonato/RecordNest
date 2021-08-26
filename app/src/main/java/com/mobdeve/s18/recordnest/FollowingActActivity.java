@@ -7,18 +7,27 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.mobdeve.s18.recordnest.adapter.ReviewAdapter;
 import com.mobdeve.s18.recordnest.databinding.ActivityFollowingActBinding;
+import com.mobdeve.s18.recordnest.model.Review;
+
+import java.util.ArrayList;
 
 public class FollowingActActivity extends AppCompatActivity {
 
     private ActivityFollowingActBinding binding;
 
     private Button btn_edit;
+    private LinearLayout followers;
+
+    private ReviewAdapter reviewAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +58,16 @@ public class FollowingActActivity extends AppCompatActivity {
                         return true;
                 }
                 return false;
+            }
+        });
+
+        followers  = findViewById(R.id.ll_followers);
+
+        followers.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(FollowingActActivity.this, FollowersActivity.class);
+                startActivity(i);
             }
         });
 
@@ -86,5 +105,22 @@ public class FollowingActActivity extends AppCompatActivity {
                 return false;
             }
         });
+
+        reviewAdapter = new ReviewAdapter(getApplicationContext(), initializeData());
+
+        //TextView albumName = findViewById(R.id.tv_album_name);
+        //albumName.setVisibility(View.VISIBLE);
+
+        binding.rvRecentactivity.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+        //findViewById(R.id.tv_album_name).setVisibility(View.VISIBLE);;
+        binding.rvRecentactivity.setAdapter(reviewAdapter);
+    }
+
+    public ArrayList<Review> initializeData() {
+        // get data from database here?
+        ArrayList<Review> data = new ArrayList<>();
+        data.add(new Review(5,R.drawable.user,"Ina", "nice!"));
+        data.add(new Review(5,R.drawable.user,"eva", "owowow"));
+        return data;
     }
 }

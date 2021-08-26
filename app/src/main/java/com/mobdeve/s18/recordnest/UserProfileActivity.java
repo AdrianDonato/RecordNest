@@ -1,12 +1,9 @@
 package com.mobdeve.s18.recordnest;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
@@ -41,7 +38,6 @@ import com.mobdeve.s18.recordnest.model.Collection;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -63,14 +59,13 @@ public class UserProfileActivity extends AppCompatActivity {
     EditText et_col;
     TextView tv_username, tv_followers, tv_following;
     ImageView ivProfilePic;
-    LinearLayout following;
+    LinearLayout following, followers;
 
     AlertDialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         binding = ActivityUserProfileBinding.inflate(getLayoutInflater());
 
         requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -90,21 +85,29 @@ public class UserProfileActivity extends AppCompatActivity {
 
         btn_edit.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v){
                 Intent i = new Intent(UserProfileActivity.this, EditProfileActivity.class);
                 startActivity(i);
             }
         });
 
-
-
         following = findViewById(R.id.ll_following);
 
         following.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v){
                 Intent i = new Intent(UserProfileActivity.this, FollowingActivity.class);
                 i.putExtra("USER_ID", mUserID);
+                startActivity(i);
+            }
+        });
+
+        followers = findViewById(R.id.ll_followers);
+
+        followers.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v){
+                Intent i = new Intent(UserProfileActivity.this, FollowersActivity.class);
                 startActivity(i);
             }
         });
@@ -121,6 +124,8 @@ public class UserProfileActivity extends AppCompatActivity {
             }
         });
 
+
+
         tv_username = view.findViewById(R.id.profile_username);
         ivProfilePic = view.findViewById(R.id.profile_userImage);
         tv_username.setOnClickListener(new View.OnClickListener() {
@@ -129,8 +134,6 @@ public class UserProfileActivity extends AppCompatActivity {
                 createLogoutDialog();
             }
         });
-
-
 
         //sets username of profile page (not finished yet, only works on logged in user's profile)
         setProfileDataFStore();

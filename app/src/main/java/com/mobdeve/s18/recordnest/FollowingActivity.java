@@ -8,6 +8,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,6 +41,7 @@ public class FollowingActivity extends AppCompatActivity {
     private ImageView ownImage;
     private TextView ownUsername, ownFollowers, ownFollowing;
     private Button btn_edit;
+    private LinearLayout followers;
 
     private FirebaseFirestore fStore;
     private String ownUserID;
@@ -67,6 +69,16 @@ public class FollowingActivity extends AppCompatActivity {
             @Override
             public void onClick(View v){
                 Intent i = new Intent(FollowingActivity.this, EditProfileActivity.class);
+                startActivity(i);
+            }
+        });
+
+        followers  = findViewById(R.id.ll_followers);
+
+        followers.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(FollowingActivity.this, FollowersActivity.class);
                 startActivity(i);
             }
         });

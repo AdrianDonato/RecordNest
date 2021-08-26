@@ -16,6 +16,7 @@
         android:roundIcon="@mipmap/vinyl"
         android:supportsRtl="true"
         android:theme="@style/Theme.RecordNest">
+
         <activity android:name=".LogoutActivity" />
         <activity android:name=".LoginActivity" />
         <activity android:name=".RegisterActivity" />
@@ -51,12 +52,15 @@
             android:theme="@style/noAnimTheme" />
         <activity
             android:name=".OtherUserProfileActivity"
-            android:theme="@style/noAnimTheme"/>
+            android:theme="@style/noAnimTheme" />
         <activity
             android:name=".FollowingActivity"
             android:theme="@style/noAnimTheme" />
         <activity
             android:name=".FollowingActActivity"
+            android:theme="@style/noAnimTheme" />
+        <activity
+            android:name=".FollowersActivity"
             android:theme="@style/noAnimTheme"/>
         <activity
             android:name=".EditProfileActivity"
