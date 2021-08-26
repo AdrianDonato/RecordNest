@@ -187,6 +187,17 @@
                     android:textSize="18dp"
                     android:textStyle="bold" />
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:text="No Review"
+                    android:textSize="18dp"
+                    android:textStyle="bold"
+                    android:padding="20dp"
+                    android:textColor="#c4c4c4"
+                    android:visibility="gone"/>
+
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rv_review"
                     android:layout_width="match_parent"

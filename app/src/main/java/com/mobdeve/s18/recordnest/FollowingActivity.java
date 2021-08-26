@@ -1,12 +1,12 @@
 package com.mobdeve.s18.recordnest;
 
 import android.content.Intent;
-import android.media.Image;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -39,6 +39,7 @@ public class FollowingActivity extends AppCompatActivity {
     private ArrayList<UserList> followingUsers;
     private ImageView ownImage;
     private TextView ownUsername, ownFollowers, ownFollowing;
+    private Button btn_edit;
 
     private FirebaseFirestore fStore;
     private String ownUserID;
@@ -59,6 +60,16 @@ public class FollowingActivity extends AppCompatActivity {
         fStore = FirebaseFirestore.getInstance();
         Intent i = getIntent();
         ownUserID = i.getStringExtra("USER_ID");
+
+        btn_edit = findViewById(R.id.btn_edit_profile);
+
+        btn_edit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v){
+                Intent i = new Intent(FollowingActivity.this, EditProfileActivity.class);
+                startActivity(i);
+            }
+        });
 
         BottomNavigationView bottomNavigationViewFollowing = findViewById(R.id.nav_following);
         //home

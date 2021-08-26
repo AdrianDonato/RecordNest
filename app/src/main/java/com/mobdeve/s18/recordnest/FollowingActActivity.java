@@ -6,6 +6,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,6 +17,8 @@ import com.mobdeve.s18.recordnest.databinding.ActivityFollowingActBinding;
 public class FollowingActActivity extends AppCompatActivity {
 
     private ActivityFollowingActBinding binding;
+
+    private Button btn_edit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +49,16 @@ public class FollowingActActivity extends AppCompatActivity {
                         return true;
                 }
                 return false;
+            }
+        });
+
+        btn_edit = findViewById(R.id.btn_edit_profile);
+
+        btn_edit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v){
+                Intent i = new Intent(FollowingActActivity.this, EditProfileActivity.class);
+                startActivity(i);
             }
         });
 
