@@ -20,6 +20,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -89,7 +90,11 @@ public class EditProfileActivity extends AppCompatActivity {
                     Toast.makeText(EditProfileActivity.this, "Please enter Username / Email!",
                             Toast.LENGTH_SHORT).show();
                 } else {
-                    updateUserProfile();
+                    if(bitmap != null) {
+                        updateUserProfile();
+                    } else {
+                        updateWithoutImage();
+                    }
                 }
             }
         });
@@ -245,6 +250,12 @@ public class EditProfileActivity extends AppCompatActivity {
                                                             Intent i = new Intent(EditProfileActivity.this, UserProfileActivity.class);
                                                             startActivity(i);
                                                         }
+                                                    }).addOnFailureListener(new OnFailureListener() {
+                                                        @Override
+                                                        public void onFailure(@NonNull @NotNull Exception e) {
+                                                            Toast.makeText(EditProfileActivity.this, "Error! " + e.getMessage(),
+                                                                    Toast.LENGTH_SHORT).show();
+                                                        }
                                                     });
                                                 } else {
                                                     Toast.makeText(EditProfileActivity.this, "Successfully edited profile!",
@@ -263,6 +274,63 @@ public class EditProfileActivity extends AppCompatActivity {
                         }
                     });
 
+                } else {
+                    Toast.makeText(EditProfileActivity.this, "Error! " + task.getException().getMessage(),
+                            Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
+    public void updateWithoutImage(){
+        newUsername = etUsername.getText().toString().trim();
+        newPassword = etPassword.getText().toString().trim();
+        newEmail = etEmail.getText().toString().trim();
+
+
+        UserProfileChangeRequest profileUpdate = new UserProfileChangeRequest.Builder()
+                .setDisplayName(newUsername)
+                .build();
+
+        Map<String, Object> userDetailsUpdates = new HashMap<>();
+        userDetailsUpdates.put("Username", newUsername);
+
+        fUser.updateProfile(profileUpdate).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull @NotNull Task<Void> task) {
+                if(task.isSuccessful()){
+                    fUser.updateEmail(newEmail).addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void unused) {
+                            fStore.collection("UserDetails").document(userID).update(userDetailsUpdates).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void unused) {
+                                    if(!(newPassword.equals(""))){
+                                        fUser.updatePassword(newPassword).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void unused) {
+                                                Toast.makeText(EditProfileActivity.this, "Successfully edited profile!",
+                                                        Toast.LENGTH_SHORT).show();
+                                                Intent i = new Intent(EditProfileActivity.this, UserProfileActivity.class);
+                                                startActivity(i);
+                                            }
+                                        }).addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull @NotNull Exception e) {
+                                                Toast.makeText(EditProfileActivity.this, "Error! " + e.getMessage(),
+                                                        Toast.LENGTH_SHORT).show();
+                                            }
+                                        });
+                                    } else {
+                                        Toast.makeText(EditProfileActivity.this, "Successfully edited profile!",
+                                                Toast.LENGTH_SHORT).show();
+                                        Intent i = new Intent(EditProfileActivity.this, UserProfileActivity.class);
+                                        startActivity(i);
+                                    }
+                                }
+                            });
+                        }
+                    });
                 } else {
                     Toast.makeText(EditProfileActivity.this, "Error! " + task.getException().getMessage(),
                             Toast.LENGTH_SHORT).show();
