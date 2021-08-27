@@ -202,7 +202,7 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
         super.onStart();
         FirebaseUser mUser = mAuth.getCurrentUser();
         if(mUser == null){
-            startActivity(new Intent(MainActivity.this, RegisterActivity.class));
+            startActivity(new Intent(MainActivity.this, LoginActivity.class));
         }
     }
 }

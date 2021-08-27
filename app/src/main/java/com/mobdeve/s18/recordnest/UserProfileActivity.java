@@ -244,10 +244,13 @@ public class UserProfileActivity extends AppCompatActivity {
         btn_logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(UserProfileActivity.this,
-                       "Logout",
-                        Toast.LENGTH_SHORT).show();
                 dialog.dismiss();
+                FirebaseAuth.getInstance().signOut();
+                Intent i = new Intent(UserProfileActivity.this, MainActivity.class);
+                startActivity(i);
+                Toast.makeText(UserProfileActivity.this,
+                        "Logged Out",
+                        Toast.LENGTH_SHORT).show();
             }
         });
 
