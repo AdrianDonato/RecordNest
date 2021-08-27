@@ -169,14 +169,4 @@ public class SearchUserActivity extends AppCompatActivity {
         //findViewById(R.id.tv_album_name).setVisibility(View.VISIBLE);;
         binding.rvUser.setAdapter(userListAdapter);
     }
-
-    public ArrayList<UserList> initializeData() {
-        // get data from database here?
-        ArrayList<UserList> data = new ArrayList<>();
-        data.add(new UserList(R.drawable.album1, "ina", "qbvxJbLdBXWq0CYqEeoSqV91ALs2"));
-        data.add(new UserList(R.drawable.album2, "pat", "4F41MMsEjSWDxzkVHcTDvlj8BLD3"));
-        data.add(new UserList(R.drawable.album3, "eva", "sGMkuJr9S3TiTRfAg4inkCO5DnH2"));
-
-        return data;
-    }
 }

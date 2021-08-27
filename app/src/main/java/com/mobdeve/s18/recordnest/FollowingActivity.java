@@ -69,6 +69,7 @@ public class FollowingActivity extends AppCompatActivity {
             @Override
             public void onClick(View v){
                 Intent i = new Intent(FollowingActivity.this, EditProfileActivity.class);
+                i.putExtra("USER_ID", ownUserID);
                 startActivity(i);
             }
         });
@@ -79,6 +80,7 @@ public class FollowingActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(FollowingActivity.this, FollowersActivity.class);
+                i.putExtra("USER_ID", ownUserID);
                 startActivity(i);
             }
         });
@@ -94,7 +96,9 @@ public class FollowingActivity extends AppCompatActivity {
                     case R.id.following:
                         return true;
                     case R.id.activity:
-                        startActivity(new Intent(getApplicationContext(), FollowingActActivity.class));
+                        Intent i = new Intent(getApplicationContext(), FollowingActActivity.class);
+                        i.putExtra("USER_ID", ownUserID);
+                        startActivity(i);
                         overridePendingTransition(0,0);
                         return true;
                 }
@@ -156,7 +160,8 @@ public class FollowingActivity extends AppCompatActivity {
                                 .load(retImg).into(ownImage);
                     }
                 } else {
-
+                    Toast.makeText(FollowingActivity.this, "Error! " + task.getException().getMessage(),
+                            Toast.LENGTH_SHORT).show();
                 }
             }
         });

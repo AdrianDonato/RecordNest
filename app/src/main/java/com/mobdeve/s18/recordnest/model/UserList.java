@@ -18,7 +18,7 @@ public class UserList {
         this.imageURL = imageURL;
         this.userName = userName;
         this.userID = userID;
-        this.userImage = R.drawable.album1;
+        this.userImage = R.drawable.user;
     }
 
     public int getUserImage() {

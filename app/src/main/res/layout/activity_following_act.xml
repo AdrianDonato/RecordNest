@@ -68,7 +68,7 @@
             android:layout_marginRight="20dp">
 
             <ImageView
-                android:id="@+id/review_userImage"
+                android:id="@+id/following_own_image"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
                 android:src="@drawable/album1"/>
@@ -85,9 +85,10 @@
             android:layout_marginRight="10dp">
 
             <TextView
+                android:id="@+id/followingact_own_follower"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="104"
+                android:text="-"
                 android:background="@drawable/followers_text_con"
                 android:textAlignment="center"/>
 
@@ -111,9 +112,10 @@
             android:layout_marginLeft="10dp">
 
             <TextView
+                android:id="@+id/followingact_own_following"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="104"
+                android:text="-"
                 android:background="@drawable/followers_text_con"
                 android:textAlignment="center"/>
 

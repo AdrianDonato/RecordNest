@@ -70,7 +70,7 @@
                 android:id="@+id/profile_userImage"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
-                android:src="@drawable/album1"/>
+                android:src="@drawable/user"/>
 
         </androidx.cardview.widget.CardView>
 
@@ -130,9 +130,10 @@
     </LinearLayout>
 
     <TextView
+        android:id="@+id/tv_no_collection"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="No Collection"
+        android:text="No Collection Yet. Create a new one!"
         android:layout_below="@id/ll_userinfo"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="50dp"/>

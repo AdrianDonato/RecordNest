@@ -14,6 +14,7 @@ public class Review {
         this.userImageId = userImageId;
         this.username = username;
         this.reviewContent = reviewContent;
+
     }
 
     public int getReviewID() {

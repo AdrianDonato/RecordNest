@@ -58,7 +58,7 @@
                 android:id="@+id/iv_other_userImage"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
-                android:src="@drawable/album1"/>
+                android:src="@drawable/user"/>
 
         </androidx.cardview.widget.CardView>
 
@@ -74,7 +74,7 @@
                 android:id="@+id/tv_ou_followers"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="104"
+                android:text="-"
                 android:background="@drawable/followers_text_con"
                 android:textAlignment="center"/>
 
@@ -100,7 +100,7 @@
                 android:id="@+id/tv_ou_following"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="104"
+                android:text="-"
                 android:background="@drawable/followers_text_con"
                 android:textAlignment="center"/>
 

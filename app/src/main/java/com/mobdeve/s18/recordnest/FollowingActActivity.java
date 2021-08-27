@@ -7,16 +7,26 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.mobdeve.s18.recordnest.adapter.ReviewAdapter;
 import com.mobdeve.s18.recordnest.databinding.ActivityFollowingActBinding;
 import com.mobdeve.s18.recordnest.model.Review;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 
@@ -26,6 +36,12 @@ public class FollowingActActivity extends AppCompatActivity {
 
     private Button btn_edit;
     private LinearLayout followers;
+
+    private ImageView ownImage;
+    private TextView ownUsername, ownFollowers, ownFollowing;
+
+    private FirebaseFirestore fStore;
+    private String ownUserID;
 
     private ReviewAdapter reviewAdapter;
 
@@ -42,6 +58,10 @@ public class FollowingActActivity extends AppCompatActivity {
         View view = binding.getRoot();
         setContentView(view);
 
+        fStore = FirebaseFirestore.getInstance();
+        Intent i = getIntent();
+        ownUserID = i.getStringExtra("USER_ID");
+
         BottomNavigationView bottomNavigationViewFollowing = findViewById(R.id.nav_following);
         //home
         bottomNavigationViewFollowing.setSelectedItemId(R.id.activity);
@@ -51,7 +71,9 @@ public class FollowingActActivity extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()){
                     case R.id.following:
-                        startActivity(new Intent(getApplicationContext(), FollowingActivity.class));
+                        Intent i = new Intent(getApplicationContext(), FollowingActActivity.class);
+                        i.putExtra("USER_ID", ownUserID);
+                        startActivity(i);
                         overridePendingTransition(0,0);
                         return true;
                     case R.id.activity:
@@ -61,12 +83,15 @@ public class FollowingActActivity extends AppCompatActivity {
             }
         });
 
+        initOwnProfile(ownUserID);
+
         followers  = findViewById(R.id.ll_followers);
 
         followers.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(FollowingActActivity.this, FollowersActivity.class);
+                i.putExtra("USER_ID", ownUserID);
                 startActivity(i);
             }
         });
@@ -77,6 +102,7 @@ public class FollowingActActivity extends AppCompatActivity {
             @Override
             public void onClick(View v){
                 Intent i = new Intent(FollowingActActivity.this, EditProfileActivity.class);
+                i.putExtra("USER_ID", ownUserID);
                 startActivity(i);
             }
         });
@@ -116,11 +142,44 @@ public class FollowingActActivity extends AppCompatActivity {
         binding.rvRecentactivity.setAdapter(reviewAdapter);
     }
 
+    //initialize own profile (username, profile picture, etc)
+    public void initOwnProfile(String userID){
+        this.ownImage = findViewById(R.id.following_own_image);
+        this.ownUsername = findViewById(R.id.profile_username);
+        this.ownFollowers = findViewById(R.id.followingact_own_follower);
+        this.ownFollowing = findViewById(R.id.followingact_own_following);
+
+        fStore.collection("UserDetails").document(userID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull @NotNull Task<DocumentSnapshot> task) {
+                if(task.isSuccessful()){
+                    DocumentSnapshot snapshot = task.getResult();
+                    String retImg = snapshot.getString("ProfPicURL");
+                    String retUsername = snapshot.getString("Username");
+                    int fercount = snapshot.getLong("FollowerCount").intValue();
+                    int fingcount= snapshot.getLong("FollowingCount").intValue();
+
+                    ownUsername.setText(retUsername);
+                    ownFollowers.setText(Integer.toString(fercount));
+                    ownFollowing.setText(Integer.toString(fingcount));
+
+                    if(!(retImg.equals("placeholder"))){
+                        Glide.with(getApplicationContext())
+                                .load(retImg).into(ownImage);
+                    }
+                } else {
+                    Toast.makeText(FollowingActActivity.this, "Error! " + task.getException().getMessage(),
+                            Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
     public ArrayList<Review> initializeData() {
         // get data from database here?
         ArrayList<Review> data = new ArrayList<>();
-        data.add(new Review(5,R.drawable.user,"Ina", "nice!"));
-        data.add(new Review(5,R.drawable.user,"eva", "owowow"));
+        data.add(new Review(5,R.drawable.user,"qbvxJbLdBXWq0CYqEeoSqV91ALs2", "nice!"));
+        data.add(new Review(5,R.drawable.user,"qbvxJbLdBXWq0CYqEeoSqV91ALs2", "owowow"));
         return data;
     }
 }

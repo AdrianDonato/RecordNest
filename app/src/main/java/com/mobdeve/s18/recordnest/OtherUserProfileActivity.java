@@ -143,6 +143,8 @@ public class OtherUserProfileActivity extends AppCompatActivity {
 
                     if(!(retImgURL.equals("placeholder"))){
                         Glide.with(getApplicationContext()).load(retImgURL).into(userimg);
+                    } else {
+                        userimg.setImageResource(R.drawable.user);
                     }
 
                 } else {

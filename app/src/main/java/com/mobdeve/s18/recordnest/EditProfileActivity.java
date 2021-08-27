@@ -168,6 +168,8 @@ public class EditProfileActivity extends AppCompatActivity {
                 String picURL = documentSnapshot.getString("ProfPicURL");
                 if(!(picURL.equals("placeholder"))) {
                     Glide.with(getApplicationContext()).load(picURL).into(iv_profilepic);
+                } else {
+                    iv_profilepic.setImageResource(R.drawable.user);
                 }
             }
         });

@@ -57,7 +57,7 @@ public class UserProfileActivity extends AppCompatActivity {
 
     Button btn_edit, btn_addcol, btn_close, btn_save, btn_logout;
     EditText et_col;
-    TextView tv_username, tv_followers, tv_following;
+    TextView tv_username, tv_followers, tv_following, tv_nocoll;
     ImageView ivProfilePic;
     LinearLayout following, followers;
 
@@ -81,6 +81,7 @@ public class UserProfileActivity extends AppCompatActivity {
         mUserID = mUser.getUid();
         mUsername = mUser.getDisplayName();
 
+        tv_nocoll = findViewById(R.id.tv_no_collection);
         btn_edit = findViewById(R.id.btn_edit_profile);
 
         btn_edit.setOnClickListener(new View.OnClickListener() {
@@ -277,6 +278,9 @@ public class UserProfileActivity extends AppCompatActivity {
                                 collArray.add(new Collection(collTitle));
                                 collArray.get(collArray.size()-1).setCollectionID(collID);
                             }
+                            if(collArray.size()>0){
+                                tv_nocoll.setVisibility(View.INVISIBLE);
+                            }
                             initCollAdapter();
                         } else {
                             Toast.makeText(UserProfileActivity.this, "Error! " + task.getException().getMessage(),
@@ -336,6 +340,8 @@ public class UserProfileActivity extends AppCompatActivity {
 
                 if(!(profURL.equals("placeholder"))){
                     Glide.with(getApplicationContext()).load(profURL).into(ivProfilePic);
+                } else {
+                    ivProfilePic.setImageResource(R.drawable.user);
                 }
 
                 tv_followers.setText(Integer.toString(followercount));
