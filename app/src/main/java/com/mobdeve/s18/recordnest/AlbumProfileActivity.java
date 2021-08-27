@@ -328,7 +328,7 @@ public class AlbumProfileActivity extends AppCompatActivity {
         String genre = albumDisplayed.getGenre();
         albumCoverStorage = FirebaseStorage.getInstance().getReferenceFromUrl(artLink);
 
-        Glide.with(this).load(albumCoverStorage).into(imgViewAlbum);
+        Glide.with(this).load(artLink).into(imgViewAlbum);
         this.nameViewAlbum.setText(name);
         this.artistViewAlbum.setText(artist);
         this.yearViewAlbum.setText(Integer.toString(albumYear));

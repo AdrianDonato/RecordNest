@@ -46,7 +46,7 @@ public class ViewHolder extends RecyclerView.ViewHolder {
         albumCoverStorage = FirebaseStorage.getInstance().getReferenceFromUrl(imageURL);
         //Glide.with(this).load(albumCoverStorage).into(imgViewAlbum);
         //Glide.with(this.context).load(albumCoverStorage).into(imgViewAlbum);
-        Glide.with(imgViewAlbum.getContext()).load(albumCoverStorage).into(imgViewAlbum);
+        Glide.with(imgViewAlbum.getContext()).load(imageURL).into(imgViewAlbum);
     }
 
     public void setImgAlbum(int imgAlbum) {
