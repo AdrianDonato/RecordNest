@@ -30,11 +30,16 @@ public class AlbumAdapter extends RecyclerView.Adapter<ViewHolder> {
     public static final String KEY_PICTURE = "KEY_PICTURE";
     public static final String KEY_NAME = "KEY_NAME";
     public static final String KEY_ARTIST = "KEY_ARTIST";
-
+    public static final String KEY_COLLECTION = "KEY_COLLECTION";
+    public String collectionID;
 
     public AlbumAdapter(Context context, ArrayList<Album> albumArrayList) {
         this.albumArrayList = albumArrayList;
         this.context = context;
+    }
+
+    public void setCollectionID(String collID){
+        this.collectionID = collID;
     }
 
     @Override
@@ -65,23 +70,27 @@ public class AlbumAdapter extends RecyclerView.Adapter<ViewHolder> {
             }
         });
 
-        viewHolder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                //Toast.makeText(context, "long clicked " + albumArrayList.get(viewHolder.getBindingAdapterPosition()).getAlbumName(), Toast.LENGTH_SHORT).show();
-                Intent i = new Intent(v.getContext(), EditAlbumActivity.class);
+        //only enable long press if collectionid is not null
+        if(collectionID != null) {
+            viewHolder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    //Toast.makeText(context, "long clicked " + albumArrayList.get(viewHolder.getBindingAdapterPosition()).getAlbumName(), Toast.LENGTH_SHORT).show();
+                    Intent i = new Intent(v.getContext(), EditAlbumActivity.class);
 
-                i.putExtra(KEY_PICTURE, albumArrayList.get(viewHolder.getBindingAdapterPosition()).getImageId());
-                i.putExtra(KEY_NAME, albumArrayList.get(viewHolder.getBindingAdapterPosition()).getAlbumName());
-                i.putExtra(KEY_ARTIST, albumArrayList.get(viewHolder.getBindingAdapterPosition()).getArtist());
-                i.putExtra(KEY_ID, albumArrayList.get(viewHolder.getBindingAdapterPosition()).getAlbumID());
-                v.getContext().startActivity(i);
+                    i.putExtra(KEY_PICTURE, albumArrayList.get(viewHolder.getBindingAdapterPosition()).getImageId());
+                    i.putExtra(KEY_NAME, albumArrayList.get(viewHolder.getBindingAdapterPosition()).getAlbumName());
+                    i.putExtra(KEY_ARTIST, albumArrayList.get(viewHolder.getBindingAdapterPosition()).getArtist());
+                    i.putExtra(KEY_ID, albumArrayList.get(viewHolder.getBindingAdapterPosition()).getAlbumID());
+                    i.putExtra(KEY_COLLECTION, collectionID);
 
-                return true;
+                    v.getContext().startActivity(i);
 
-            }
-        });
+                    return true;
 
+                }
+            });
+        }
 
 
         return viewHolder;

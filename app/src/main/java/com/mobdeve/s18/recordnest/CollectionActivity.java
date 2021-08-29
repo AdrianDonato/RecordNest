@@ -43,7 +43,7 @@ public class CollectionActivity extends AppCompatActivity {
     private DocumentReference collRef;
     private ArrayList<Album> retAlbums;
     private Collection retCollection;
-    private String collectionID;
+    private String collIntentID;
 
     Dialog dialog;
 
@@ -106,7 +106,7 @@ public class CollectionActivity extends AppCompatActivity {
         binding.rvCollectionalbum.setAdapter(albumAdapter);
         */
 
-        String collIntentID = i.getStringExtra(CollectionAdapter.KEY_COLLECTION_ID);
+        collIntentID = i.getStringExtra(CollectionAdapter.KEY_COLLECTION_ID);
         initializeCollection(collIntentID);
     }
 
@@ -171,7 +171,7 @@ public class CollectionActivity extends AppCompatActivity {
     //function to initialize album adapter
     public void initializeAlbumAdapter(){
         albumAdapter = new AlbumAdapter(getApplicationContext(), retAlbums);
-
+        albumAdapter.setCollectionID(collIntentID);
         //TextView albumName = findViewById(R.id.tv_album_name);
         //albumName.setVisibility(View.VISIBLE);
 
