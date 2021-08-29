@@ -153,7 +153,7 @@
         android:id="@+id/btn_delete_album"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="DELETE"
+        android:text="REMOVE FROM COLLECTION"
         android:backgroundTint="#e5e5e5"
         android:textColor="@color/black"
         app:layout_constraintLeft_toLeftOf="parent"

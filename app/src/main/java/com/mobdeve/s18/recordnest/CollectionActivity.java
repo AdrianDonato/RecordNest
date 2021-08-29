@@ -66,9 +66,9 @@ public class CollectionActivity extends AppCompatActivity {
 
         Intent i = getIntent();
 
-        String name= i.getStringExtra(CollectionAdapter.KEY_COLLECTION_NAME);
+        //String name= i.getStringExtra(CollectionAdapter.KEY_COLLECTION_NAME);
 
-        this.collectionName.setText(name);
+        //this.collectionName.setText(name);
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.nav);
 
@@ -134,6 +134,7 @@ public class CollectionActivity extends AppCompatActivity {
                 if(task.isSuccessful()){
                     DocumentSnapshot snapshot = task.getResult();
                     String snapshotCollId = snapshot.getId();
+                    String snapshotCollTitle = snapshot.getString("Title");
                     String snapshotUsername = snapshot.getString("Username");
                     String snapshotDesc = snapshot.getString("Description");
                     ArrayList<String> snapshotAlbums = (ArrayList<String>) snapshot.get("AlbumIDList");
@@ -141,7 +142,7 @@ public class CollectionActivity extends AppCompatActivity {
                     ArrayList<String> snapshotTitles = (ArrayList<String>) snapshot.get("AlbumTitleList");
 
 
-                    retCollection = new Collection(snapshot.getString("Title"));
+                    retCollection = new Collection(snapshotCollTitle);
                     retCollection.setCollectionID(snapshotCollId);
                     retCollection.setUsername(snapshotUsername);
                     retCollection.setDescription(snapshotDesc);
@@ -159,6 +160,7 @@ public class CollectionActivity extends AppCompatActivity {
                         retAlbums.get(i).setAlbumID(retAlbumID);
                         retAlbums.get(i).setAlbumArtURL(retImgURL);
                     }
+                    collectionName.setText(snapshotCollTitle);
                     initializeAlbumAdapter();
                 } else {
                     Toast.makeText(CollectionActivity.this, "Error! " + task.getException().getMessage(),
