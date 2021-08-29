@@ -84,6 +84,8 @@ public class EditAlbumActivity extends AppCompatActivity {
             }
         });
 
+        setTransferListener();
+
         BottomNavigationView bottomNavigationView = findViewById(R.id.nav);
 
         bottomNavigationView.setSelectedItemId(R.id.invisible);
@@ -178,6 +180,47 @@ public class EditAlbumActivity extends AppCompatActivity {
         });
     }
 
+    public void transferColls(String targCollTitle){
+        Map<String, Object> removeColl = new HashMap<>();
+        removeColl.put("AlbumIDList", FieldValue.arrayRemove(albumID));
+        removeColl.put("AlbumTitleList", FieldValue.arrayRemove(albTitle));
+        removeColl.put("ImageURLList", FieldValue.arrayRemove(albImgURL));
+
+        fStore.collection("AlbumCollection").document(collID).update(removeColl).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull @NotNull Task<Void> task) {
+                if(task.isSuccessful()) {
+                    int titleIndex = otherCollTitles.indexOf(targCollTitle);
+                    String targCollID = otherCollIDs.get(titleIndex);
+
+                    Map<String, Object> collTransfer = new HashMap<>();
+                    collTransfer.put("AlbumIDList", FieldValue.arrayUnion(albumID));
+                    collTransfer.put("AlbumTitleList", FieldValue.arrayUnion(albTitle));
+                    collTransfer.put("ImageURLList", FieldValue.arrayUnion(albImgURL));
+
+                    fStore.collection("AlbumCollection").document(targCollID).update(collTransfer).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull @NotNull Task<Void> task) {
+                            if(task.isSuccessful()){
+                                Toast.makeText(EditAlbumActivity.this, "Transferred " + albTitle + " to " + targCollTitle + "!",
+                                        Toast.LENGTH_SHORT).show();
+                                Intent i = new Intent(getApplicationContext(), CollectionActivity.class);
+                                i.putExtra(CollectionAdapter.KEY_COLLECTION_NAME, collID);
+                                startActivity(i);
+                            } else {
+                                Toast.makeText(EditAlbumActivity.this, "Error! " + task.getException().getMessage(),
+                                        Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+                } else {
+                    Toast.makeText(EditAlbumActivity.this, "Error! " + task.getException().getMessage(),
+                            Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
     public void initMoveToColl(){
         otherCollIDs = new ArrayList<>();
         otherCollTitles = new ArrayList<>();
@@ -191,11 +234,13 @@ public class EditAlbumActivity extends AppCompatActivity {
             public void onComplete(@NonNull @NotNull Task<QuerySnapshot> task) {
                 if(task.isSuccessful()){
                     for(QueryDocumentSnapshot documentSnapshot : task.getResult()){
-                        String collID = documentSnapshot.getId();
-                        String collTitle = documentSnapshot.getString("Title");
+                        if (!(collID.equals(documentSnapshot.getId()))) {
+                            String retCollID = documentSnapshot.getId();
+                            String retCollTitle = documentSnapshot.getString("Title");
 
-                        otherCollTitles.add(collTitle);
-                        otherCollIDs.add(collID);
+                            otherCollTitles.add(retCollTitle);
+                            otherCollIDs.add(retCollID);
+                        }
                     }
                     //initialize collection listener
                     initCollSpinner();
@@ -214,5 +259,19 @@ public class EditAlbumActivity extends AppCompatActivity {
 
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
+    }
+
+    public void setTransferListener(){
+        btn_save.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(!spinner.getSelectedItem().toString().equalsIgnoreCase("Choose a collection...")){
+                    transferColls(spinner.getSelectedItem().toString());
+                } else {
+                    Toast.makeText(EditAlbumActivity.this, "Please choose a collection!",
+                            Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 }
