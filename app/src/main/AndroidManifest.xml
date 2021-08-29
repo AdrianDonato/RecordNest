@@ -48,6 +48,9 @@
             android:name=".SearchYearActivity"
             android:theme="@style/noAnimTheme" />
         <activity
+            android:name=".SearchCollectionActivity"
+            android:theme="@style/noAnimTheme"/>
+        <activity
             android:name=".UserProfileActivity"
             android:theme="@style/noAnimTheme" />
         <activity
@@ -61,7 +64,7 @@
             android:theme="@style/noAnimTheme" />
         <activity
             android:name=".FollowersActivity"
-            android:theme="@style/noAnimTheme"/>
+            android:theme="@style/noAnimTheme" />
         <activity
             android:name=".EditProfileActivity"
             android:theme="@style/noAnimTheme" />

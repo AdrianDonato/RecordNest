@@ -1,6 +1,7 @@
 package com.mobdeve.s18.recordnest.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +10,7 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.mobdeve.s18.recordnest.R;
+import com.mobdeve.s18.recordnest.SearchCollectionActivity;
 import com.mobdeve.s18.recordnest.model.Genre;
 
 import java.util.ArrayList;
@@ -17,6 +19,8 @@ public class GenreAdapter extends RecyclerView.Adapter<GenreAdapter.GenreViewHol
 
     private ArrayList<Genre> genreArrayList;
     private Context context;
+
+    public static final String KEY_GENRE_NAME = "KEY_GENRE_NAME";
 
     public GenreAdapter(Context context, ArrayList<Genre> genreArrayList) {
             this.genreArrayList = genreArrayList;
@@ -35,6 +39,17 @@ public class GenreAdapter extends RecyclerView.Adapter<GenreAdapter.GenreViewHol
                 .inflate(R.layout.category, parent, false);
 
         GenreAdapter.GenreViewHolder viewHolder = new GenreAdapter.GenreViewHolder(view);
+
+        viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(v.getContext(), SearchCollectionActivity.class);
+
+                i.putExtra("FROM_ACTIVITY", "genre");
+                i.putExtra(KEY_GENRE_NAME, genreArrayList.get(viewHolder.getBindingAdapterPosition()).getGenre());
+                v.getContext().startActivity(i);
+            }
+        });
 
         return viewHolder;
     }

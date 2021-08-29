@@ -1,6 +1,7 @@
 package com.mobdeve.s18.recordnest.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +10,7 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.mobdeve.s18.recordnest.R;
+import com.mobdeve.s18.recordnest.SearchCollectionActivity;
 import com.mobdeve.s18.recordnest.model.Artist;
 
 import java.util.ArrayList;
@@ -17,6 +19,8 @@ public class ArtistAdapter extends RecyclerView.Adapter<ArtistAdapter.ArtistView
 
     private ArrayList<Artist> artistArrayList;
     private Context context;
+
+    public static final String KEY_ARTIST_NAME = "KEY_ARTIST_NAME";
 
     public ArtistAdapter(Context context, ArrayList<Artist> artistArrayList) {
         this.artistArrayList = artistArrayList;
@@ -35,6 +39,17 @@ public class ArtistAdapter extends RecyclerView.Adapter<ArtistAdapter.ArtistView
                 .inflate(R.layout.category, parent, false);
 
         ArtistAdapter.ArtistViewHolder viewHolder = new ArtistAdapter.ArtistViewHolder(view);
+
+        viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(v.getContext(), SearchCollectionActivity.class);
+
+                i.putExtra("FROM_ACTIVITY", "artist");
+                i.putExtra(KEY_ARTIST_NAME, artistArrayList.get(viewHolder.getBindingAdapterPosition()).getArtist());
+                v.getContext().startActivity(i);
+            }
+        });
 
         return viewHolder;
     }

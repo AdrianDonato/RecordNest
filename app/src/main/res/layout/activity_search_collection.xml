@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="#e5e5e5">
+
+    <View
+        android:id="@+id/search_collname_con"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="#FF7A17"
+        android:layout_alignParentBottom="true"
+        app:layout_constraintTop_toTopOf="parent"
+        android:elevation="10dp"/>
+
+
+    <TextView
+        android:id="@+id/search_collection_item"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+
+        android:layout_margin="20dp"
+        android:text="COLLECTION NAME"
+        android:textStyle="bold"
+        android:textSize="20dp"
+        android:textAllCaps="true"
+        android:textColor="@color/black"
+        android:layout_alignParentTop="true"
+        android:elevation="10dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="No Album"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:visibility="gone"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_searchcollectionalbum"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/search_collname_con"
+        app:layout_constraintBottom_toTopOf="@id/nav"
+        android:visibility="visible"
+        app:flow_horizontalAlign="center" />
+
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:layout_width="match_parent"
+        android:layout_height="42dp"
+        android:id="@+id/nav"
+        android:background="#FF7A17"
+        app:menu="@menu/menu_nav"
+        app:itemIconTint="@drawable/nav_selector"
+        app:itemTextColor="@drawable/nav_selector"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:elevation="20dp"/>
+
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
