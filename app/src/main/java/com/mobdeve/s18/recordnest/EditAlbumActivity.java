@@ -25,6 +25,8 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.mobdeve.s18.recordnest.adapter.AlbumAdapter;
 import com.mobdeve.s18.recordnest.adapter.CollectionAdapter;
 import com.mobdeve.s18.recordnest.databinding.ActivityEditAlbumBinding;
@@ -47,6 +49,8 @@ public class EditAlbumActivity extends AppCompatActivity {
     private String mUserID;
     private String collID;
     private String albumID, albImgURL, albTitle;
+    private ArrayList<String> otherCollIDs, otherCollTitles;
+    private Spinner spinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,23 +68,11 @@ public class EditAlbumActivity extends AppCompatActivity {
 
         fStore = FirebaseFirestore.getInstance();
         mUser = FirebaseAuth.getInstance().getCurrentUser();
+        mUserID = mUser.getUid();
         setAlbumData();
 
-        Spinner spinner = view.findViewById(R.id.spinner_move_to_collection);
-
-        ArrayList<String> arrayListCollection = new ArrayList<>();
-        arrayListCollection.add("Choose a collection...");
-        arrayListCollection.add("Collection 1");
-        arrayListCollection.add("Collection 2");
-        arrayListCollection.add("Collection 3");
-
-
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_spinner_item,
-                arrayListCollection);
-
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(adapter);
+        spinner = view.findViewById(R.id.spinner_move_to_collection);
+        initMoveToColl();
 
         btn_delete = findViewById(R.id.btn_delete_album);
         btn_save = findViewById(R.id.btn_save_edit_album);
@@ -184,7 +176,43 @@ public class EditAlbumActivity extends AppCompatActivity {
                 }
             }
         });
+    }
 
-       // fStore.collection("AlbumCollection")
+    public void initMoveToColl(){
+        otherCollIDs = new ArrayList<>();
+        otherCollTitles = new ArrayList<>();
+
+        otherCollTitles.add("Choose a collection...");
+        otherCollIDs.add("placeholder"); //filler data, ensures both arrays have same size and indexes
+
+        fStore.collection("AlbumCollection")
+                .whereEqualTo("UserID", mUserID).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull @NotNull Task<QuerySnapshot> task) {
+                if(task.isSuccessful()){
+                    for(QueryDocumentSnapshot documentSnapshot : task.getResult()){
+                        String collID = documentSnapshot.getId();
+                        String collTitle = documentSnapshot.getString("Title");
+
+                        otherCollTitles.add(collTitle);
+                        otherCollIDs.add(collID);
+                    }
+                    //initialize collection listener
+                    initCollSpinner();
+                } else {
+                    Toast.makeText(EditAlbumActivity.this, "Error! " + task.getException().getMessage(),
+                            Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
+    public void initCollSpinner(){
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_spinner_item,
+                otherCollTitles);
+
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
     }
 }
