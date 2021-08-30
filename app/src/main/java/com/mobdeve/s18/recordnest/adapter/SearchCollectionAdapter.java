@@ -9,18 +9,18 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.mobdeve.s18.recordnest.R;
-import com.mobdeve.s18.recordnest.model.SearchCollection;
+import com.mobdeve.s18.recordnest.model.Collection;
 
 import java.util.ArrayList;
 
 public class SearchCollectionAdapter extends RecyclerView.Adapter<SearchCollectionAdapter.SearchCollectionViewHolder>{
-    private ArrayList<SearchCollection> searchCollectionArrayList;
+    private ArrayList<Collection> searchCollectionArrayList;
     private Context context;
 
     public static final String KEY_S_COLLECTION_NAME = "KEY_COLLECTION_NAME";
     public static final String KEY_COLLECTION_ID = "KEY_COLLECTION_ID";
 
-    public SearchCollectionAdapter(Context context, ArrayList<SearchCollection> searchCollectionArrayList) {
+    public SearchCollectionAdapter(Context context, ArrayList<Collection> searchCollectionArrayList) {
         this.searchCollectionArrayList = searchCollectionArrayList;
         this.context = context;
     }

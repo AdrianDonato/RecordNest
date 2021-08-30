@@ -77,14 +77,14 @@ public class SearchYearActivity extends AppCompatActivity {
     public ArrayList<Year> initializeData() {
         // get data from database here?
         ArrayList<Year> data = new ArrayList<>();
-        data.add(new Year("2021"));
-        data.add(new Year("2020-2011"));
-        data.add(new Year("2010-2001"));
-        data.add(new Year("2000-1991"));
-        data.add(new Year("1990-1981"));
-        data.add(new Year("1980-1971"));
-        data.add(new Year("1970-1961"));
-        data.add(new Year("Before 1960"));
+        data.add(new Year("2020s"));
+        data.add(new Year("2010s"));
+        data.add(new Year("2000s"));
+        data.add(new Year("1990s"));
+        data.add(new Year("1980s"));
+        data.add(new Year("1970s"));
+        data.add(new Year("1960s"));
+        data.add(new Year("1950s"));
 
         return data;
     }
