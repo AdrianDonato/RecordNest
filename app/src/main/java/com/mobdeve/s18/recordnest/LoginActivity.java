@@ -17,6 +17,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.mobdeve.s18.recordnest.databinding.ActivityLoginBinding;
 
 import org.jetbrains.annotations.NotNull;
@@ -76,6 +77,15 @@ public class LoginActivity extends AppCompatActivity{
             }
         });
 
+    }
+
+    @Override
+    public void onStart(){
+        super.onStart();
+        FirebaseUser mUser = mAuth.getCurrentUser();
+        if(mUser != null){
+            startActivity(new Intent(LoginActivity.this, MainActivity.class));
+        }
     }
 
 
