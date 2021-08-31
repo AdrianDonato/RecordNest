@@ -2,15 +2,19 @@ package com.mobdeve.s18.recordnest;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 
@@ -37,6 +41,8 @@ public class CollectionActivity extends AppCompatActivity {
 
     private ActivityCollectionBinding binding;
     TextView collectionName;
+    View v_share;
+    Button btn_cancel_share;
 
     public AlbumAdapter albumAdapter;
     MainActivity mainActivity;
@@ -99,6 +105,15 @@ public class CollectionActivity extends AppCompatActivity {
             }
         });
 
+        v_share = view.findViewById(R.id.v_share);
+
+        v_share.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                createAddCollectionDialog();
+            }
+        });
+
         /*
         albumAdapter = new AlbumAdapter(getApplicationContext(), initializeData());
 
@@ -128,6 +143,25 @@ public class CollectionActivity extends AppCompatActivity {
 
 
         return data;
+    }
+
+    public void createAddCollectionDialog(){
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+        final View addCollPopup = getLayoutInflater().inflate(R.layout.share, null);
+
+        btn_cancel_share = addCollPopup.findViewById(R.id.btn_cancel_share);
+        dialogBuilder.setView(addCollPopup);
+        dialog = dialogBuilder.create();
+        dialog.show();
+
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        btn_cancel_share.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
     }
 
     public void initializeCollection (String obtainedCollID){
