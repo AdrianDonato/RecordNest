@@ -17,6 +17,8 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -40,6 +42,7 @@ public class CollectionActivity extends AppCompatActivity {
     MainActivity mainActivity;
 
     private FirebaseFirestore fStore;
+    private FirebaseUser fUser;
     private DocumentReference collRef;
     private ArrayList<Album> retAlbums;
     private Collection retCollection;
@@ -61,6 +64,7 @@ public class CollectionActivity extends AppCompatActivity {
 
         //initialize fStore
         fStore = FirebaseFirestore.getInstance();
+        fUser = FirebaseAuth.getInstance().getCurrentUser();
 
         this.collectionName = findViewById(R.id.collection_item);
 
@@ -135,7 +139,7 @@ public class CollectionActivity extends AppCompatActivity {
                     DocumentSnapshot snapshot = task.getResult();
                     String snapshotCollId = snapshot.getId();
                     String snapshotCollTitle = snapshot.getString("Title");
-                    String snapshotUsername = snapshot.getString("Username");
+                    String snapshotUserID = snapshot.getString("UserID");
                     String snapshotDesc = snapshot.getString("Description");
                     ArrayList<String> snapshotAlbums = (ArrayList<String>) snapshot.get("AlbumIDList");
                     ArrayList<String> snapshotImgs = (ArrayList<String>) snapshot.get("ImageURLList");
@@ -144,7 +148,7 @@ public class CollectionActivity extends AppCompatActivity {
 
                     retCollection = new Collection(snapshotCollTitle);
                     retCollection.setCollectionID(snapshotCollId);
-                    retCollection.setUsername(snapshotUsername);
+                    retCollection.setUsername(snapshotUserID);
                     retCollection.setDescription(snapshotDesc);
 
                     retAlbums = new ArrayList<>();
@@ -174,6 +178,9 @@ public class CollectionActivity extends AppCompatActivity {
     public void initializeAlbumAdapter(){
         albumAdapter = new AlbumAdapter(getApplicationContext(), retAlbums);
         albumAdapter.setCollectionID(collIntentID);
+        albumAdapter.setOwnerID(retCollection.getUsername());
+        albumAdapter.setViewerID(fUser.getUid());
+
         //TextView albumName = findViewById(R.id.tv_album_name);
         //albumName.setVisibility(View.VISIBLE);
 

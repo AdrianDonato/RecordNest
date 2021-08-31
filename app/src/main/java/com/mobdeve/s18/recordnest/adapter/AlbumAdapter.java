@@ -31,7 +31,7 @@ public class AlbumAdapter extends RecyclerView.Adapter<ViewHolder> {
     public static final String KEY_NAME = "KEY_NAME";
     public static final String KEY_ARTIST = "KEY_ARTIST";
     public static final String KEY_COLLECTION = "KEY_COLLECTION";
-    public String collectionID;
+    public String collectionID, ownerID, viewerID;
 
     public AlbumAdapter(Context context, ArrayList<Album> albumArrayList) {
         this.albumArrayList = albumArrayList;
@@ -41,6 +41,10 @@ public class AlbumAdapter extends RecyclerView.Adapter<ViewHolder> {
     public void setCollectionID(String collID){
         this.collectionID = collID;
     }
+
+    public void setOwnerID(String ownerID){this.ownerID = ownerID;}
+
+    public void setViewerID(String viewerID){this.viewerID = viewerID;}
 
     @Override
     public int getItemCount() {
@@ -72,24 +76,27 @@ public class AlbumAdapter extends RecyclerView.Adapter<ViewHolder> {
 
         //only enable long press if collectionid is not null
         if(collectionID != null) {
-            viewHolder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-                    //Toast.makeText(context, "long clicked " + albumArrayList.get(viewHolder.getBindingAdapterPosition()).getAlbumName(), Toast.LENGTH_SHORT).show();
-                    Intent i = new Intent(v.getContext(), EditAlbumActivity.class);
+            //check if viewer is also owner of collection
+            if(ownerID.equals(viewerID)) {
+                viewHolder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View v) {
+                        //Toast.makeText(context, "long clicked " + albumArrayList.get(viewHolder.getBindingAdapterPosition()).getAlbumName(), Toast.LENGTH_SHORT).show();
+                        Intent i = new Intent(v.getContext(), EditAlbumActivity.class);
 
-                    i.putExtra(KEY_PICTURE, albumArrayList.get(viewHolder.getBindingAdapterPosition()).getImageId());
-                    i.putExtra(KEY_NAME, albumArrayList.get(viewHolder.getBindingAdapterPosition()).getAlbumName());
-                    i.putExtra(KEY_ARTIST, albumArrayList.get(viewHolder.getBindingAdapterPosition()).getArtist());
-                    i.putExtra(KEY_ID, albumArrayList.get(viewHolder.getBindingAdapterPosition()).getAlbumID());
-                    i.putExtra(KEY_COLLECTION, collectionID);
+                        i.putExtra(KEY_PICTURE, albumArrayList.get(viewHolder.getBindingAdapterPosition()).getImageId());
+                        i.putExtra(KEY_NAME, albumArrayList.get(viewHolder.getBindingAdapterPosition()).getAlbumName());
+                        i.putExtra(KEY_ARTIST, albumArrayList.get(viewHolder.getBindingAdapterPosition()).getArtist());
+                        i.putExtra(KEY_ID, albumArrayList.get(viewHolder.getBindingAdapterPosition()).getAlbumID());
+                        i.putExtra(KEY_COLLECTION, collectionID);
 
-                    v.getContext().startActivity(i);
+                        v.getContext().startActivity(i);
 
-                    return true;
+                        return true;
 
-                }
-            });
+                    }
+                });
+            }
         }
 
 
