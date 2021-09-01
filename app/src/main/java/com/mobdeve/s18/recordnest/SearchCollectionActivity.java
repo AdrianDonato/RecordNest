@@ -137,7 +137,7 @@ public class SearchCollectionActivity extends AppCompatActivity {
             initCollYear(Integer.parseInt(pageYearSbstr));
         } else if(previousActivity.equals("artist")){
             String pageArtist= i.getStringExtra(ArtistAdapter.KEY_ARTIST_NAME);
-            this.collectionName.setText("Albums by " + pageArtist);
+            this.collectionName.setText("Albums from Artists - " + pageArtist);
             initCollArtist(pageArtist);
         }
     }

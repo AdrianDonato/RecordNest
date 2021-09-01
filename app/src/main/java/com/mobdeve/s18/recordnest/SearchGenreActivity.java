@@ -7,15 +7,22 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.mobdeve.s18.recordnest.adapter.GenreAdapter;
 import com.mobdeve.s18.recordnest.databinding.ActivitySearchGenreBinding;
 import com.mobdeve.s18.recordnest.model.Genre;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 
@@ -24,6 +31,10 @@ public class SearchGenreActivity extends AppCompatActivity {
     private ActivitySearchGenreBinding binding;
 
     public GenreAdapter genreAdapter;
+
+    public ArrayList<Genre> genreList;
+
+    public FirebaseFirestore fStore;
 
     TextView genre;
 
@@ -38,6 +49,8 @@ public class SearchGenreActivity extends AppCompatActivity {
         //setContentView(R.layout.activity_main);
         View view = binding.getRoot();
         setContentView(view);
+
+        fStore = FirebaseFirestore.getInstance();
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.nav);
 
@@ -64,7 +77,31 @@ public class SearchGenreActivity extends AppCompatActivity {
             }
         });
 
-        genreAdapter = new GenreAdapter(getApplicationContext(), initializeData());
+        initGenreList();
+    }
+
+    public void initGenreList(){
+        genreList = new ArrayList<>();
+        fStore.collection("AlbumTags").document("GenreTags").get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull @NotNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()){
+                    DocumentSnapshot snapshot = task.getResult();
+                    ArrayList<String> retGenre = (ArrayList<String>) snapshot.get("GenreList");
+                    for(int i = 0; i < retGenre.size(); i++){
+                        genreList.add(new Genre(retGenre.get(i)));
+                    }
+                    initGenreAdapter();
+                } else {
+                    Toast.makeText(SearchGenreActivity.this, "Error! " + task.getException().getMessage(),
+                            Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
+    public void initGenreAdapter(){
+        genreAdapter = new GenreAdapter(getApplicationContext(), genreList);
 
         binding.rvGenre.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
 
@@ -73,16 +110,5 @@ public class SearchGenreActivity extends AppCompatActivity {
         binding.rvGenre.setLayoutManager(lm);
         //findViewById(R.id.tv_album_name).setVisibility(View.VISIBLE);;
         binding.rvGenre.setAdapter(genreAdapter);
-    }
-
-    public ArrayList<Genre> initializeData() {
-        // get data from database here?
-        ArrayList<Genre> data = new ArrayList<>();
-        data.add(new Genre("Pop"));
-        data.add(new Genre("Indie"));
-        data.add(new Genre("Hip Hop"));
-        data.add(new Genre("Jazz"));
-
-        return data;
     }
 }

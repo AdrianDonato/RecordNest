@@ -28,6 +28,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -225,11 +226,18 @@ public class SubmitAlbumActivity extends AppCompatActivity{
                             fStore.collection("Albums").document(newId).update(newImgURL).addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void unused) {
-                                    Toast.makeText(SubmitAlbumActivity.this, "Successfully added " + etAlbTitle.getText().toString().trim() +"!",
-                                            Toast.LENGTH_SHORT).show();
-                                    Intent i = new Intent(SubmitAlbumActivity.this, AlbumProfileActivity.class);
-                                    i.putExtra("KEY_ID", newId);
-                                    startActivity(i);
+                                    Map<String, Object> addGenre = new HashMap<>();
+                                    addGenre.put("GenreList", FieldValue.arrayUnion(subGenre));
+                                    fStore.collection("AlbumTags").document("GenreTags").update(addGenre).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void unused) {
+                                            Toast.makeText(SubmitAlbumActivity.this, "Successfully added " + etAlbTitle.getText().toString().trim() +"!",
+                                                    Toast.LENGTH_SHORT).show();
+                                            Intent i = new Intent(SubmitAlbumActivity.this, AlbumProfileActivity.class);
+                                            i.putExtra("KEY_ID", newId);
+                                            startActivity(i);
+                                        }
+                                    });
                                 }
                             });
                         }
