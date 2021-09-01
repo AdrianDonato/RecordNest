@@ -109,6 +109,7 @@ public class UserProfileActivity extends AppCompatActivity {
             @Override
             public void onClick(View v){
                 Intent i = new Intent(UserProfileActivity.this, FollowersActivity.class);
+                i.putExtra("USER_ID", mUserID);
                 startActivity(i);
             }
         });

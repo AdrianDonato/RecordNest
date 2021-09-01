@@ -71,7 +71,7 @@ public class FollowingActActivity extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()){
                     case R.id.following:
-                        Intent i = new Intent(getApplicationContext(), FollowingActActivity.class);
+                        Intent i = new Intent(getApplicationContext(), FollowingActivity.class);
                         i.putExtra("USER_ID", ownUserID);
                         startActivity(i);
                         overridePendingTransition(0,0);

@@ -67,7 +67,7 @@
             android:layout_marginRight="20dp">
 
             <ImageView
-                android:id="@+id/following_own_image"
+                android:id="@+id/follower_own_image"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
                 android:src="@drawable/album1"/>
@@ -84,7 +84,7 @@
             android:layout_marginRight="10dp">
 
             <TextView
-                android:id="@+id/following_own_follower"
+                android:id="@+id/follower_own_follower"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="-"
@@ -111,7 +111,7 @@
             android:layout_marginLeft="10dp">
 
             <TextView
-                android:id="@+id/following_own_following"
+                android:id="@+id/follower_own_following"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="-"

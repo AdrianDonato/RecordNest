@@ -7,16 +7,28 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.mobdeve.s18.recordnest.adapter.UserListAdapter;
 import com.mobdeve.s18.recordnest.databinding.ActivityFollowersBinding;
 import com.mobdeve.s18.recordnest.model.UserList;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 
@@ -29,6 +41,13 @@ public class FollowersActivity extends AppCompatActivity {
     private LinearLayout following;
     private Button btn_edit;
 
+    private ArrayList<UserList> followerUsers;
+    private ImageView ownImage;
+    private TextView ownUsername, ownFollowers, ownFollowing;
+
+    private FirebaseFirestore fStore;
+    private String ownUserID;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,12 +59,17 @@ public class FollowersActivity extends AppCompatActivity {
         View view = binding.getRoot();
         setContentView(view);
 
+        fStore = FirebaseFirestore.getInstance();
+        Intent i = getIntent();
+        ownUserID = i.getStringExtra("USER_ID");
+
         btn_edit = findViewById(R.id.btn_edit_profile);
 
         btn_edit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v){
                 Intent i = new Intent(FollowersActivity.this, EditProfileActivity.class);
+                i.putExtra("USER_ID", ownUserID);
                 startActivity(i);
             }
         });
@@ -56,18 +80,13 @@ public class FollowersActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(FollowersActivity.this, FollowingActivity.class);
+                i.putExtra("USER_ID", ownUserID);
                 startActivity(i);
             }
         });
 
-        userListAdapter = new UserListAdapter(getApplicationContext(), initializeData());
-
-        //TextView albumName = findViewById(R.id.tv_album_name);
-        //albumName.setVisibility(View.VISIBLE);
-
-        binding.rvFollowerslist.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-        //findViewById(R.id.tv_album_name).setVisibility(View.VISIBLE);;
-        binding.rvFollowerslist.setAdapter(userListAdapter);
+        initOwnProfile(ownUserID);
+        initializeUserData(ownUserID);
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.nav);
 
@@ -104,4 +123,75 @@ public class FollowersActivity extends AppCompatActivity {
 
         return data;
     }
+
+    //initialize own profile (username, profile picture, etc)
+    public void initOwnProfile(String userID){
+        this.ownImage = findViewById(R.id.follower_own_image);
+        this.ownUsername = findViewById(R.id.profile_username);
+        this.ownFollowers = findViewById(R.id.follower_own_follower);
+        this.ownFollowing = findViewById(R.id.follower_own_following);
+
+        fStore.collection("UserDetails").document(userID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull @NotNull Task<DocumentSnapshot> task) {
+                if(task.isSuccessful()){
+                    DocumentSnapshot snapshot = task.getResult();
+                    String retImg = snapshot.getString("ProfPicURL");
+                    String retUsername = snapshot.getString("Username");
+                    int fercount = snapshot.getLong("FollowerCount").intValue();
+                    int fingcount= snapshot.getLong("FollowingCount").intValue();
+
+                    ownUsername.setText(retUsername);
+                    ownFollowers.setText(Integer.toString(fercount));
+                    ownFollowing.setText(Integer.toString(fingcount));
+
+                    if(!(retImg.equals("placeholder"))){
+                        Glide.with(getApplicationContext())
+                                .load(retImg).into(ownImage);
+                    }
+                } else {
+                    Toast.makeText(FollowersActivity.this, "Error! " + task.getException().getMessage(),
+                            Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
+    //generate followed users from database with this function
+    public void initializeUserData(String userID){
+        followerUsers = new ArrayList<>();
+        fStore.collection("UserDetails").whereArrayContains("FollowingList", userID).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull @NotNull Task<QuerySnapshot> task) {
+                if(task.isSuccessful()){
+                    for(QueryDocumentSnapshot documentSnapshot : task.getResult()){
+                        String retUID = documentSnapshot.getId();
+                        String retUsername = documentSnapshot.getString("Username");
+                        String retImgURL = documentSnapshot.getString("ProfPicURL");
+
+                        //set userlist instance with image url string
+                        followerUsers.add(new UserList(retImgURL, retUsername, retUID));
+                    }
+                    initUsersAdapter();
+                } else {
+                    Toast.makeText(FollowersActivity.this, "Error! " + task.getException().getMessage(),
+                            Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
+    //initialize user adapter after getting users from db
+    public void initUsersAdapter(){
+        userListAdapter = new UserListAdapter(getApplicationContext(), followerUsers);
+
+        //TextView albumName = findViewById(R.id.tv_album_name);
+        //albumName.setVisibility(View.VISIBLE);
+
+        binding.rvFollowerslist.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+        //findViewById(R.id.tv_album_name).setVisibility(View.VISIBLE);;
+        binding.rvFollowerslist.setAdapter(userListAdapter);
+    }
+
+
 }
