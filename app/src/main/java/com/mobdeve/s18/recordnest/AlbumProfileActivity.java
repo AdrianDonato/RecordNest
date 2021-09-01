@@ -334,6 +334,30 @@ public class AlbumProfileActivity extends AppCompatActivity {
         this.yearViewAlbum.setText(Integer.toString(albumYear));
         this.genreViewAlbum.setText(genre);
 
+        this.yearViewAlbum.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String intentYear = Integer.toString(albumYear).substring(0,3) + "0s";
+
+                Intent i = new Intent(v.getContext(), SearchCollectionActivity.class);
+
+                i.putExtra("FROM_ACTIVITY", "year");
+                i.putExtra("KEY_YEAR_NAME", intentYear);
+                v.getContext().startActivity(i);
+            }
+        });
+
+        this.genreViewAlbum.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(v.getContext(), SearchCollectionActivity.class);
+
+                i.putExtra("FROM_ACTIVITY", "genre");
+                i.putExtra("KEY_GENRE_NAME", genre);
+                v.getContext().startActivity(i);
+            }
+        });
+
         //don't display average rating if no review has been made yet
         if(rateCount > 0) {
             //format average to 2 decimal places only
