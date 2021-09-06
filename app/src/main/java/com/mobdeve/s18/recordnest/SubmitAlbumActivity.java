@@ -231,11 +231,19 @@ public class SubmitAlbumActivity extends AppCompatActivity{
                                     fStore.collection("AlbumTags").document("GenreTags").update(addGenre).addOnSuccessListener(new OnSuccessListener<Void>() {
                                         @Override
                                         public void onSuccess(Void unused) {
-                                            Toast.makeText(SubmitAlbumActivity.this, "Successfully added " + etAlbTitle.getText().toString().trim() +"!",
-                                                    Toast.LENGTH_SHORT).show();
-                                            Intent i = new Intent(SubmitAlbumActivity.this, AlbumProfileActivity.class);
-                                            i.putExtra("KEY_ID", newId);
-                                            startActivity(i);
+                                            Map<String, Object> addArtistAlphabet = new HashMap<>();
+                                            char newArtistAlph = subArtist.charAt(0);
+                                            addArtistAlphabet.put("ArtistAlphabetList", FieldValue.arrayUnion(String.valueOf(newArtistAlph)));
+                                            fStore.collection("AlbumTags").document("ArtistAlphabetTags").update(addArtistAlphabet).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                @Override
+                                                public void onSuccess(Void unused) {
+                                                    Toast.makeText(SubmitAlbumActivity.this, "Successfully added " + etAlbTitle.getText().toString().trim() +"!",
+                                                            Toast.LENGTH_SHORT).show();
+                                                    Intent i = new Intent(SubmitAlbumActivity.this, AlbumProfileActivity.class);
+                                                    i.putExtra("KEY_ID", newId);
+                                                    startActivity(i);
+                                                }
+                                            });
                                         }
                                     });
                                 }
