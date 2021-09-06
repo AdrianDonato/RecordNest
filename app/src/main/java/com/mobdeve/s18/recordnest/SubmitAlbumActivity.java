@@ -266,9 +266,6 @@ public class SubmitAlbumActivity extends AppCompatActivity{
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-
-
     }
 
 

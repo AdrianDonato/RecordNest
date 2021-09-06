@@ -191,7 +191,9 @@ public class SearchCollectionActivity extends AppCompatActivity {
     public void initCollArtist(String albArtist){
         albumList = new ArrayList<>();
 
-        fStore.collection("Albums").whereEqualTo("Artist", albArtist).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        fStore.collection("Albums").whereGreaterThanOrEqualTo("Artist", albArtist)
+                .whereLessThanOrEqualTo("Artist", albArtist+'\uf8ff')
+                .orderBy("Artist").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull @NotNull Task<QuerySnapshot> task) {
                 if(task.isSuccessful()){
