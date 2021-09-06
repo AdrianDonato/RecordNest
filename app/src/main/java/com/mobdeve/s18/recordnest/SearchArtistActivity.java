@@ -7,15 +7,22 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.mobdeve.s18.recordnest.adapter.ArtistAdapter;
 import com.mobdeve.s18.recordnest.databinding.ActivitySearchArtistBinding;
 import com.mobdeve.s18.recordnest.model.Artist;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 
@@ -26,6 +33,9 @@ public class SearchArtistActivity extends AppCompatActivity {
     public ArtistAdapter artistAdapter;
 
     TextView artist;
+
+    private FirebaseFirestore fStore;
+    private ArrayList<Artist> retArtistAlphabet;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +48,9 @@ public class SearchArtistActivity extends AppCompatActivity {
         //setContentView(R.layout.activity_main);
         View view = binding.getRoot();
         setContentView(view);
+
+        //firestore initialization
+        fStore = FirebaseFirestore.getInstance();
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.nav);
 
@@ -63,7 +76,34 @@ public class SearchArtistActivity extends AppCompatActivity {
                 return false;
             }
         });
-        artistAdapter = new ArtistAdapter(getApplicationContext(), initializeData());
+        initArtistAlphabet();
+    }
+
+    //function to retrieve lists of starting letters from database
+    public void initArtistAlphabet(){
+        retArtistAlphabet = new ArrayList<>();
+        fStore.collection("AlbumTags").document("ArtistAlphabetTags").get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull @NotNull Task<DocumentSnapshot> task) {
+                if(task.isSuccessful()){
+                    DocumentSnapshot snapshot = task.getResult();
+                    ArrayList<String> retAlphabet = (ArrayList<String>) snapshot.get("ArtistAlphabetList");
+                    if(retAlphabet != null) {
+                        for (int i = 0; i < retAlphabet.size(); i++) {
+                            retArtistAlphabet.add(new Artist(retAlphabet.get(i)));
+                        }
+                        initArtistListAdapter();
+                    }
+                } else {
+                    Toast.makeText(SearchArtistActivity.this, "Error! " + task.getException().getMessage(),
+                            Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
+    public void initArtistListAdapter(){
+        artistAdapter = new ArtistAdapter(getApplicationContext(), retArtistAlphabet);
 
         binding.rvArtist.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
 
@@ -72,15 +112,5 @@ public class SearchArtistActivity extends AppCompatActivity {
         binding.rvArtist.setLayoutManager(lm);
         //findViewById(R.id.tv_album_name).setVisibility(View.VISIBLE);;
         binding.rvArtist.setAdapter(artistAdapter);
-    }
-
-    public ArrayList<Artist> initializeData() {
-        // get data from database here?
-        ArrayList<Artist> data = new ArrayList<>();
-        data.add(new Artist("0-9"));
-        data.add(new Artist("A-Z"));
-        data.add(new Artist("Symbols/Special Characters"));
-        data.add(new Artist("Others"));
-        return data;
     }
 }

@@ -190,6 +190,7 @@ public class SearchCollectionActivity extends AppCompatActivity {
     //initializes list of albums using an artist
     public void initCollArtist(String albArtist){
         albumList = new ArrayList<>();
+
         fStore.collection("Albums").whereEqualTo("Artist", albArtist).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull @NotNull Task<QuerySnapshot> task) {
