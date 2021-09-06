@@ -334,6 +334,7 @@ public class AlbumProfileActivity extends AppCompatActivity {
         this.yearViewAlbum.setText(Integer.toString(albumYear));
         this.genreViewAlbum.setText(genre);
 
+        //set intent when year is clicked
         this.yearViewAlbum.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -347,6 +348,7 @@ public class AlbumProfileActivity extends AppCompatActivity {
             }
         });
 
+        //set intent when genre is clicked
         this.genreViewAlbum.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -354,6 +356,19 @@ public class AlbumProfileActivity extends AppCompatActivity {
 
                 i.putExtra("FROM_ACTIVITY", "genre");
                 i.putExtra("KEY_GENRE_NAME", genre);
+                v.getContext().startActivity(i);
+            }
+        });
+
+        //set intent when artist name is clicked
+        this.artistViewAlbum.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String artistAlph = String.valueOf(artist.charAt(0));
+                Intent i = new Intent(v.getContext(), SearchCollectionActivity.class);
+
+                i.putExtra("FROM_ACTIVITY", "artist");
+                i.putExtra("KEY_ARTIST_NAME", artistAlph);
                 v.getContext().startActivity(i);
             }
         });
