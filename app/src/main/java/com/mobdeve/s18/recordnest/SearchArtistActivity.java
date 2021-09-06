@@ -25,6 +25,7 @@ import com.mobdeve.s18.recordnest.model.Artist;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class SearchArtistActivity extends AppCompatActivity {
 
@@ -88,6 +89,8 @@ public class SearchArtistActivity extends AppCompatActivity {
                 if(task.isSuccessful()){
                     DocumentSnapshot snapshot = task.getResult();
                     ArrayList<String> retAlphabet = (ArrayList<String>) snapshot.get("ArtistAlphabetList");
+                    //sort alphabet
+                    Collections.sort(retAlphabet);
                     if(retAlphabet != null) {
                         for (int i = 0; i < retAlphabet.size(); i++) {
                             retArtistAlphabet.add(new Artist(retAlphabet.get(i)));
