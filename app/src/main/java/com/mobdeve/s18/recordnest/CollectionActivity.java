@@ -184,6 +184,14 @@ public class CollectionActivity extends AppCompatActivity {
 
         sbFBShare = addCollPopup.findViewById(R.id.sb_facebookshare);
 
+        //task 1: save current activity as screenshot
+        Bitmap viewSS = getScreenshot(view);
+        //task 2: share to facebook
+        SharePhoto sharePhoto = new SharePhoto.Builder().setBitmap(viewSS).build();
+        SharePhotoContent sharePhotoContent = new SharePhotoContent.Builder()
+                .addPhoto(sharePhoto).build();
+        sbFBShare.setShareContent(sharePhotoContent);
+
         dialogBuilder.setView(addCollPopup);
         dialog = dialogBuilder.create();
         dialog.show();
@@ -258,14 +266,13 @@ public class CollectionActivity extends AppCompatActivity {
         binding.rvCollectionalbum.setAdapter(albumAdapter);
     }
 
+    //baka di na need i-log sa facebook? will check later
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data){
         super.onActivityResult(requestCode, resultCode, data);
         callbackManager.onActivityResult(requestCode, resultCode, data);
 
         //task 1: save current activity as screenshot
-        //for now, use a random pic
-        //Bitmap testbitmap = BitmapFactory.decodeResource(getResources(), R.drawable.vinyl);
         Bitmap viewSS = getScreenshot(view);
         //task 2: share to facebook
         SharePhoto sharePhoto = new SharePhoto.Builder().setBitmap(viewSS).build();
