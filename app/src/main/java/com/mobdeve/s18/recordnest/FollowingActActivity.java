@@ -22,9 +22,9 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.mobdeve.s18.recordnest.adapter.ReviewAdapter;
+import com.mobdeve.s18.recordnest.adapter.ActivityAdapter;
 import com.mobdeve.s18.recordnest.databinding.ActivityFollowingActBinding;
-import com.mobdeve.s18.recordnest.model.Review;
+import com.mobdeve.s18.recordnest.model.Activity;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -43,7 +43,8 @@ public class FollowingActActivity extends AppCompatActivity {
     private FirebaseFirestore fStore;
     private String ownUserID;
 
-    private ReviewAdapter reviewAdapter;
+    //private ReviewAdapter reviewAdapter;
+    private ActivityAdapter activityAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -132,14 +133,14 @@ public class FollowingActActivity extends AppCompatActivity {
             }
         });
 
-        reviewAdapter = new ReviewAdapter(getApplicationContext(), initializeData());
+        activityAdapter = new ActivityAdapter(getApplicationContext(), initializeData());
 
         //TextView albumName = findViewById(R.id.tv_album_name);
         //albumName.setVisibility(View.VISIBLE);
 
         binding.rvRecentactivity.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
         //findViewById(R.id.tv_album_name).setVisibility(View.VISIBLE);;
-        binding.rvRecentactivity.setAdapter(reviewAdapter);
+        binding.rvRecentactivity.setAdapter(activityAdapter);
     }
 
     //initialize own profile (username, profile picture, etc)
@@ -175,11 +176,11 @@ public class FollowingActActivity extends AppCompatActivity {
         });
     }
 
-    public ArrayList<Review> initializeData() {
+    public ArrayList<Activity> initializeData() {
         // get data from database here?
-        ArrayList<Review> data = new ArrayList<>();
-        data.add(new Review(5,R.drawable.user,"qbvxJbLdBXWq0CYqEeoSqV91ALs2", "nice!"));
-        data.add(new Review(5,R.drawable.user,"qbvxJbLdBXWq0CYqEeoSqV91ALs2", "owowow"));
+        ArrayList<Activity> data = new ArrayList<>();
+        data.add(new Activity("Username","Title","Content", "Date", R.drawable.vinyl));
+        data.add(new Activity("Username","Title","Content", "Date", R.drawable.vinyl));
         return data;
     }
 }

@@ -174,7 +174,6 @@
             android:id="@+id/rv_datalist"
             android:layout_width="220dp"
             android:layout_height="380dp"
-
             android:nestedScrollingEnabled="false"/>
 
     </androidx.core.widget.NestedScrollView>
