@@ -2,7 +2,10 @@ package com.mobdeve.s18.recordnest;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -14,10 +17,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 
+import com.facebook.CallbackManager;
+import com.facebook.login.widget.LoginButton;
+import com.facebook.share.model.SharePhoto;
+import com.facebook.share.model.SharePhotoContent;
+import com.facebook.share.widget.ShareButton;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -37,6 +46,9 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import com.facebook.FacebookSdk;
+import com.facebook.appevents.AppEventsLogger;
+
 public class CollectionActivity extends AppCompatActivity {
 
     private ActivityCollectionBinding binding;
@@ -53,6 +65,9 @@ public class CollectionActivity extends AppCompatActivity {
     private ArrayList<Album> retAlbums;
     private Collection retCollection;
     private String collIntentID;
+    private CallbackManager callbackManager;
+    private ShareButton sbFBShare;
+    private LoginButton lbFBlogin;
 
     Dialog dialog;
 
@@ -71,6 +86,14 @@ public class CollectionActivity extends AppCompatActivity {
         //initialize fStore
         fStore = FirebaseFirestore.getInstance();
         fUser = FirebaseAuth.getInstance().getCurrentUser();
+
+        /*
+        lbFBlogin = findViewById(R.id.lb_facebooklogin);
+        sbFBShare = findViewById(R.id.sb_facebookshare);
+        //initialize callback manager
+        //this allows the app to communicate with facebook
+        callbackManager = CallbackManager.Factory.create();
+        */
 
         this.collectionName = findViewById(R.id.collection_item);
 
@@ -145,11 +168,21 @@ public class CollectionActivity extends AppCompatActivity {
         return data;
     }
 
+    //creates sharing dialog (rename na lang yung function)
     public void createAddCollectionDialog(){
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
         final View addCollPopup = getLayoutInflater().inflate(R.layout.share, null);
 
         btn_cancel_share = addCollPopup.findViewById(R.id.btn_cancel_share);
+        lbFBlogin = addCollPopup.findViewById(R.id.lb_facebooklogin);
+
+        //initialize callback manager
+        //this allows the app to communicate with facebook
+        callbackManager = CallbackManager.Factory.create();
+
+
+        sbFBShare = addCollPopup.findViewById(R.id.sb_facebookshare);
+
         dialogBuilder.setView(addCollPopup);
         dialog = dialogBuilder.create();
         dialog.show();
@@ -164,6 +197,7 @@ public class CollectionActivity extends AppCompatActivity {
         });
     }
 
+    //initializes collection from the obtained collection id
     public void initializeCollection (String obtainedCollID){
         collRef = fStore.collection("AlbumCollection").document(obtainedCollID);
         collRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -223,6 +257,20 @@ public class CollectionActivity extends AppCompatActivity {
         binding.rvCollectionalbum.setAdapter(albumAdapter);
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data){
+        super.onActivityResult(requestCode, resultCode, data);
+        callbackManager.onActivityResult(requestCode, resultCode, data);
 
+        //task 1: save current activity as screenshot
+        //for now, use a random pic
+        Bitmap testbitmap = BitmapFactory.decodeResource(getResources(), R.drawable.vinyl);
+
+        //task 2: share to facebook
+        SharePhoto sharePhoto = new SharePhoto.Builder().setBitmap(testbitmap).build();
+        SharePhotoContent sharePhotoContent = new SharePhotoContent.Builder()
+                .addPhoto(sharePhoto).build();
+        sbFBShare.setShareContent(sharePhotoContent);
+    }
 
 }

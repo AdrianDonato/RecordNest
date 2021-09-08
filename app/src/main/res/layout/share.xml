@@ -40,10 +40,16 @@
                 android:layout_height="80dp"
                 android:src="@drawable/facebook"/>
 
-            <TextView
+            <com.facebook.share.widget.ShareButton
+                android:id="@+id/sb_facebookshare"
+                android:text="facebook"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Facebook"/>
+                android:layout_height="wrap_content"/>
+            <com.facebook.login.widget.LoginButton
+                android:id="@+id/lb_facebooklogin"
+                android:text="connect"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
         </LinearLayout>
 
         <LinearLayout

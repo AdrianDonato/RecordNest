@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Record Nest</string>
-
+    <string name="facebook_app_id">1276243732892644</string>
+    <string name="fb_login_protocol_scheme">fb1276243732892644</string>
     <string-array name="collections">
         <item>Choose a collection</item>
         <item>Collection 1</item>
