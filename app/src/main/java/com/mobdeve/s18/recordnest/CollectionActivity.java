@@ -68,6 +68,7 @@ public class CollectionActivity extends AppCompatActivity {
     private CallbackManager callbackManager;
     private ShareButton sbFBShare;
     private LoginButton lbFBlogin;
+    private View view;
 
     Dialog dialog;
 
@@ -80,7 +81,7 @@ public class CollectionActivity extends AppCompatActivity {
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         getSupportActionBar().hide();
         //setContentView(R.layout.activity_main);
-        View view = binding.getRoot();
+        view = binding.getRoot();
         setContentView(view);
 
         //initialize fStore
@@ -264,13 +265,22 @@ public class CollectionActivity extends AppCompatActivity {
 
         //task 1: save current activity as screenshot
         //for now, use a random pic
-        Bitmap testbitmap = BitmapFactory.decodeResource(getResources(), R.drawable.vinyl);
-
+        //Bitmap testbitmap = BitmapFactory.decodeResource(getResources(), R.drawable.vinyl);
+        Bitmap viewSS = getScreenshot(view);
         //task 2: share to facebook
-        SharePhoto sharePhoto = new SharePhoto.Builder().setBitmap(testbitmap).build();
+        SharePhoto sharePhoto = new SharePhoto.Builder().setBitmap(viewSS).build();
         SharePhotoContent sharePhotoContent = new SharePhotoContent.Builder()
                 .addPhoto(sharePhoto).build();
         sbFBShare.setShareContent(sharePhotoContent);
+    }
+
+    //function to get current activity into bitmap form
+    public static Bitmap getScreenshot(View v){
+        View rootView = v.getRootView();
+        rootView.setDrawingCacheEnabled(true);
+        Bitmap bitmap = Bitmap.createBitmap(rootView.getDrawingCache());
+        rootView.setDrawingCacheEnabled(false);
+        return bitmap;
     }
 
 }
