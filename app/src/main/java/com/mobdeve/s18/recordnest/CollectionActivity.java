@@ -12,7 +12,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -54,7 +56,8 @@ public class CollectionActivity extends AppCompatActivity {
     private ActivityCollectionBinding binding;
     TextView collectionName;
     View v_share;
-    Button btn_cancel_share;
+    View v_sort;
+    Button btn_cancel_share, btn_close_sortby, btn_sort;
 
     public AlbumAdapter albumAdapter;
     MainActivity mainActivity;
@@ -138,6 +141,15 @@ public class CollectionActivity extends AppCompatActivity {
             }
         });
 
+        v_sort = view.findViewById(R.id.v_sort);
+
+        v_sort.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                createSortDialog();
+            }
+        });
+
         /*
         albumAdapter = new AlbumAdapter(getApplicationContext(), initializeData());
 
@@ -202,6 +214,44 @@ public class CollectionActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
+            }
+        });
+    }
+
+    public void createSortDialog(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(CollectionActivity.this);
+        View view = getLayoutInflater().inflate(R.layout.sortby, null);
+
+        ArrayList<String> sortList = new ArrayList<>();
+
+        sortList.add("BY YEAR");
+        sortList.add("BY ALBUM NAME");
+        sortList.add("BY ARTIST NAME");
+        sortList.add("BY RATING");
+
+        btn_close_sortby = view.findViewById(R.id.btn_close_sortby);
+        btn_sort = view.findViewById(R.id.btn_sort);
+
+
+        builder.setTitle("Spinner");
+        Spinner spinner = view.findViewById((R.id.spinner_sortby));
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(CollectionActivity.this,
+                android.R.layout.simple_spinner_item, sortList);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        spinner.setAdapter(adapter);
+
+        builder.setView(view);
+        AlertDialog myDialog = builder.create();
+        myDialog.show();
+
+        myDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        btn_close_sortby.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                myDialog.dismiss();
             }
         });
     }

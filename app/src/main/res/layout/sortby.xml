@@ -14,12 +14,12 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        android:text="ADD TO COLLECTION"
+        android:text="SORT ALBUMS"
         android:layout_marginTop="20dp"
         android:textColor="@color/black"/>
 
     <Button
-        android:id="@+id/btn_close_add_to_collection"
+        android:id="@+id/btn_close_sortby"
         android:layout_width="24dp"
         android:layout_height="24dp"
         android:padding="0dp"
@@ -33,7 +33,7 @@
         android:visibility="visible"/>
 
     <Spinner
-        android:id="@+id/spinner_collection"
+        android:id="@+id/spinner_sortby"
         android:layout_width="250dp"
         android:layout_height="35dp"
         android:background="@drawable/popup"
@@ -47,13 +47,13 @@
 
 
     <Button
-        android:id="@+id/btn_add_to_collection"
+        android:id="@+id/btn_sort"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:backgroundTint="#FF7A17"
         android:text="DONE"
         android:textColor="@color/black"
-        app:layout_constraintTop_toBottomOf="@id/spinner_collection"
+        app:layout_constraintTop_toBottomOf="@id/spinner_sortby"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         android:layout_marginTop="20dp"
