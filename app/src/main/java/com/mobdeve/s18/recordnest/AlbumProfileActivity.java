@@ -50,8 +50,11 @@ import com.mobdeve.s18.recordnest.model.Tracklist;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 public class AlbumProfileActivity extends AppCompatActivity {
@@ -432,10 +435,44 @@ public class AlbumProfileActivity extends AppCompatActivity {
                             @Override
                             public void onComplete(@NonNull @NotNull Task<Void> task) {
                                 if (task.isSuccessful()) {
-                                    Toast.makeText(AlbumProfileActivity.this, "Successfully updated your review!", Toast.LENGTH_SHORT).show();
-                                    //refreshes activity to reflect changes
-                                    finish();
-                                    startActivity(getIntent());
+                                    //create a new activity for feed
+                                    Map<String, Object> newActivity = new HashMap<>();
+                                    if(reviewContent.equals("")){
+                                        newActivity.put("ActivityTitle", "updated their rating of " + albumDisplayed.getAlbumName()
+                                        + " to " + rating + " stars!");
+                                        newActivity.put("ExtraContent", "");
+                                    } else {
+                                        newActivity.put("ActivityTitle", "updated their review for " + albumDisplayed.getAlbumName()
+                                        + "!");
+                                        newActivity.put("ExtraContent", '\"' + reviewContent + '\"');
+                                    }
+                                    newActivity.put("UserID", mUserID);
+                                    newActivity.put("IntentFor", "Album");
+                                    newActivity.put("IntentID", obtainedId);
+
+                                    //get current timestamp
+                                    Calendar currDate = Calendar.getInstance();
+                                    SimpleDateFormat sdf = new SimpleDateFormat("MMMM dd, yyyy - hh:mm aa", Locale.US);
+                                    String inDatePosted = sdf.format(currDate.getTime());
+
+                                    //save current timestamp to hashmap
+                                    newActivity.put("Date", inDatePosted);
+
+                                    //add new activity into database
+                                    fStore.collection("FeedActivities").add(newActivity).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+                                        @Override
+                                        public void onComplete(@NonNull @NotNull Task<DocumentReference> task) {
+                                            if(task.isSuccessful()){
+                                                Toast.makeText(AlbumProfileActivity.this, "Successfully updated your review!", Toast.LENGTH_SHORT).show();
+                                                //refreshes activity to reflect changes
+                                                finish();
+                                                startActivity(getIntent());
+                                            } else {
+                                                Toast.makeText(AlbumProfileActivity.this, "Error! " + task.getException().getMessage(),
+                                                        Toast.LENGTH_SHORT).show();
+                                            }
+                                        }
+                                    });
                                 }
                             }
                         });
@@ -475,10 +512,44 @@ public class AlbumProfileActivity extends AppCompatActivity {
                             @Override
                             public void onComplete(@NonNull @NotNull Task<Void> task) {
                                 if (task.isSuccessful()) {
-                                    Toast.makeText(AlbumProfileActivity.this, "Successfully submitted your review!", Toast.LENGTH_SHORT).show();
-                                    //refreshes activity to reflect changes
-                                    finish();
-                                    startActivity(getIntent());
+                                    //create a new activity for feed
+                                    Map<String, Object> newActivity = new HashMap<>();
+                                    if(reviewContent.equals("")){
+                                        newActivity.put("ActivityTitle", "rated " + albumDisplayed.getAlbumName()
+                                                + " " + rating + " stars!");
+                                        newActivity.put("ExtraContent", "");
+                                    } else {
+                                        newActivity.put("ActivityTitle", "wrote a review for " + albumDisplayed.getAlbumName()
+                                                + "!");
+                                        newActivity.put("ExtraContent", '\"' + reviewContent + '\"');
+                                    }
+                                    newActivity.put("UserID", mUserID);
+                                    newActivity.put("IntentFor", "Album");
+                                    newActivity.put("IntentID", obtainedId);
+
+                                    //get current timestamp
+                                    Calendar currDate = Calendar.getInstance();
+                                    SimpleDateFormat sdf = new SimpleDateFormat("MMMM dd, yyyy - hh:mm aa", Locale.US);
+                                    String inDatePosted = sdf.format(currDate.getTime());
+
+                                    //save current timestamp to hashmap
+                                    newActivity.put("Date", inDatePosted);
+
+                                    //add new activity into database
+                                    fStore.collection("FeedActivities").add(newActivity).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+                                        @Override
+                                        public void onComplete(@NonNull @NotNull Task<DocumentReference> task) {
+                                            if(task.isSuccessful()){
+                                                Toast.makeText(AlbumProfileActivity.this, "Successfully submitted your review!", Toast.LENGTH_SHORT).show();
+                                                //refreshes activity to reflect changes
+                                                finish();
+                                                startActivity(getIntent());
+                                            } else {
+                                                Toast.makeText(AlbumProfileActivity.this, "Error! " + task.getException().getMessage(),
+                                                        Toast.LENGTH_SHORT).show();
+                                            }
+                                        }
+                                    });
                                 }
                             }
                         });

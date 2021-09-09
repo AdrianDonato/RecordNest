@@ -57,7 +57,13 @@ public class ActivityAdapter extends RecyclerView.Adapter<ActivityAdapter.Activi
                         String retUsername = snapshot.getString("Username");
                         holder.activity_username.setText(retUsername);
                         holder.activity_title.setText(retUsername + " " + activityArrayList.get(position).getTitle());
-                        holder.activity_content.setText(activityArrayList.get(position).getContent());
+
+                        //hide content view if there is no content
+                        if(activityArrayList.get(position).getContent().equals("")){
+                            holder.activity_content.setVisibility(View.GONE);
+                        } else {
+                            holder.activity_content.setText(activityArrayList.get(position).getContent());
+                        }
                         holder.activity_date.setText(activityArrayList.get(position).getDate());
 
                         if(activityArrayList.get(position).getIntentFor().equals("Collection")) {
