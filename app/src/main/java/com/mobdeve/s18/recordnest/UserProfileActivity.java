@@ -38,8 +38,11 @@ import com.mobdeve.s18.recordnest.model.Collection;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 public class UserProfileActivity extends AppCompatActivity {
@@ -318,10 +321,38 @@ public class UserProfileActivity extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull @NotNull Task<DocumentReference> task) {
                 if(task.isSuccessful()){
-                    Toast.makeText(UserProfileActivity.this, "Successfully added " + collTitle + "!",
-                            Toast.LENGTH_SHORT).show();
-                    finish();
-                    startActivity(getIntent());
+                    DocumentReference docRef = task.getResult();
+                    //create a new activity for feed
+                    Map<String, Object> newActivity = new HashMap<>();
+                    newActivity.put("ActivityTitle", "created a new collection!");
+                    newActivity.put("UserID", mUserID);
+                    newActivity.put("ExtraContent", "Check out "+collTitle+"!");
+                    newActivity.put("IntentFor", "Collection");
+                    newActivity.put("IntentID", docRef.getId());
+
+                    //get current timestamp
+                    Calendar currDate = Calendar.getInstance();
+                    SimpleDateFormat sdf = new SimpleDateFormat("MMMM dd, yyyy - hh:mm aa", Locale.US);
+                    String inDatePosted = sdf.format(currDate.getTime());
+
+                    //save current timestamp to hashmap
+                    newActivity.put("Date", inDatePosted);
+
+                    //add new activity into database
+                    fStore.collection("FeedActivities").add(newActivity).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+                        @Override
+                        public void onComplete(@NonNull @NotNull Task<DocumentReference> task) {
+                            if (task.isSuccessful()){
+                                Toast.makeText(UserProfileActivity.this, "Successfully added " + collTitle + "!",
+                                        Toast.LENGTH_SHORT).show();
+                                finish();
+                                startActivity(getIntent());
+                            } else {
+                                Toast.makeText(UserProfileActivity.this, "Error! " + task.getException().getMessage(),
+                                        Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
                 } else {
                     Toast.makeText(UserProfileActivity.this, "Error! " + task.getException().getMessage(),
                             Toast.LENGTH_SHORT).show();
