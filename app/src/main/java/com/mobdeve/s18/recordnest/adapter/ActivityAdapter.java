@@ -1,6 +1,7 @@
 package com.mobdeve.s18.recordnest.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +10,11 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.mobdeve.s18.recordnest.AlbumProfileActivity;
+import com.mobdeve.s18.recordnest.CollectionActivity;
 import com.mobdeve.s18.recordnest.R;
 import com.mobdeve.s18.recordnest.model.Activity;
 
@@ -43,12 +49,40 @@ public class ActivityAdapter extends RecyclerView.Adapter<ActivityAdapter.Activi
 
     @Override
     public void onBindViewHolder(ActivityAdapter.ActivityViewHolder holder, int position) {
+        FirebaseFirestore.getInstance().collection("UserDetails")
+                .document(activityArrayList.get(position).getUsername()).get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot snapshot) {
+                        String retUsername = snapshot.getString("Username");
+                        holder.activity_username.setText(retUsername);
+                        holder.activity_title.setText(retUsername + " " + activityArrayList.get(position).getTitle());
+                        holder.activity_content.setText(activityArrayList.get(position).getContent());
+                        holder.activity_date.setText(activityArrayList.get(position).getDate());
 
-        holder.activity_username.setText(activityArrayList.get(position).getUsername());
-        holder.activity_title.setText(activityArrayList.get(position).getTitle());
-        holder.activity_content.setText(activityArrayList.get(position).getContent());
-        holder.activity_date.setText(activityArrayList.get(position).getDate());
-        holder.activity_icon.setImageResource(activityArrayList.get(position).getIcon());
+                        if(activityArrayList.get(position).getIntentFor().equals("Collection")) {
+                            holder.activity_icon.setImageResource(R.drawable.vinyl);
+                            holder.activity_title.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    Intent i = new Intent(v.getContext(), CollectionActivity.class);
+                                    i.putExtra("KEY_COLLECTION_ID", activityArrayList.get(position).getIntentID());
+                                    v.getContext().startActivity(i);
+                                }
+                            });
+                        } else {
+                            holder.activity_icon.setImageResource(R.drawable.vinyl2);
+                            holder.activity_title.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    Intent i = new Intent(v.getContext(), AlbumProfileActivity.class);
+                                    i.putExtra("KEY_ID", activityArrayList.get(position).getIntentID());
+                                    v.getContext().startActivity(i);
+                                }
+                            });
+                        }
+                    }
+                });
     }
 
     protected class ActivityViewHolder extends RecyclerView.ViewHolder{

@@ -2,10 +2,12 @@ package com.mobdeve.s18.recordnest.model;
 
 public class Activity {
 
-    private String username;
+    private String username; //user ID instead of username
     private String title;
     private String content;
     private String date;
+    private String intentFor; //used to specify intent activity (album or collection)
+    private String intentID; //intent extra for either album or coll id
     private int icon;
 
     public Activity (String username, String title, String content, String date, int icon){
@@ -14,6 +16,14 @@ public class Activity {
         this.content = content;
         this.date = date;
         this.icon = icon;
+    }
+
+    //constructor without icon
+    public Activity (String username, String title, String content, String date){
+        this.username = username;
+        this.title = title;
+        this.content = content;
+        this.date = date;
     }
 
     public String getUsername() {
@@ -54,5 +64,19 @@ public class Activity {
 
     public void setIcon(int icon) {
         this.icon = icon;
+    }
+
+    public String getIntentFor(){return intentFor;}
+
+    public void setIntentFor(String intentFor) {
+        this.intentFor = intentFor;
+    }
+
+    public String getIntentID() {
+        return intentID;
+    }
+
+    public void setIntentID(String intentID) {
+        this.intentID = intentID;
     }
 }

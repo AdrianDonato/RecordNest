@@ -2,6 +2,7 @@ package com.mobdeve.s18.recordnest;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
@@ -22,6 +23,9 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.mobdeve.s18.recordnest.adapter.ActivityAdapter;
 import com.mobdeve.s18.recordnest.databinding.ActivityFollowingActBinding;
 import com.mobdeve.s18.recordnest.model.Activity;
@@ -42,6 +46,8 @@ public class FollowingActActivity extends AppCompatActivity {
 
     private FirebaseFirestore fStore;
     private String ownUserID;
+    private ArrayList<String> followingIDs;
+    private ArrayList<Activity> feedList;
 
     //private ReviewAdapter reviewAdapter;
     private ActivityAdapter activityAdapter;
@@ -132,7 +138,7 @@ public class FollowingActActivity extends AppCompatActivity {
                 return false;
             }
         });
-
+        /*
         activityAdapter = new ActivityAdapter(getApplicationContext(), initializeData());
 
         //TextView albumName = findViewById(R.id.tv_album_name);
@@ -141,9 +147,11 @@ public class FollowingActActivity extends AppCompatActivity {
         binding.rvRecentactivity.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
         //findViewById(R.id.tv_album_name).setVisibility(View.VISIBLE);;
         binding.rvRecentactivity.setAdapter(activityAdapter);
+
+         */
     }
 
-    //initialize own profile (username, profile picture, etc)
+    //initialize own profile (username, profile picture, etc) as well as user's feed
     public void initOwnProfile(String userID){
         this.ownImage = findViewById(R.id.following_own_image);
         this.ownUsername = findViewById(R.id.profile_username);
@@ -159,6 +167,7 @@ public class FollowingActActivity extends AppCompatActivity {
                     String retUsername = snapshot.getString("Username");
                     int fercount = snapshot.getLong("FollowerCount").intValue();
                     int fingcount= snapshot.getLong("FollowingCount").intValue();
+                    followingIDs = (ArrayList<String>) snapshot.get("FollowingList");
 
                     ownUsername.setText(retUsername);
                     ownFollowers.setText(Integer.toString(fercount));
@@ -168,6 +177,8 @@ public class FollowingActActivity extends AppCompatActivity {
                         Glide.with(getApplicationContext())
                                 .load(retImg).into(ownImage);
                     }
+
+                    initFeed();
                 } else {
                     Toast.makeText(FollowingActActivity.this, "Error! " + task.getException().getMessage(),
                             Toast.LENGTH_SHORT).show();
@@ -182,5 +193,46 @@ public class FollowingActActivity extends AppCompatActivity {
         data.add(new Activity("Username","Title","Content", "Date", R.drawable.vinyl));
         data.add(new Activity("Username","Title","Content", "Date", R.drawable.vinyl));
         return data;
+    }
+
+    //retrieves recent activity of users followed from firestore db
+    public void initFeed(){
+        feedList = new ArrayList<>();
+        fStore.collection("FeedActivities").whereIn("UserID", followingIDs).orderBy("Date", Query.Direction.DESCENDING)
+                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull @NotNull Task<QuerySnapshot> task) {
+                if(task.isSuccessful()){
+                    for(QueryDocumentSnapshot documentSnapshot : task.getResult()){
+                        String retUserID = documentSnapshot.getString("UserID");
+                        String retTitle = documentSnapshot.getString("ActivityTitle");
+                        String retContent = documentSnapshot.getString("ExtraContent");
+                        String retDate = documentSnapshot.getString("Date");
+                        String retIntentFor = documentSnapshot.getString("IntentFor");
+                        String retIntentID = documentSnapshot.getString("IntentID");
+                        feedList.add(new Activity(retUserID, retTitle, retContent, retDate));
+                        feedList.get(feedList.size()-1).setIntentFor(retIntentFor);
+                        feedList.get(feedList.size()-1).setIntentID(retIntentID);
+                    }
+                    initFeedAdapter();
+                } else {
+                    Toast.makeText(FollowingActActivity.this, "Error! " + task.getException().getMessage(),
+                            Toast.LENGTH_SHORT).show();
+                    Log.d("firebaserror", task.getException().getMessage());
+                }
+            }
+        });
+    }
+
+    //initializes adapter of recent activities, executed after retrieving activities from db on initFeed()
+    public void initFeedAdapter(){
+        activityAdapter = new ActivityAdapter(getApplicationContext(), feedList);
+
+        //TextView albumName = findViewById(R.id.tv_album_name);
+        //albumName.setVisibility(View.VISIBLE);
+
+        binding.rvRecentactivity.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+        //findViewById(R.id.tv_album_name).setVisibility(View.VISIBLE);;
+        binding.rvRecentactivity.setAdapter(activityAdapter);
     }
 }

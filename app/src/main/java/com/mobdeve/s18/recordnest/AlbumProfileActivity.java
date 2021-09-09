@@ -155,9 +155,9 @@ public class AlbumProfileActivity extends AppCompatActivity {
         mUserID = mUser.getUid();
         mUsername = mUser.getDisplayName();
 
-        int cover = i.getIntExtra(AlbumAdapter.KEY_PICTURE, 0);
-        String name = i.getStringExtra(AlbumAdapter.KEY_NAME);
-        String artist = i.getStringExtra(AlbumAdapter.KEY_ARTIST);
+        int cover = i.getIntExtra(AlbumAdapter.KEY_PICTURE, R.drawable.vinyl);
+        //String name = i.getStringExtra(AlbumAdapter.KEY_NAME);
+        //String artist = i.getStringExtra(AlbumAdapter.KEY_ARTIST);
         obtainedId = i.getStringExtra(AlbumAdapter.KEY_ID);
         //String track = i.getStringExtra(TracklistAdapter.KEY_TRACK);
 
