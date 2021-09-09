@@ -134,21 +134,7 @@ public class CollectionActivity extends AppCompatActivity {
 
         v_share = view.findViewById(R.id.v_share);
 
-        v_share.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                createAddCollectionDialog();
-            }
-        });
-
         v_sort = view.findViewById(R.id.v_sort);
-
-        v_sort.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                createSortDialog();
-            }
-        });
 
         /*
         albumAdapter = new AlbumAdapter(getApplicationContext(), initializeData());
@@ -291,7 +277,29 @@ public class CollectionActivity extends AppCompatActivity {
                         retAlbums.get(i).setAlbumID(retAlbumID);
                         retAlbums.get(i).setAlbumArtURL(retImgURL);
                     }
+
                     collectionName.setText(snapshotCollTitle);
+
+                    //check if collection's owner is the same as the current user
+                    //if not, then hide sort and share buttons
+                    if(snapshotUserID.equals(fUser.getUid())){
+                        v_share.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                createAddCollectionDialog();
+                            }
+                        });
+                        v_sort.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                createSortDialog();
+                            }
+                        });
+                    } else {
+                        v_share.setVisibility(View.INVISIBLE);
+                        v_sort.setVisibility(View.INVISIBLE);
+                    }
+
                     initializeAlbumAdapter();
                 } else {
                     Toast.makeText(CollectionActivity.this, "Error! " + task.getException().getMessage(),
