@@ -33,11 +33,10 @@ import java.util.Map;
 
 public class RegisterActivity extends AppCompatActivity{
     private ActivityRegisterBinding binding;
-    private DatabaseReference registerref;
     private FirebaseFirestore fStore;
     private FirebaseAuth mAuth;
-    private User registeruser;
-    // might need firebase auth instead?
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,24 +67,9 @@ public class RegisterActivity extends AppCompatActivity{
                 String insertEmail = regEmail.getText().toString().trim();
                 String insertPass = regPassword.getText().toString().trim();
 
-                registeruser = new User(insertUser, insertPass, insertEmail);
-
                 if(TextUtils.isEmpty(insertUser) || TextUtils.isEmpty(insertEmail) || TextUtils.isEmpty(insertPass)){
                     Toast.makeText(RegisterActivity.this, "One or more fields are empty!", Toast.LENGTH_SHORT).show();
                 } else {
-                    /*
-                    registerref.push().setValue(registeruser).addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull @NotNull Task<Void> task) {
-                            if(task.isSuccessful()) {
-                                startActivity(new Intent(RegisterActivity.this, MainActivity.class));
-                            } else {
-                                Toast.makeText(RegisterActivity.this, "Error! " + task.getException().getMessage(),
-                                        Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    }); */
-
                     mAuth.createUserWithEmailAndPassword(insertEmail, insertPass).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull @NotNull Task<AuthResult> task) {
@@ -106,6 +90,7 @@ public class RegisterActivity extends AppCompatActivity{
                                             newUserDetails.put("FollowingCount", 0);
                                             newUserDetails.put("FollowerList", emptyArray);
                                             newUserDetails.put("FollowingList", emptyArray);
+                                            newUserDetails.put("Type", "Regular");
 
                                             fStore.collection("UserDetails").document(newUserID).set(newUserDetails).addOnCompleteListener(new OnCompleteListener<Void>() {
                                                 @Override
