@@ -316,6 +316,7 @@ public class UserProfileActivity extends AppCompatActivity {
         newColl.put("UserID", mUserID);
         newColl.put("AlbumIDList", newCollAlbumID);
         newColl.put("ImageURLList", newCollImgURL);
+        newColl.put("SortMethod", "Title"); //default sorting method
 
         fStore.collection("AlbumCollection").add(newColl).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
             @Override

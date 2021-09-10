@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
@@ -34,9 +35,14 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldPath;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.mobdeve.s18.recordnest.adapter.AlbumAdapter;
 import com.mobdeve.s18.recordnest.adapter.CollectionAdapter;
 import com.mobdeve.s18.recordnest.databinding.ActivityCollectionBinding;
@@ -47,6 +53,8 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
@@ -67,7 +75,7 @@ public class CollectionActivity extends AppCompatActivity {
     private DocumentReference collRef;
     private ArrayList<Album> retAlbums;
     private Collection retCollection;
-    private String collIntentID;
+    private String collIntentID, retSortMethod;
     private CallbackManager callbackManager;
     private ShareButton sbFBShare;
     private LoginButton lbFBlogin;
@@ -210,10 +218,10 @@ public class CollectionActivity extends AppCompatActivity {
 
         ArrayList<String> sortList = new ArrayList<>();
 
-        sortList.add("BY YEAR");
-        sortList.add("BY ALBUM NAME");
-        sortList.add("BY ARTIST NAME");
-        sortList.add("BY RATING");
+        sortList.add("Title");
+        sortList.add("Artist");
+        sortList.add("Year");
+        sortList.add("Rating");
 
         btn_close_sortby = view.findViewById(R.id.btn_close_sortby);
         btn_sort = view.findViewById(R.id.btn_sort);
@@ -228,11 +236,28 @@ public class CollectionActivity extends AppCompatActivity {
 
         spinner.setAdapter(adapter);
 
+        if(retSortMethod.equals("AvgRating")){
+            spinner.setSelection(adapter.getPosition("Rating"));
+        } else {
+            spinner.setSelection(adapter.getPosition(retSortMethod));
+        }
+
         builder.setView(view);
         AlertDialog myDialog = builder.create();
         myDialog.show();
 
         myDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        btn_sort.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(spinner.getSelectedItem().toString().equalsIgnoreCase("Rating")){
+                    saveSortCollection("AvgRating");
+                } else {
+                    saveSortCollection(spinner.getSelectedItem().toString());
+                }
+            }
+        });
 
         btn_close_sortby.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -257,16 +282,17 @@ public class CollectionActivity extends AppCompatActivity {
                     ArrayList<String> snapshotAlbums = (ArrayList<String>) snapshot.get("AlbumIDList");
                     ArrayList<String> snapshotImgs = (ArrayList<String>) snapshot.get("ImageURLList");
                     ArrayList<String> snapshotTitles = (ArrayList<String>) snapshot.get("AlbumTitleList");
-
-
+                    String snapshotSort = snapshot.getString("SortMethod");
+                    retSortMethod = snapshotSort;
                     retCollection = new Collection(snapshotCollTitle);
                     retCollection.setCollectionID(snapshotCollId);
                     retCollection.setUsername(snapshotUserID);
                     retCollection.setDescription(snapshotDesc);
 
-                    retAlbums = new ArrayList<>();
+                    //retAlbums = new ArrayList<>();
 
                     //initialize album data
+                    /*
                     for(int i = 0; i < snapshotAlbums.size(); i++){
 
                         String retAlbumID = snapshotAlbums.get(i);
@@ -277,7 +303,7 @@ public class CollectionActivity extends AppCompatActivity {
                         retAlbums.get(i).setAlbumID(retAlbumID);
                         retAlbums.get(i).setAlbumArtURL(retImgURL);
                     }
-
+                    */
                     collectionName.setText(snapshotCollTitle);
 
                     //check if collection's owner is the same as the current user
@@ -300,10 +326,43 @@ public class CollectionActivity extends AppCompatActivity {
                         v_sort.setVisibility(View.INVISIBLE);
                     }
 
+                    //calls a function to get list of albums from firebase
+                    getAlbumsFromColl(snapshotTitles, snapshotSort);
+                    //initializeAlbumAdapter();
+                } else {
+                    Toast.makeText(CollectionActivity.this, "Error! " + task.getException().getMessage(),
+                            Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
+    //used to get albums in a collection in a sorted format
+    public void getAlbumsFromColl(ArrayList<String> albumIDList, String sortMethod){
+        retAlbums = new ArrayList<>();
+        Query collQuery;
+        if(sortMethod.equals("Title")){
+            collQuery = fStore.collection("Albums").whereIn("Title", albumIDList);
+        } else {
+            collQuery = fStore.collection("Albums").whereIn("Title", albumIDList)
+                    .orderBy(sortMethod);
+        }
+        collQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull @NotNull Task<QuerySnapshot> task) {
+                if(task.isSuccessful()){
+                    for(QueryDocumentSnapshot snapshot : task.getResult()){
+                        String retID = snapshot.getId();
+                        String retTitle = snapshot.getString("Title");
+                        String retImgURL = snapshot.getString("ImageURL");
+
+                        retAlbums.add(new Album(retID, retTitle, retImgURL));
+                    }
                     initializeAlbumAdapter();
                 } else {
                     Toast.makeText(CollectionActivity.this, "Error! " + task.getException().getMessage(),
                             Toast.LENGTH_SHORT).show();
+                    Log.d("FireBaseError", task.getException().getMessage());
                 }
             }
         });
@@ -324,7 +383,28 @@ public class CollectionActivity extends AppCompatActivity {
         binding.rvCollectionalbum.setAdapter(albumAdapter);
     }
 
-    //baka di na need i-log sa facebook? will check later
+    //saves the method of how the collection is sorted into the database
+    public void saveSortCollection(String sortMethod){
+        Map<String, Object> newSortMethod = new HashMap<>();
+        newSortMethod.put("SortMethod", sortMethod);
+        fStore.collection("AlbumCollection").document(collIntentID).update(newSortMethod).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull @NotNull Task<Void> task) {
+                if(task.isSuccessful()){
+                    Toast.makeText(CollectionActivity.this, "Collection is now sorted by " + sortMethod + ".",
+                            Toast.LENGTH_SHORT).show();
+                    //refreshes activity to reflect changes
+                    finish();
+                    startActivity(getIntent());
+                } else {
+                    Toast.makeText(CollectionActivity.this, "Error! " + task.getException().getMessage(),
+                            Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
+    //this is used for logging in to facebook and setting the share button
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data){
         super.onActivityResult(requestCode, resultCode, data);

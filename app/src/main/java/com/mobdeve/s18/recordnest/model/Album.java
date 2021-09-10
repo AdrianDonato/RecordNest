@@ -1,5 +1,7 @@
 package com.mobdeve.s18.recordnest.model;
 
+import com.mobdeve.s18.recordnest.R;
+
 import java.util.ArrayList;
 
 public class Album {
@@ -23,6 +25,15 @@ public class Album {
         this.artist = artist;
 
         //this.trackList = trackList;
+    }
+
+    //alternate constructor for album adapter
+    public Album(String albumID, String albumName, String albumArtURL){
+        this.albumID = albumID;
+        this.albumName = albumName;
+        this.albumArtURL = albumArtURL;
+        this.artist = "Artist";
+        this.imageId = R.drawable.vinyl;
     }
 
     //setters
