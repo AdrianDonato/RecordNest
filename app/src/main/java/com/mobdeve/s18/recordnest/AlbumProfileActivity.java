@@ -7,8 +7,6 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ArrayAdapter;
@@ -44,7 +42,6 @@ import com.mobdeve.s18.recordnest.adapter.ReviewAdapter;
 import com.mobdeve.s18.recordnest.adapter.TracklistAdapter;
 import com.mobdeve.s18.recordnest.databinding.ActivityAlbumProfileBinding;
 import com.mobdeve.s18.recordnest.model.Album;
-import com.mobdeve.s18.recordnest.model.Collection;
 import com.mobdeve.s18.recordnest.model.Review;
 import com.mobdeve.s18.recordnest.model.Tracklist;
 
@@ -112,10 +109,6 @@ public class AlbumProfileActivity extends AppCompatActivity {
 
         binding = ActivityAlbumProfileBinding.inflate(getLayoutInflater());
 
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
-        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        getSupportActionBar().hide();
-        //setContentView(R.layout.activity_main);
         View view = binding.getRoot();
         setContentView(view);
 
@@ -395,7 +388,7 @@ public class AlbumProfileActivity extends AppCompatActivity {
 
     //function which initializes reviewlist adapter
     public void initializeReviewAdapter(){
-        reviewAdapter = new ReviewAdapter(getApplicationContext(), reviewList);
+        reviewAdapter = new ReviewAdapter(this, reviewList);
         binding.rvReview.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
         binding.rvReview.setAdapter(reviewAdapter);
     }

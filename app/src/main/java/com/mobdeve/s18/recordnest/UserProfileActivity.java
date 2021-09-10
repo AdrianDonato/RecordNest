@@ -6,8 +6,6 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -71,10 +69,6 @@ public class UserProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityUserProfileBinding.inflate(getLayoutInflater());
 
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
-        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        getSupportActionBar().hide();
-        //setContentView(R.layout.activity_main);
         View view = binding.getRoot();
         setContentView(view);
 
@@ -280,7 +274,7 @@ public class UserProfileActivity extends AppCompatActivity {
                                 String collTitle = documentSnapshot.getString("Title");
 
                                 collArray.add(new Collection(collTitle));
-                                collArray.get(collArray.size()-1).setCollectionID(collID);
+                                   collArray.get(collArray.size()-1).setCollectionID(collID);
                             }
                             if(collArray.size()>0){
                                 tv_nocoll.setVisibility(View.INVISIBLE);

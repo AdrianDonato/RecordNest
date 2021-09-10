@@ -4,8 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -30,7 +28,6 @@ import com.mobdeve.s18.recordnest.adapter.CollectionAdapter;
 import com.mobdeve.s18.recordnest.adapter.UserListAdapter;
 import com.mobdeve.s18.recordnest.databinding.ActivityOtherUserProfileBinding;
 import com.mobdeve.s18.recordnest.model.Collection;
-import com.mobdeve.s18.recordnest.model.User;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -59,9 +56,6 @@ public class OtherUserProfileActivity extends AppCompatActivity {
 
         binding = ActivityOtherUserProfileBinding.inflate(getLayoutInflater());
 
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
-        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        getSupportActionBar().hide();
         View view = binding.getRoot();
         setContentView(view);
 

@@ -10,8 +10,6 @@ import android.text.InputType;
 import android.util.TypedValue;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -66,10 +64,6 @@ public class SubmitAlbumActivity extends AppCompatActivity{
 
         binding = ActivitySubmitAlbumBinding.inflate(getLayoutInflater());
 
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
-        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        getSupportActionBar().hide();
-        //setContentView(R.layout.activity_main);
         View view = binding.getRoot();
         setContentView(view);
 
