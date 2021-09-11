@@ -32,6 +32,8 @@ import com.mobdeve.s18.recordnest.model.Review;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewViewHolder> {
     private ArrayList<Review> reviewArrayList;
@@ -111,9 +113,35 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewView
                                 @Override
                                 public void onComplete(@NonNull @NotNull Task<Void> task) {
                                     if(task.isSuccessful()){
-                                        Toast.makeText(context.getApplicationContext(), "Deleted review.",
-                                                Toast.LENGTH_SHORT).show();
-                                        dialog.dismiss();
+                                        //when a review is deleted, we need to recalculate the album's average rating
+                                        Map<String, Object> albumUpdate = new HashMap<>();
+
+                                        int newRatingCount = albumReviewed.getRatingsCount() - 1;
+                                        int newAccRating = albumReviewed.getAccRatingScore() - review.getRating();
+                                        double newAvgRating;
+                                        if(newRatingCount > 0) {
+                                            newAvgRating = (double) newAccRating / newRatingCount;
+                                        } else {
+                                            newAvgRating = 0; //this is to prevent a situation where 0 is divided by 0
+                                        }
+                                        albumUpdate.put("AccRatings", newAccRating);
+                                        albumUpdate.put("AvgRating", newAvgRating);
+                                        albumUpdate.put("RatingCount", newRatingCount);
+
+                                        FirebaseFirestore.getInstance().collection("Albums")
+                                                .document(albumReviewed.getAlbumID()).update(albumUpdate).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                            @Override
+                                            public void onComplete(@NonNull @NotNull Task<Void> task) {
+                                                if(task.isSuccessful()){
+                                                    Toast.makeText(context.getApplicationContext(), "Deleted review.",
+                                                            Toast.LENGTH_SHORT).show();
+                                                    dialog.dismiss();
+                                                } else {
+                                                    Toast.makeText(context.getApplicationContext(), "Error!" + task.getException().getMessage(),
+                                                            Toast.LENGTH_SHORT).show();
+                                                }
+                                            }
+                                        });
                                     } else {
                                         Toast.makeText(context.getApplicationContext(), "Error!" + task.getException().getMessage(),
                                                 Toast.LENGTH_SHORT).show();

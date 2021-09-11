@@ -160,6 +160,7 @@ public class AlbumProfileActivity extends AppCompatActivity {
 
 
         //sets the data of the album (albumDisplayed) then sets data to the layout views
+        //also sets the data for reviews if album is successfully loaded
         setAlbumData(obtainedId, cover);
         initializeDataReview();
 
@@ -409,6 +410,7 @@ public class AlbumProfileActivity extends AppCompatActivity {
     public void initializeReviewAdapter(){
         reviewAdapter = new ReviewAdapter(this, reviewList);
         reviewAdapter.setHideDelete(!isModerator);
+        reviewAdapter.setAlbumReviewed(albumDisplayed);
         binding.rvReview.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
         binding.rvReview.setAdapter(reviewAdapter);
     }
@@ -719,7 +721,7 @@ public class AlbumProfileActivity extends AppCompatActivity {
         });
     }
 
-    //function to check if the album is already in a selected collection
+    //function to check if the album is already in a selected collection, if not then add to database
     //void not bool because of async nature of firebase
     public void checkIfInCollection(String collTitle){
         int titleIndex = arrayListCollection.indexOf(collTitle);
