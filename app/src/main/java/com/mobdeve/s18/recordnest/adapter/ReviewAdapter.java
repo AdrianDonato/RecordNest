@@ -26,6 +26,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.mobdeve.s18.recordnest.AlbumProfileActivity;
 import com.mobdeve.s18.recordnest.OtherUserProfileActivity;
 import com.mobdeve.s18.recordnest.R;
+import com.mobdeve.s18.recordnest.model.Album;
 import com.mobdeve.s18.recordnest.model.Review;
 
 import org.jetbrains.annotations.NotNull;
@@ -37,6 +38,7 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewView
     private DocumentReference usernameDocRef;
     private Context context;
     private boolean hideDelete; //if true then hide delete button
+    private Album albumReviewed;
 
     public ReviewAdapter(Context context, ArrayList<Review> reviewArrayList) {
         this.reviewArrayList = reviewArrayList;
@@ -44,6 +46,8 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewView
     }
 
     public void setHideDelete(boolean hideDelete){this.hideDelete = hideDelete;}
+
+    public void setAlbumReviewed(Album albumReviewed){this.albumReviewed = albumReviewed;}
 
     @Override
     public int getItemCount() {

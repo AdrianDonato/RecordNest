@@ -584,26 +584,6 @@ public class AlbumProfileActivity extends AppCompatActivity {
         }
     }
 
-    //used to delete a review
-    public void deleteReview(int reviewIndex){
-        FirebaseFirestore.getInstance().collection("Review").document(reviewList.get(reviewIndex).getReviewIDString())
-                .delete().addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull @NotNull Task<Void> task) {
-                if(task.isSuccessful()){
-                    Toast.makeText(AlbumProfileActivity.this, "Deleted review.",
-                            Toast.LENGTH_SHORT).show();
-                    //refreshes activity to reflect changes
-                    finish();
-                    startActivity(getIntent());
-                } else {
-                    Toast.makeText(AlbumProfileActivity.this, "Error! " + task.getException().getMessage(),
-                            Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-    }
-
     public void initializeAddtoCollection(){
         arrayListCollection = new ArrayList<>();
         collIDs = new ArrayList<>();
@@ -664,19 +644,7 @@ public class AlbumProfileActivity extends AppCompatActivity {
                     public void onClick(View v) {
                         if(!spinner.getSelectedItem().toString().equalsIgnoreCase("Choose a collection...")){
                             checkIfInCollection(spinner.getSelectedItem().toString());
-                            //runs checkIfInCollection AFTER if else statement kasi async? idk pa ang fix
-                            if(isInColl) {
-                                String errorMsg = albumDisplayed.getAlbumName() + " is already in " + spinner.getSelectedItem().toString() + "!";
-                                Toast.makeText(AlbumProfileActivity.this,
-                                        errorMsg,
-                                        Toast.LENGTH_SHORT).show();
-                            } else {
-                              addToCollectionDB(spinner.getSelectedItem().toString());
-                              Toast.makeText(AlbumProfileActivity.this,
-                                    spinner.getSelectedItem().toString(),
-                                    Toast.LENGTH_SHORT).show();
-                                myDialog.dismiss();
-                            }
+                            myDialog.dismiss();
                         }
                     }
                 });
@@ -766,9 +734,15 @@ public class AlbumProfileActivity extends AppCompatActivity {
                     ArrayList<String> albumIDList = (ArrayList<String>) snapshot.get("AlbumIDList");
 
                     isInColl = albumIDList.contains(albumId);
-                    String listofIds = albumIDList.toString() + Boolean.toString(isInColl);
-                    Toast.makeText(AlbumProfileActivity.this, listofIds,
-                            Toast.LENGTH_SHORT).show();
+
+                    if(isInColl) {
+                        String errorMsg = albumDisplayed.getAlbumName() + " is already in " + collTitle + "!";
+                        Toast.makeText(AlbumProfileActivity.this,
+                                errorMsg,
+                                Toast.LENGTH_SHORT).show();
+                    } else {
+                        addToCollectionDB(collTitle);
+                    }
                 } else {
                     Toast.makeText(AlbumProfileActivity.this, "Error! " + task.getException().getMessage(),
                             Toast.LENGTH_SHORT).show();
