@@ -136,6 +136,12 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewView
                                                     Toast.makeText(context.getApplicationContext(), "Deleted review.",
                                                             Toast.LENGTH_SHORT).show();
                                                     dialog.dismiss();
+
+                                                    //restart activity after deletion to reflect changes
+                                                    Intent i = new Intent(context.getApplicationContext(), AlbumProfileActivity.class);
+                                                    i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                                    i.putExtra("KEY_ID", albumReviewed.getAlbumID());
+                                                    context.getApplicationContext().startActivity(i);
                                                 } else {
                                                     Toast.makeText(context.getApplicationContext(), "Error!" + task.getException().getMessage(),
                                                             Toast.LENGTH_SHORT).show();

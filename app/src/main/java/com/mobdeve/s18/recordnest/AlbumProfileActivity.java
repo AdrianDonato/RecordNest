@@ -153,15 +153,11 @@ public class AlbumProfileActivity extends AppCompatActivity {
         mUsername = mUser.getDisplayName();
 
         int cover = i.getIntExtra(AlbumAdapter.KEY_PICTURE, R.drawable.vinyl);
-        //String name = i.getStringExtra(AlbumAdapter.KEY_NAME);
-        //String artist = i.getStringExtra(AlbumAdapter.KEY_ARTIST);
         obtainedId = i.getStringExtra(AlbumAdapter.KEY_ID);
-        //String track = i.getStringExtra(TracklistAdapter.KEY_TRACK);
-
 
         //sets the data of the album (albumDisplayed) then sets data to the layout views
-        //also sets the data for reviews if album is successfully loaded
         setAlbumData(obtainedId, cover);
+        //sets the data of all reviews made for the album
         initializeDataReview();
 
         btn_add_to_col = findViewById(R.id.btn_album_add_to_collection);
@@ -751,6 +747,10 @@ public class AlbumProfileActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    public void OnBackPressed(){
+        finish();
     }
 
 }
