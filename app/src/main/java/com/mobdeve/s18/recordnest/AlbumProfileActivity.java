@@ -96,6 +96,7 @@ public class AlbumProfileActivity extends AppCompatActivity {
     private ArrayList<Review> reviewList;
     private int userReviewIndex;
     private boolean isInColl; //for checking if the album is in a collection
+    private boolean isModerator; //checks if current user is a moderator
 
     //Dialog myDialog;
     private AlertDialog.Builder dialogBuilder;
@@ -263,8 +264,26 @@ public class AlbumProfileActivity extends AppCompatActivity {
                                 documentSnapshot.getString("ReviewContent")));
                         reviewList.get(reviewList.size()-1).setReviewIDString(reviewID);
                     }
-                    setEditReview();
-                    initializeReviewAdapter();
+                    fStore.collection("UserDetails").document(mUserID).get()
+                            .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                @Override
+                                public void onComplete(@NonNull @NotNull Task<DocumentSnapshot> task) {
+                                    if(task.isSuccessful()){
+                                        DocumentSnapshot snapshot = task.getResult();
+                                        if((snapshot.getString("Type").equals("Moderator"))
+                                                ||(snapshot.getString("Type").equals("Admin"))){
+                                            isModerator = true;
+                                        } else {
+                                            isModerator = false;
+                                        }
+                                        setEditReview();
+                                        initializeReviewAdapter();
+                                    } else {
+                                        Toast.makeText(AlbumProfileActivity.this, "Error! " + task.getException().getMessage(),
+                                                Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            });
                 } else {
                     Toast.makeText(AlbumProfileActivity.this, "Error! " + task.getException().getMessage(),
                             Toast.LENGTH_SHORT).show();
@@ -389,6 +408,7 @@ public class AlbumProfileActivity extends AppCompatActivity {
     //function which initializes reviewlist adapter
     public void initializeReviewAdapter(){
         reviewAdapter = new ReviewAdapter(this, reviewList);
+        reviewAdapter.setHideDelete(!isModerator);
         binding.rvReview.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
         binding.rvReview.setAdapter(reviewAdapter);
     }
@@ -562,6 +582,26 @@ public class AlbumProfileActivity extends AppCompatActivity {
             reviewETAlbum.setText(reviewList.get(userReviewIndex).getReviewContent());
             ratingViewAlbum.setRating(currRating);
         }
+    }
+
+    //used to delete a review
+    public void deleteReview(int reviewIndex){
+        FirebaseFirestore.getInstance().collection("Review").document(reviewList.get(reviewIndex).getReviewIDString())
+                .delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull @NotNull Task<Void> task) {
+                if(task.isSuccessful()){
+                    Toast.makeText(AlbumProfileActivity.this, "Deleted review.",
+                            Toast.LENGTH_SHORT).show();
+                    //refreshes activity to reflect changes
+                    finish();
+                    startActivity(getIntent());
+                } else {
+                    Toast.makeText(AlbumProfileActivity.this, "Error! " + task.getException().getMessage(),
+                            Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 
     public void initializeAddtoCollection(){

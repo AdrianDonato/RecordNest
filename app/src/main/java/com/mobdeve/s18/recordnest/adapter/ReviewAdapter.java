@@ -8,8 +8,10 @@ import android.graphics.drawable.ColorDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -21,6 +23,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.mobdeve.s18.recordnest.AlbumProfileActivity;
 import com.mobdeve.s18.recordnest.OtherUserProfileActivity;
 import com.mobdeve.s18.recordnest.R;
 import com.mobdeve.s18.recordnest.model.Review;
@@ -33,11 +36,14 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewView
     private ArrayList<Review> reviewArrayList;
     private DocumentReference usernameDocRef;
     private Context context;
+    private boolean hideDelete; //if true then hide delete button
 
     public ReviewAdapter(Context context, ArrayList<Review> reviewArrayList) {
         this.reviewArrayList = reviewArrayList;
         this.context = context;
     }
+
+    public void setHideDelete(boolean hideDelete){this.hideDelete = hideDelete;}
 
     @Override
     public int getItemCount() {
@@ -65,16 +71,18 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewView
         //holder.setTracklistItem(this.tracklistArrayList.get(position).getTrackTitle());
 
         Review review = reviewArrayList.get(position);
+        if(hideDelete){
+            holder.delete_review.setVisibility(View.GONE);
+        } else {
+            holder.delete_review.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(context);
+                    //final View addLogoutPopup = context.getLayoutInflater().inflate(R.layout.activity_logout, null);
+                    //final View deleteDialog = View.inflate(context,R.layout.delete,null);
 
-        holder.delete_review.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(context );
-                //final View addLogoutPopup = context.getLayoutInflater().inflate(R.layout.activity_logout, null);
-                //final View deleteDialog = View.inflate(context,R.layout.delete,null);
-
-                //delete_review = deleteDialog.findViewById(R.id.v_delete);
-                //btn_logout = addLogoutPopup.findViewById(R.id.btn_logout);
+                    //delete_review = deleteDialog.findViewById(R.id.v_delete);
+                    //btn_logout = addLogoutPopup.findViewById(R.id.btn_logout);
 
             /*
             dialogBuilder.setView(deleteDialog);
@@ -84,30 +92,41 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewView
             myDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
              */
-                dialogBuilder.setTitle("DELETE REVIEW?");
-                dialogBuilder.setPositiveButton("CANCEL", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                });
-                dialogBuilder.setNegativeButton("YES", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
+                    dialogBuilder.setTitle("DELETE REVIEW?");
+                    dialogBuilder.setPositiveButton("CANCEL", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                        }
+                    });
+                    dialogBuilder.setNegativeButton("YES", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            FirebaseFirestore.getInstance().collection("Review").document(review.getReviewIDString())
+                                    .delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull @NotNull Task<Void> task) {
+                                    if(task.isSuccessful()){
+                                        Toast.makeText(context.getApplicationContext(), "Deleted review.",
+                                                Toast.LENGTH_SHORT).show();
+                                        dialog.dismiss();
+                                    } else {
+                                        Toast.makeText(context.getApplicationContext(), "Error!" + task.getException().getMessage(),
+                                                Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            });
+                        }
+                    });
 
-                        // DO SOMETHING HERE
+                    //dialogBuilder.setView(deleteDialog);
+                    AlertDialog myDialog = dialogBuilder.create();
+                    myDialog.show();
 
-                    }
-                });
-
-                //dialogBuilder.setView(deleteDialog);
-                AlertDialog myDialog = dialogBuilder.create();
-                myDialog.show();
-
-                myDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.WHITE));
-            }
-        });
-
+                    myDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.WHITE));
+                }
+            });
+        }
 
 
         FirebaseFirestore.getInstance().collection("UserDetails").document(
@@ -184,12 +203,12 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewView
             myDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
              */
-
             dialogBuilder.setView(deleteDialog);
             AlertDialog myDialog = dialogBuilder.create();
             myDialog.show();
 
             myDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
         }
 
 
