@@ -24,6 +24,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 
 import com.facebook.CallbackManager;
@@ -445,23 +446,26 @@ public class CollectionActivity extends AppCompatActivity {
         */
 
         Intent twIntent = new Intent(Intent.ACTION_SEND);
-        twIntent.setType("text/plain");
-        String testText = "Test from application";
+        twIntent.setType("image/png");
 
+        Uri fileLink = saveScreenshotUri(getScreenshot(view));
         twIntent.setPackage("com.twitter.android");
-        twIntent.putExtra(Intent.EXTRA_TEXT, testText);
+        twIntent.putExtra(Intent.EXTRA_STREAM, fileLink);
         startActivity(Intent.createChooser(twIntent, "Share with: "));
     }
 
     //TO BE DELETED
     public Uri saveScreenshotUri(Bitmap screenshot){
         Uri uri = null;
+        File imagefolder = new File(getCacheDir(), "images");
         try {
-            File file = new File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), "RNscreenshot.png");
+            imagefolder.mkdirs();
+            File file = new File(imagefolder, "RNscreenshot.png");
             FileOutputStream stream = new FileOutputStream(file);
             screenshot.compress(Bitmap.CompressFormat.PNG, 90, stream);
+            stream.flush();
             stream.close();
-            uri = Uri.fromFile(file);
+            uri = FileProvider.getUriForFile(this, "com.mobdeve.s18.recordnest", file);
         } catch (IOException e) {
             //Log.d(TAG, "IOException while trying to write file for sharing: " + e.getMessage());
             Toast.makeText(CollectionActivity.this, "Error in generating image! " + e.getMessage(),
