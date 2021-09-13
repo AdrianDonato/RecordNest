@@ -332,9 +332,11 @@ public class CollectionActivity extends AppCompatActivity {
                         v_sort.setVisibility(View.INVISIBLE);
                     }
 
-                    //calls a function to get list of albums from firebase
-                    getAlbumsFromColl(snapshotTitles, snapshotSort);
-                    //initializeAlbumAdapter();
+                    //check first if there is at least 1 album in the collection
+                    if(snapshotTitles.size() > 0) {
+                        //calls a function to get list of albums from firebase
+                        getAlbumsFromColl(snapshotTitles, snapshotSort);
+                    }
                 } else {
                     Toast.makeText(CollectionActivity.this, "Error! " + task.getException().getMessage(),
                             Toast.LENGTH_SHORT).show();
@@ -454,7 +456,7 @@ public class CollectionActivity extends AppCompatActivity {
         startActivity(Intent.createChooser(twIntent, "Share with: "));
     }
 
-    //TO BE DELETED
+    //gets a Uri from a bitmap (used for twitter share)
     public Uri saveScreenshotUri(Bitmap screenshot){
         Uri uri = null;
         File imagefolder = new File(getCacheDir(), "images");

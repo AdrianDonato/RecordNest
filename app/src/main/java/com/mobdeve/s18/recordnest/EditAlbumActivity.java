@@ -164,7 +164,7 @@ public class EditAlbumActivity extends AppCompatActivity {
                     Toast.makeText(EditAlbumActivity.this, "Removed " + albTitle + ".",
                             Toast.LENGTH_SHORT).show();
                     Intent i = new Intent(getApplicationContext(), CollectionActivity.class);
-                    i.putExtra(CollectionAdapter.KEY_COLLECTION_NAME, collID);
+                    i.putExtra(CollectionAdapter.KEY_COLLECTION_ID, collID);
                     startActivity(i);
                 } else {
                     Toast.makeText(EditAlbumActivity.this, "Error! " + task.getException().getMessage(),
@@ -199,7 +199,7 @@ public class EditAlbumActivity extends AppCompatActivity {
                                 Toast.makeText(EditAlbumActivity.this, "Transferred " + albTitle + " to " + targCollTitle + "!",
                                         Toast.LENGTH_SHORT).show();
                                 Intent i = new Intent(getApplicationContext(), CollectionActivity.class);
-                                i.putExtra(CollectionAdapter.KEY_COLLECTION_NAME, collID);
+                                i.putExtra(CollectionAdapter.KEY_COLLECTION_ID, collID);
                                 startActivity(i);
                             } else {
                                 Toast.makeText(EditAlbumActivity.this, "Error! " + task.getException().getMessage(),
