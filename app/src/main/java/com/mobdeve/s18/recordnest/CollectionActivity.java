@@ -2,15 +2,20 @@ package com.mobdeve.s18.recordnest;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -45,6 +50,9 @@ import com.mobdeve.s18.recordnest.model.Collection;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -57,6 +65,7 @@ public class CollectionActivity extends AppCompatActivity {
     View v_share;
     View v_sort;
     Button btn_cancel_share, btn_close_sortby, btn_sort;
+    LinearLayout twLayout;
 
     public AlbumAdapter albumAdapter;
     MainActivity mainActivity;
@@ -71,6 +80,7 @@ public class CollectionActivity extends AppCompatActivity {
     private ShareButton sbFBShare;
     private LoginButton lbFBlogin;
     private View view;
+    private Uri twImageShareURI;
 
     Dialog dialog;
 
@@ -162,8 +172,8 @@ public class CollectionActivity extends AppCompatActivity {
         return data;
     }
 
-    //creates sharing dialog (rename na lang yung function)
-    public void createAddCollectionDialog(){
+    //creates the dialog for sharing to facebook and twitter
+    public void createShareDialog(){
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
         final View addCollPopup = getLayoutInflater().inflate(R.layout.share, null);
 
@@ -176,6 +186,14 @@ public class CollectionActivity extends AppCompatActivity {
 
 
         sbFBShare = addCollPopup.findViewById(R.id.sb_facebookshare);
+        twLayout = addCollPopup.findViewById(R.id.ll_twitter);
+
+        twLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                shareOnTwitter();
+            }
+        });
 
         //task 1: save current activity as screenshot
         Bitmap viewSS = getScreenshot(view);
@@ -299,7 +317,7 @@ public class CollectionActivity extends AppCompatActivity {
                         v_share.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                createAddCollectionDialog();
+                                createShareDialog();
                             }
                         });
                         v_sort.setOnClickListener(new View.OnClickListener() {
@@ -404,6 +422,52 @@ public class CollectionActivity extends AppCompatActivity {
         SharePhotoContent sharePhotoContent = new SharePhotoContent.Builder()
                 .addPhoto(sharePhoto).build();
         sbFBShare.setShareContent(sharePhotoContent);
+    }
+
+    //function to share current activity to twitter
+    public void shareOnTwitter(){
+        PackageManager pm = getPackageManager();
+        /*
+        try {
+            Intent twIntent = new Intent(Intent.ACTION_SEND);
+            twIntent.setType("text/plain");
+            String testText = "Test from application";
+
+            //from what I could understand, pmInfo is used to try and catch exceptions?
+            PackageInfo pmInfo = pm.getPackageInfo("com.twitter.android", PackageManager.GET_META_DATA);
+            twIntent.setPackage("com.twitter.android");
+            twIntent.putExtra(Intent.EXTRA_TEXT, testText);
+            startActivity(Intent.createChooser(twIntent, "Share with: "));
+        } catch (PackageManager.NameNotFoundException e){
+            Toast.makeText(CollectionActivity.this, "Twitter is not installed in your phone!",
+                    Toast.LENGTH_SHORT).show();
+        }
+        */
+
+        Intent twIntent = new Intent(Intent.ACTION_SEND);
+        twIntent.setType("text/plain");
+        String testText = "Test from application";
+
+        twIntent.setPackage("com.twitter.android");
+        twIntent.putExtra(Intent.EXTRA_TEXT, testText);
+        startActivity(Intent.createChooser(twIntent, "Share with: "));
+    }
+
+    //TO BE DELETED
+    public Uri saveScreenshotUri(Bitmap screenshot){
+        Uri uri = null;
+        try {
+            File file = new File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), "RNscreenshot.png");
+            FileOutputStream stream = new FileOutputStream(file);
+            screenshot.compress(Bitmap.CompressFormat.PNG, 90, stream);
+            stream.close();
+            uri = Uri.fromFile(file);
+        } catch (IOException e) {
+            //Log.d(TAG, "IOException while trying to write file for sharing: " + e.getMessage());
+            Toast.makeText(CollectionActivity.this, "Error in generating image! " + e.getMessage(),
+                    Toast.LENGTH_SHORT).show();
+        }
+        return uri;
     }
 
     //function to get current activity into bitmap form
