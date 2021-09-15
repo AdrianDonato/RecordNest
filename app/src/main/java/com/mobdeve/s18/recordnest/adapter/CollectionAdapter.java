@@ -74,14 +74,16 @@ public class CollectionAdapter extends RecyclerView.Adapter<CollectionAdapter.Co
         //holder.setCollectionItem(this.collectionArrayList.get(position).getTrackTitle());
 
         holder.collection_item.setText(collectionArrayList.get(position).getCollectionTitle());
+        holder.collection_desc.setText(collectionArrayList.get(position).getDescription());
     }
 
     protected class CollectionViewHolder extends RecyclerView.ViewHolder{
-        TextView collection_item;
+        TextView collection_item, collection_desc;
 
         public CollectionViewHolder(View view){
             super(view);
             collection_item = view.findViewById(R.id.collection_item);
+            collection_desc = view.findViewById(R.id.collection_desc);
         }
     }
 }

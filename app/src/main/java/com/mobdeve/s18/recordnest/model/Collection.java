@@ -11,7 +11,7 @@ public class Collection {
     private ArrayList<String> albumIDList;
 
 
-    public Collection(String collectionTitle /*int collectionID,  String username, ArrayList<Album> albumsList*/) {
+    public Collection(String collectionTitle/* String description, int collectionID,  String username, ArrayList<Album> albumsList*/) {
         //this.collectionID = collectionID;
         this.collectionTitle = collectionTitle;
         //this.username = username;
