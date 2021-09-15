@@ -45,8 +45,9 @@
         android:layout_marginTop="21dp"
         android:paddingHorizontal="10dp"
         android:paddingVertical="0dp"
+        android:layout_marginLeft="5dp"
         android:background="@drawable/toggle_selector"
-        android:layout_toRightOf="@id/tv_other_username"/>
+        android:layout_toRightOf="@id/btn_follow"/>
 
     <LinearLayout
         android:id="@+id/ll_other_user_info"

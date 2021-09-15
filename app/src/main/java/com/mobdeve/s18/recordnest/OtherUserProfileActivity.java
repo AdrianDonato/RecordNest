@@ -41,7 +41,7 @@ public class OtherUserProfileActivity extends AppCompatActivity {
 
     private TextView username, followercount, followingcount;
     private ImageView userimg;
-    private ToggleButton tbFollow;
+    private ToggleButton tbFollow, tbModerator;
     private ArrayList<Collection> collArray;
     private FirebaseFirestore fStore;
     private FirebaseUser fUser;
@@ -66,6 +66,10 @@ public class OtherUserProfileActivity extends AppCompatActivity {
         this.followercount = findViewById(R.id.tv_ou_followers);
         this.followingcount = findViewById(R.id.tv_ou_following);
         this.tbFollow = findViewById(R.id.btn_follow);
+        this.tbModerator = findViewById(R.id.btn_set_moderator);
+
+        //set visibility of moderator button to gone
+        this.tbModerator.setVisibility(View.GONE);
 
         Intent i = getIntent();
 
@@ -119,6 +123,7 @@ public class OtherUserProfileActivity extends AppCompatActivity {
         initializeDataCollection();
     }
 
+    //retrieves the data of the selected user from the database
     public void initializeUserData(String userID){
         fStore.collection("UserDetails").document(userID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
@@ -127,6 +132,7 @@ public class OtherUserProfileActivity extends AppCompatActivity {
                     DocumentSnapshot snapshot = task.getResult();
                     String retUsername = snapshot.getString("Username");
                     String retImgURL = snapshot.getString("ProfPicURL");
+                    String retUserType = snapshot.getString("Type");
                     int retFollowers = snapshot.getLong("FollowerCount").intValue();
                     int retFollowing = snapshot.getLong("FollowingCount").intValue();
                     targFollowerCount = retFollowers;
@@ -139,6 +145,13 @@ public class OtherUserProfileActivity extends AppCompatActivity {
                         Glide.with(getApplicationContext()).load(retImgURL).into(userimg);
                     } else {
                         userimg.setImageResource(R.drawable.user);
+                    }
+
+                    //sets the moderator toggle button based on the user's role/type
+                    if(retUserType.equals("Moderator")){
+                        tbModerator.setChecked(true);
+                    } else {
+                        tbModerator.setChecked(false);
                     }
 
                 } else {
@@ -184,26 +197,59 @@ public class OtherUserProfileActivity extends AppCompatActivity {
         binding.rvOtherCollection.setAdapter(collectionAdapter);
     }
 
-    public ArrayList<Collection> initializeData() {
-        // get data from database here?
-        ArrayList<Collection> data = new ArrayList<>();
-        data.add(new Collection("Collection 1"));
-        data.add(new Collection("Collection 2"));
-        data.add(new Collection("Collection 3"));
-
-        return data;
-    }
-
     //function to check if current user follows this user, also gets curr user's following count
+    //also gets current user's role, if moderator, then set moderator button is visible
     public void checkOwnFollows(){
         fStore.collection("UserDetails").document(fUser.getUid()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull @NotNull Task<DocumentSnapshot> task) {
                 if(task.isSuccessful()){
                     DocumentSnapshot snapshot = task.getResult();
+                    String userType = snapshot.getString("Type");
+
+                    //set visibility and functionality of 'set moderator' toggle button
+                    if(userType.equals("Moderator")){
+                        tbModerator.setVisibility(View.VISIBLE);
+
+                        tbModerator.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                updateRoleDb(tbModerator.isChecked());
+                            }
+                        });
+                    }
+
                     ArrayList<String> followList = (ArrayList<String>) snapshot.get("FollowingList");
                     ownFollowingCount = followList.size();
                     tbFollow.setChecked(followList.contains(userID));
+                } else {
+                    Toast.makeText(OtherUserProfileActivity.this, "Error! " + task.getException().getMessage(),
+                            Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
+    public void updateRoleDb (boolean modOrNot){
+        Map<String, Object> roleUpdate = new HashMap<>();
+
+        if(modOrNot){
+            roleUpdate.put("Type", "Moderator");
+        } else {
+            roleUpdate.put("Type", "Regular");
+        }
+
+        fStore.collection("UserDetails").document(userID).update(roleUpdate).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull @NotNull Task<Void> task) {
+                if (task.isSuccessful()){
+                    if (modOrNot){
+                        Toast.makeText(OtherUserProfileActivity.this, otherUserName + " has been set to Moderator.",
+                                Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(OtherUserProfileActivity.this, otherUserName + " is no longer Moderator.",
+                                Toast.LENGTH_SHORT).show();
+                    }
                 } else {
                     Toast.makeText(OtherUserProfileActivity.this, "Error! " + task.getException().getMessage(),
                             Toast.LENGTH_SHORT).show();
