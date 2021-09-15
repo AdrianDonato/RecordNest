@@ -24,12 +24,26 @@
 
     <ToggleButton
         android:id="@+id/btn_follow"
-        android:layout_width="110dp"
+        android:layout_width="wrap_content"
         android:layout_height="25dp"
         android:textOff="Follow"
         android:textOn="Following"
         android:textAllCaps="false"
         android:layout_marginTop="21dp"
+        android:paddingHorizontal="10dp"
+        android:paddingVertical="0dp"
+        android:background="@drawable/toggle_selector"
+        android:layout_toRightOf="@id/tv_other_username"/>
+
+    <ToggleButton
+        android:id="@+id/btn_set_moderator"
+        android:layout_width="wrap_content"
+        android:layout_height="25dp"
+        android:textOff="Set Moderator"
+        android:textOn="Unset Moderator"
+        android:textAllCaps="false"
+        android:layout_marginTop="21dp"
+        android:paddingHorizontal="10dp"
         android:paddingVertical="0dp"
         android:background="@drawable/toggle_selector"
         android:layout_toRightOf="@id/tv_other_username"/>
