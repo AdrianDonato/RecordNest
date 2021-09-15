@@ -57,7 +57,7 @@ public class UserProfileActivity extends AppCompatActivity {
     private TextView profileUsername;
 
     Button btn_edit, btn_addcol, btn_close, btn_save, btn_logout;
-    EditText et_col;
+    EditText et_col, et_coldesc;
     TextView tv_username, tv_followers, tv_following, tv_nocoll;
     ImageView ivProfilePic;
     LinearLayout following, followers;
@@ -187,6 +187,7 @@ public class UserProfileActivity extends AppCompatActivity {
         btn_close = addCollPopup.findViewById(R.id.btn_close_add_collection);
         btn_save = addCollPopup.findViewById(R.id.btn_save_collection);
         et_col = addCollPopup.findViewById(R.id.et_addcollection);
+        et_coldesc = addCollPopup.findViewById(R.id.et_addcollection_desc);
 
         dialogBuilder.setView(addCollPopup);
         dialog = dialogBuilder.create();
@@ -202,7 +203,7 @@ public class UserProfileActivity extends AppCompatActivity {
                    /* Toast.makeText(UserProfileActivity.this,
                             et_col.getText().toString(),
                             Toast.LENGTH_SHORT).show(); */
-                    createNewCollection(et_col.getText().toString(), "placeholder");
+                    createNewCollection(et_col.getText().toString(), et_coldesc.getText().toString());
                     dialog.dismiss();
                 }
 
@@ -272,9 +273,11 @@ public class UserProfileActivity extends AppCompatActivity {
                             for(QueryDocumentSnapshot documentSnapshot : task.getResult()){
                                 String collID = documentSnapshot.getId();
                                 String collTitle = documentSnapshot.getString("Title");
+                                String collDesc = documentSnapshot.getString("Description");
 
                                 collArray.add(new Collection(collTitle));
-                                   collArray.get(collArray.size()-1).setCollectionID(collID);
+                                collArray.get(collArray.size()-1).setCollectionID(collID);
+                                collArray.get(collArray.size()-1).setDescription(collDesc);
                             }
                             if(collArray.size()>0){
                                 tv_nocoll.setVisibility(View.INVISIBLE);
@@ -304,11 +307,13 @@ public class UserProfileActivity extends AppCompatActivity {
         Map<String, Object> newColl = new HashMap<>();
         ArrayList<String> newCollAlbumID = new ArrayList<>();
         ArrayList<String> newCollImgURL = new ArrayList<>();
+        ArrayList<String> newCollTitle = new ArrayList<>();
 
         newColl.put("Title", collTitle);
         newColl.put("Description", collDesc);
         newColl.put("UserID", mUserID);
         newColl.put("AlbumIDList", newCollAlbumID);
+        newColl.put("AlbumTitleList", newCollTitle);
         newColl.put("ImageURLList", newCollImgURL);
         newColl.put("SortMethod", "Title"); //default sorting method
 

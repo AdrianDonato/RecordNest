@@ -55,28 +55,6 @@ public class SearchCollectionActivity extends AppCompatActivity {
         //initialize albums from database
         initPageAlbData();
 
-        /*
-        Intent i = getIntent();
-
-        String previousActivity= i.getStringExtra("FROM_ACTIVITY");
-
-        if (previousActivity.equals("genre")){
-            String name= i.getStringExtra(GenreAdapter.KEY_GENRE_NAME);
-            this.collectionName.setText(name);
-        }
-
-        else if (previousActivity.equals("artist")){
-            String name= i.getStringExtra(ArtistAdapter.KEY_ARTIST_NAME);
-            this.collectionName.setText(name);
-        }
-
-        else if (previousActivity.equals("year")){
-            String name= i.getStringExtra(YearAdapter.KEY_YEAR_NAME);
-            this.collectionName.setText(name);
-        }
-        */
-
-
         BottomNavigationView bottomNavigationView = findViewById(R.id.nav);
 
         bottomNavigationView.setSelectedItemId(R.id.invisible);
@@ -101,20 +79,6 @@ public class SearchCollectionActivity extends AppCompatActivity {
                 return false;
             }
         });
-
-/*
-        albumAdapter = new AlbumAdapter(getApplicationContext(), initializeData());
-
-        //TextView albumName = findViewById(R.id.tv_album_name);
-        //albumName.setVisibility(View.VISIBLE);
-
-        binding.rvSearchcollectionalbum.setLayoutManager(new GridLayoutManager(getApplicationContext(),3));
-        //findViewById(R.id.tv_album_name).setVisibility(View.  VISIBLE);;
-        binding.rvSearchcollectionalbum.setAdapter(albumAdapter);
-
- */
-
-
     }
 
     public void initPageAlbData(){
@@ -133,6 +97,9 @@ public class SearchCollectionActivity extends AppCompatActivity {
             String pageArtist= i.getStringExtra(ArtistAdapter.KEY_ARTIST_NAME);
             this.collectionName.setText("Albums from Artists - " + pageArtist);
             initCollArtist(pageArtist);
+        } else if (previousActivity.equals("approval")){
+            this.collectionName.setText("Albums for Approval");
+            initApprovalList();
         }
     }
 
@@ -206,14 +173,32 @@ public class SearchCollectionActivity extends AppCompatActivity {
         });
     }
 
+    //initializes list of albums that are not yet approved - this is for the use of moderators
+    public void initApprovalList(){
+        albumList = new ArrayList<>();
+        fStore.collection("Albums").whereEqualTo("Approved", "No").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull @NotNull Task<QuerySnapshot> task) {
+                if(task.isSuccessful()){
+                    for(DocumentSnapshot snapshot : task.getResult()){
+                        albumList.add(new Album(R.drawable.album1, snapshot.getString("Title"),
+                                snapshot.getString("Artist")));
+                        albumList.get(albumList.size()-1).setAlbumID(snapshot.getId());
+                        albumList.get(albumList.size()-1).setAlbumArtURL(snapshot.getString("ImageURL"));
+                    }
+                    initializeAlbumAdapter();
+                } else {
+                    Toast.makeText(SearchCollectionActivity.this, "Error! " + task.getException().getMessage(),
+                            Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
     //function to initialize album adapter
     public void initializeAlbumAdapter(){
         albumAdapter = new AlbumAdapter(getApplicationContext(), albumList);
-        //TextView albumName = findViewById(R.id.tv_album_name);
-        //albumName.setVisibility(View.VISIBLE);
-
         binding.rvSearchcollectionalbum.setLayoutManager(new GridLayoutManager(getApplicationContext(),3));
-        //findViewById(R.id.tv_album_name).setVisibility(View.VISIBLE);;
         binding.rvSearchcollectionalbum.setAdapter(albumAdapter);
     }
 }

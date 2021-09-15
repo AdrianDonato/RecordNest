@@ -36,16 +36,14 @@ public class SearchGenreActivity extends AppCompatActivity {
 
     public FirebaseFirestore fStore;
 
-    TextView genre;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivitySearchGenreBinding.inflate(getLayoutInflater());
 
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
-        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        getSupportActionBar().hide();
+        //requestWindowFeature(Window.FEATURE_NO_TITLE);
+        //this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
         //setContentView(R.layout.activity_main);
         View view = binding.getRoot();
         setContentView(view);
@@ -80,6 +78,7 @@ public class SearchGenreActivity extends AppCompatActivity {
         initGenreList();
     }
 
+    //retrieves list of genres from firebase, then calls initGenreAdapter
     public void initGenreList(){
         genreList = new ArrayList<>();
         fStore.collection("AlbumTags").document("GenreTags").get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -100,6 +99,7 @@ public class SearchGenreActivity extends AppCompatActivity {
         });
     }
 
+    //initializes recyclerview for genres
     public void initGenreAdapter(){
         genreAdapter = new GenreAdapter(getApplicationContext(), genreList);
 
@@ -108,7 +108,6 @@ public class SearchGenreActivity extends AppCompatActivity {
         LinearLayoutManager lm = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
 
         binding.rvGenre.setLayoutManager(lm);
-        //findViewById(R.id.tv_album_name).setVisibility(View.VISIBLE);;
         binding.rvGenre.setAdapter(genreAdapter);
     }
 }

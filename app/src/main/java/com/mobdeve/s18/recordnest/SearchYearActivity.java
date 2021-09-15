@@ -23,8 +23,6 @@ public class SearchYearActivity extends AppCompatActivity {
 
     public YearAdapter yearAdapter;
 
-    TextView year;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,8 +66,8 @@ public class SearchYearActivity extends AppCompatActivity {
         binding.rvYear.setAdapter(yearAdapter);
     }
 
+    //initializes set year data
     public ArrayList<Year> initializeData() {
-        // get data from database here?
         ArrayList<Year> data = new ArrayList<>();
         data.add(new Year("2020s"));
         data.add(new Year("2010s"));
