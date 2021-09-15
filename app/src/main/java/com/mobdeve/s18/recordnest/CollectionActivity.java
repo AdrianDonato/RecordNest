@@ -2,14 +2,12 @@ package com.mobdeve.s18.recordnest;
 
 import android.app.Dialog;
 import android.content.Intent;
-import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -232,8 +230,6 @@ public class CollectionActivity extends AppCompatActivity {
         btn_close_sortby = view.findViewById(R.id.btn_close_sortby);
         btn_sort = view.findViewById(R.id.btn_sort);
 
-
-        builder.setTitle("Spinner");
         Spinner spinner = view.findViewById((R.id.spinner_sortby));
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(CollectionActivity.this,
