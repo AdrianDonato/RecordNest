@@ -2,6 +2,7 @@ package com.mobdeve.s18.recordnest;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
@@ -106,7 +107,8 @@ public class SearchCollectionActivity extends AppCompatActivity {
     //initializes list of albums using a genre
     public void initCollGenre(String albGenre){
         albumList = new ArrayList<>();
-        fStore.collection("Albums").whereEqualTo("Genre", albGenre).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        fStore.collection("Albums").whereEqualTo("Genre", albGenre).whereEqualTo("Approved", "Yes")
+                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull @NotNull Task<QuerySnapshot> task) {
                 if(task.isSuccessful()){
@@ -129,7 +131,7 @@ public class SearchCollectionActivity extends AppCompatActivity {
     public void initCollYear(int albYear){
         albumList = new ArrayList<>();
         fStore.collection("Albums").whereGreaterThanOrEqualTo("Year", albYear).whereLessThan("Year", (albYear+10))
-                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                .whereEqualTo("Approved", "Yes").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull @NotNull Task<QuerySnapshot> task) {
                 if(task.isSuccessful()){
@@ -143,6 +145,7 @@ public class SearchCollectionActivity extends AppCompatActivity {
                 } else {
                     Toast.makeText(SearchCollectionActivity.this, "Error! " + task.getException().getMessage(),
                             Toast.LENGTH_SHORT).show();
+                    Log.d("FirestoreIndexError", task.getException().getMessage());
                 }
             }
         });
@@ -154,7 +157,7 @@ public class SearchCollectionActivity extends AppCompatActivity {
 
         fStore.collection("Albums").whereGreaterThanOrEqualTo("Artist", albArtist)
                 .whereLessThanOrEqualTo("Artist", albArtist+'\uf8ff')
-                .orderBy("Artist").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                .whereEqualTo("Approved", "Yes").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull @NotNull Task<QuerySnapshot> task) {
                 if(task.isSuccessful()){
@@ -168,6 +171,7 @@ public class SearchCollectionActivity extends AppCompatActivity {
                 } else {
                     Toast.makeText(SearchCollectionActivity.this, "Error! " + task.getException().getMessage(),
                             Toast.LENGTH_SHORT).show();
+                    Log.d("FirestoreIndexError", task.getException().getMessage());
                 }
             }
         });

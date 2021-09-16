@@ -2,6 +2,7 @@ package com.mobdeve.s18.recordnest;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
@@ -33,8 +34,6 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity  implements View.OnClickListener{
-    private int testing;
-    private int testing2;
     private String loggedName;
     private String loggedUID;
 
@@ -44,12 +43,9 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
 
     public FirebaseAuth mAuth;
 
-    private Button more;
-
     RecyclerView rvData;
 
     Animation topAnim;
-    //private PostAdapter postAdapter;
 
     private FirebaseFirestore fStore;
     private CollectionReference newReleases;
@@ -107,22 +103,14 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
             }
         });
         initializeData();
-        /*
-        albumAdapter = new AlbumAdapter(getApplicationContext(), initializeData());
-
-
-        //binding.rvDatalist.setLayoutManager(new LinearLayoutManager(getApplicationContext()))';
-        binding.rvDatalist.setLayoutManager(new GridLayoutManager(getApplicationContext(),2));
-
-        //binding.rvDatalist.setLayoutManager(new GridLayoutManager(getApplicationContext());
-        binding.rvDatalist.setAdapter(albumAdapter); */
     }
 
-
+    //initializes 6 of the most recent albums
     public void initializeData() {
         ArrayList<Album> data = new ArrayList<>();
         newReleases = fStore.collection("Albums");
-        newReleases.orderBy("Year", Query.Direction.DESCENDING).limit(6).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        newReleases.whereEqualTo("Approved", "Yes")
+                .orderBy("Year", Query.Direction.DESCENDING).limit(6).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull @NotNull Task<QuerySnapshot> task) {
                 if(task.isSuccessful()){
@@ -136,6 +124,7 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
                 } else {
                     Toast.makeText(MainActivity.this, "Error! " + task.getException().getMessage(),
                             Toast.LENGTH_SHORT).show();
+                    Log.d("FirestoreIndexError", task.getException().getMessage());
                 }
             }
         });
@@ -143,12 +132,7 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
 
     public void initializeAlbumAdapter(ArrayList<Album> albums){
         albumAdapter = new AlbumAdapter(getApplicationContext(), albums);
-
-
-        //binding.rvDatalist.setLayoutManager(new LinearLayoutManager(getApplicationContext()))';
         binding.rvDatalist.setLayoutManager(new GridLayoutManager(getApplicationContext(),2));
-
-        //binding.rvDatalist.setLayoutManager(new GridLayoutManager(getApplicationContext());
         binding.rvDatalist.setAdapter(albumAdapter);
     }
 
@@ -158,13 +142,11 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
         switch(v.getId()){
             case R.id.btn_more:
                 Intent i = new Intent(MainActivity.this, SearchByActivity.class);
-                //i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 startActivity(i);
                 break;
 
             case R.id.btn_submit_album:
                 i = new Intent(MainActivity.this, SubmitAlbumActivity.class);
-                //i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 startActivity(i);
                 break;
         }

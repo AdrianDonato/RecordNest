@@ -23,12 +23,12 @@
         android:layout_alignParentTop="true"/>
 
     <Button
-        android:id="@+id/btn_set_submissions"
+        android:id="@+id/btn_check_submissions"
         android:layout_width="wrap_content"
         android:layout_height="25dp"
         android:textAlignment="center"
         android:textSize="12dp"
-        android:text="Submissions"
+        android:text="See Album Submissions"
         android:textAllCaps="false"
         android:layout_marginTop="21dp"
         android:paddingHorizontal="10dp"

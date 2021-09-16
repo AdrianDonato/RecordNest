@@ -56,7 +56,7 @@ public class UserProfileActivity extends AppCompatActivity {
     private String mUserID;
     private TextView profileUsername;
 
-    Button btn_edit, btn_addcol, btn_close, btn_save, btn_logout;
+    Button btn_edit, btn_addcol, btn_close, btn_save, btn_logout, btn_mod_submission;
     EditText et_col, et_coldesc;
     TextView tv_username, tv_followers, tv_following, tv_nocoll;
     ImageView ivProfilePic;
@@ -115,6 +115,8 @@ public class UserProfileActivity extends AppCompatActivity {
         tv_following = findViewById(R.id.tv_own_following);
 
         btn_addcol = view.findViewById(R.id.btn_add_collection);
+        btn_mod_submission = view.findViewById(R.id.btn_check_submissions);
+        btn_mod_submission.setVisibility(View.GONE);
 
         btn_addcol.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -180,6 +182,7 @@ public class UserProfileActivity extends AppCompatActivity {
 
     }
 
+    //creates the dialog for adding a collection
     public void createAddCollectionDialog(){
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
         final View addCollPopup = getLayoutInflater().inflate(R.layout.activity_add_collection, null);
@@ -223,6 +226,7 @@ public class UserProfileActivity extends AppCompatActivity {
         });
     }
 
+    //creates dialog for logging out
     public void createLogoutDialog(){
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
         final View addLogoutPopup = getLayoutInflater().inflate(R.layout.activity_logout, null);
@@ -262,6 +266,7 @@ public class UserProfileActivity extends AppCompatActivity {
         });
     }
 
+    //retrieves user's collection from firebase
     public void initializeDataCollection() {
         collArray = new ArrayList<>();
         fStore.collection("AlbumCollection")
@@ -302,7 +307,7 @@ public class UserProfileActivity extends AppCompatActivity {
         binding.rvCollection.setAdapter(collectionAdapter);
     }
 
-
+    //adds a new collection to firebase
     public void createNewCollection(String collTitle, String collDesc){
         Map<String, Object> newColl = new HashMap<>();
         ArrayList<String> newCollAlbumID = new ArrayList<>();
@@ -362,11 +367,13 @@ public class UserProfileActivity extends AppCompatActivity {
 
     }
 
+    //sets user's profile data from firestore
     public void setProfileDataFStore(){
         fStore.collection("UserDetails").document(mUserID).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 String profURL = documentSnapshot.getString("ProfPicURL");
+                String userType = documentSnapshot.getString("Type");
                 int followercount = documentSnapshot.getLong("FollowerCount").intValue();
                 int followingcount= documentSnapshot.getLong("FollowingCount").intValue();
 
@@ -374,6 +381,19 @@ public class UserProfileActivity extends AppCompatActivity {
                     Glide.with(getApplicationContext()).load(profURL).into(ivProfilePic);
                 } else {
                     ivProfilePic.setImageResource(R.drawable.user);
+                }
+
+                //set visibility and functionality of submissions button if moderator
+                if(userType.equals("Moderator")){
+                    btn_mod_submission.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent i = new Intent(UserProfileActivity.this, SearchCollectionActivity.class);
+                            i.putExtra("FROM_ACTIVITY", "approval");
+                            startActivity(i);
+                        }
+                    });
+                    btn_mod_submission.setVisibility(View.VISIBLE);
                 }
 
                 tv_followers.setText(Integer.toString(followercount));

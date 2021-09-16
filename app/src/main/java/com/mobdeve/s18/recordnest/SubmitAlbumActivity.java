@@ -138,6 +138,7 @@ public class SubmitAlbumActivity extends AppCompatActivity{
 
     }
 
+    //creates an edit text view for additional tracklists
     protected void createEditTextView() {
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams (
                 RelativeLayout.LayoutParams.WRAP_CONTENT,
@@ -161,8 +162,8 @@ public class SubmitAlbumActivity extends AppCompatActivity{
         ll_tracklist.addView(etTracklists.get(etTracklists.size()-1));
     }
 
+    //submits album in firebase
     public void submitAlbum(){
-
         String subTitle = etAlbTitle.getText().toString().trim();
         String subArtist = etAlbArtist.getText().toString().trim();
         String subGenre = etAlbGenre.getText().toString().trim();
@@ -178,6 +179,7 @@ public class SubmitAlbumActivity extends AppCompatActivity{
         newAlbum.put("Artist", subArtist);
         newAlbum.put("Genre", subGenre);
         newAlbum.put("Year", subYear);
+        newAlbum.put("Approved", "No");
         newAlbum.put("AccRatings", 0);
         newAlbum.put("RatingCount", 0);
         newAlbum.put("AvgRating", 0);
@@ -231,10 +233,9 @@ public class SubmitAlbumActivity extends AppCompatActivity{
                                             fStore.collection("AlbumTags").document("ArtistAlphabetTags").update(addArtistAlphabet).addOnSuccessListener(new OnSuccessListener<Void>() {
                                                 @Override
                                                 public void onSuccess(Void unused) {
-                                                    Toast.makeText(SubmitAlbumActivity.this, "Successfully added " + etAlbTitle.getText().toString().trim() +"!",
+                                                    Toast.makeText(SubmitAlbumActivity.this, etAlbTitle.getText().toString().trim() +" has been submitted! It will be approved by a moderator.",
                                                             Toast.LENGTH_SHORT).show();
-                                                    Intent i = new Intent(SubmitAlbumActivity.this, AlbumProfileActivity.class);
-                                                    i.putExtra("KEY_ID", newId);
+                                                    Intent i = new Intent(SubmitAlbumActivity.this, MainActivity.class);
                                                     startActivity(i);
                                                 }
                                             });

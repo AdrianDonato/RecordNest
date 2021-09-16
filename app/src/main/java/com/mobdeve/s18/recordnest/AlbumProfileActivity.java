@@ -64,9 +64,9 @@ public class AlbumProfileActivity extends AppCompatActivity {
     private RatingBar ratingViewAlbum;
     private EditText reviewETAlbum;
 
-    private Button btnReviewAlbum, btnAlbumAddCollection;
+    private Button btnReviewAlbum, btnApprove, btnDelete;
 
-    private LinearLayout content, reviewInput;
+    private LinearLayout content, reviewInput, moderatorOptions;
 
     Spinner spinner;
 
@@ -128,6 +128,12 @@ public class AlbumProfileActivity extends AppCompatActivity {
         this.yearViewAlbum = findViewById(R.id.tv_album_year);
         this.genreViewAlbum = findViewById(R.id.tv_album_genre);
         this.avgRatingViewAlbum = findViewById(R.id.tv_album_avgrating);
+        this.moderatorOptions = findViewById(R.id.ll_modoptions);
+        this.btnApprove = findViewById(R.id.btn_album_approve);
+        this.btnDelete = findViewById(R.id.btn_album_delete);
+
+        //hide moderator options first
+        this.moderatorOptions.setVisibility(View.GONE);
 
         //get review views
         this.ratingViewAlbum = findViewById(R.id.rb_review_rating);
@@ -140,9 +146,6 @@ public class AlbumProfileActivity extends AppCompatActivity {
                 submitReview();
             }
         });
-
-        //this.trackListItem = findViewById(R.id.tracklist_item);
-        //this.rvTrackList = findViewById(R.id.rv_tracklist);
 
         Intent i = getIntent();
 
@@ -188,51 +191,8 @@ public class AlbumProfileActivity extends AppCompatActivity {
             }
         });
     }
-/*
-    public void ShowPopup(View v){
-        Button btn_close, btn_add;
 
-        myDialog.setContentView(R.layout.activity_add_to_collection);
-        btn_close = myDialog.findViewById(R.id.btn_close_add_collection);
-        btn_add = myDialog.findViewById(R.id.btn_album_add_to_collection);
-
-        btn_close.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                myDialog.dismiss();
-            }
-        });
-
-        myDialog.show();
-
-    }
-
- */
-
-
-    /*
-    public void createAddToCollectionDialog(){
-        dialogBuilder = new AlertDialog.Builder(this);
-        final View addToCollPopup = getLayoutInflater().inflate(R.layout.activity_add_to_collection, null);
-
-        btn_close = addToCollPopup.findViewById(R.id.btn_close_add_collection);
-        btn_add = addToCollPopup.findViewById(R.id.btn_album_add_to_collection);
-
-        dialogBuilder.setView(addToCollPopup);
-        dialog = dialogBuilder.create();
-        dialog.show();
-
-        btn_close.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-            }
-        });
-
-    }
-
-     */
-
+    //initializes tracklist model using the retrieved string arraylist from database
     public ArrayList<Tracklist> initializeDataTrack(ArrayList<String> tracklist) {
 
         ArrayList<Tracklist> data = new ArrayList<>();
@@ -302,6 +262,7 @@ public class AlbumProfileActivity extends AppCompatActivity {
                     String retArtistName = value.getString("Artist");
                     String retAlbumGenre = value.getString("Genre");
                     String retAlbumImg = value.getString("ImageURL");
+                    String retAlbumApproved = value.getString("Approved");
                     int retAlbumYear = value.getLong("Year").intValue();
                     double retAvgRating = value.getDouble("AvgRating");
                     int retRatingCount = value.getLong("RatingCount").intValue();
@@ -318,7 +279,7 @@ public class AlbumProfileActivity extends AppCompatActivity {
                     albumDisplayed.setAlbumArtURL(retAlbumImg);
                     trackString = retTracklist;
 
-                    setProfileViewData(coverData);
+                    setProfileViewData(coverData, retAlbumApproved);
                     initializeTrackAdapter();
                 } else {
                     Toast.makeText(AlbumProfileActivity.this, "Error! " + task.getException().getMessage(),
@@ -329,7 +290,7 @@ public class AlbumProfileActivity extends AppCompatActivity {
     }
 
     //this function sets the data of the views on album profile
-    public void setProfileViewData(int coverData){
+    public void setProfileViewData(int coverData, String approval){
         int cover = coverData;//albumDisplayed.getImageId();
         String name = albumDisplayed.getAlbumName();
         String artist = albumDisplayed.getArtist();
@@ -345,6 +306,23 @@ public class AlbumProfileActivity extends AppCompatActivity {
         this.artistViewAlbum.setText(artist);
         this.yearViewAlbum.setText(Integer.toString(albumYear));
         this.genreViewAlbum.setText(genre);
+
+        if(approval.equals("No")){
+            btn_add_to_col.setVisibility(View.GONE);
+            moderatorOptions.setVisibility(View.VISIBLE);
+            btnApprove.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    approveAlbum();
+                }
+            });
+            btnDelete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    deleteAlbum();
+                }
+            });
+        }
 
         //set intent when year is clicked
         this.yearViewAlbum.setOnClickListener(new View.OnClickListener() {
@@ -709,6 +687,45 @@ public class AlbumProfileActivity extends AppCompatActivity {
                             }
                         }
                     });
+                } else {
+                    Toast.makeText(AlbumProfileActivity.this, "Error! " + task.getException().getMessage(),
+                            Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
+    //function to update album's approval status to yes, making it visible for all users
+    public void approveAlbum(){
+        Map<String, Object> albumApproved = new HashMap<>();
+        albumApproved.put("Approved", "Yes");
+
+        fStore.collection("Albums").document(albumDisplayed.getAlbumID()).update(albumApproved).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull @NotNull Task<Void> task) {
+                if(task.isSuccessful()){
+                    Toast.makeText(AlbumProfileActivity.this, albumDisplayed.getAlbumName() + " has been approved!", Toast.LENGTH_SHORT).show();
+                    //refreshes activity to reflect changes
+                    finish();
+                    startActivity(getIntent());
+                } else {
+                    Toast.makeText(AlbumProfileActivity.this, "Error! " + task.getException().getMessage(),
+                            Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
+    //deletes the unapproved album from the database
+    public void deleteAlbum(){
+        fStore.collection("Albums").document(albumDisplayed.getAlbumID()).delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull @NotNull Task<Void> task) {
+                if(task.isSuccessful()){
+                    Toast.makeText(AlbumProfileActivity.this, albumDisplayed.getAlbumName() + " has been deleted.", Toast.LENGTH_SHORT).show();
+                    Intent i = new Intent(AlbumProfileActivity.this, SearchCollectionActivity.class);
+                    i.putExtra("FROM_ACTIVITY", "approval");
+                    startActivity(i);
                 } else {
                     Toast.makeText(AlbumProfileActivity.this, "Error! " + task.getException().getMessage(),
                             Toast.LENGTH_SHORT).show();
