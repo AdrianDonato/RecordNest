@@ -40,7 +40,6 @@ public class EditAlbumActivity extends AppCompatActivity {
 
     Button btn_save, btn_delete;
     private FirebaseFirestore fStore;
-    private DocumentReference albumDocRef;
     private FirebaseUser mUser;
 
     private String mUserID;
@@ -52,7 +51,6 @@ public class EditAlbumActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setContentView(R.layout.activity_edit_album);
 
         binding = ActivityEditAlbumBinding.inflate(getLayoutInflater());
 
@@ -106,6 +104,7 @@ public class EditAlbumActivity extends AppCompatActivity {
         });
     }
 
+    //sets the data of the album to be moved or deleted
     public void setAlbumData(){
         Intent i = getIntent();
         albumID = i.getStringExtra(AlbumAdapter.KEY_ID);
@@ -150,6 +149,7 @@ public class EditAlbumActivity extends AppCompatActivity {
         });
     }
 
+    //removes album from firestore collection's arraylist
     public void removeFromColl(){
         Map<String, Object> removeColl = new HashMap<>();
 
@@ -174,6 +174,7 @@ public class EditAlbumActivity extends AppCompatActivity {
         });
     }
 
+    //transfer an album to another collection of the user, will only be called if album is not yet in target collection
     public void transferColls(String targCollTitle){
         Map<String, Object> removeColl = new HashMap<>();
         removeColl.put("AlbumIDList", FieldValue.arrayRemove(albumID));
@@ -215,6 +216,31 @@ public class EditAlbumActivity extends AppCompatActivity {
         });
     }
 
+    //checks if album is in collection first, if so then transfercolls is called
+    public void checkIfInCollection(String targCollTitle){
+        int titleIndex = otherCollTitles.indexOf(targCollTitle);
+        String targCollID = otherCollIDs.get(titleIndex);
+        fStore.collection("AlbumCollection").document(targCollID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull @NotNull Task<DocumentSnapshot> task) {
+                if(task.isSuccessful()){
+                    DocumentSnapshot snapshot = task.getResult();
+                    ArrayList<String> albumIDList = (ArrayList<String>) snapshot.get("AlbumIDList");
+                    if(albumIDList.contains(albumID)){
+                        Toast.makeText(EditAlbumActivity.this, albTitle + " is already in " + targCollTitle + "!",
+                                Toast.LENGTH_SHORT).show();
+                    } else {
+                        transferColls(targCollTitle);
+                    }
+                } else {
+                    Toast.makeText(EditAlbumActivity.this, "Error! " + task.getException().getMessage(),
+                            Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
+    //initializes the collection spinner's options
     public void initMoveToColl(){
         otherCollIDs = new ArrayList<>();
         otherCollTitles = new ArrayList<>();
@@ -255,12 +281,13 @@ public class EditAlbumActivity extends AppCompatActivity {
         spinner.setAdapter(adapter);
     }
 
+    //sets on click listener for save button (when transferring the album to another collection)
     public void setTransferListener(){
         btn_save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(!spinner.getSelectedItem().toString().equalsIgnoreCase("Choose a collection...")){
-                    transferColls(spinner.getSelectedItem().toString());
+                    checkIfInCollection(spinner.getSelectedItem().toString());
                 } else {
                     Toast.makeText(EditAlbumActivity.this, "Please choose a collection!",
                             Toast.LENGTH_SHORT).show();

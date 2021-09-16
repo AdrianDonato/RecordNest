@@ -34,7 +34,7 @@
                 android:id="@+id/iv_edit_album_img"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:src="@drawable/album1"
+                android:src="@drawable/vinyl2"
                 android:adjustViewBounds="true"
                 android:scaleType="centerCrop"
                 android:layout_weight="2"/>

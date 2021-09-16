@@ -68,8 +68,6 @@ public class AlbumProfileActivity extends AppCompatActivity {
 
     private LinearLayout content, reviewInput, moderatorOptions;
 
-    Spinner spinner;
-
     Animation topAnim, bottomAnim;
 
     public TracklistAdapter tracklistAdapter;
