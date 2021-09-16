@@ -70,7 +70,7 @@
                 android:id="@+id/follower_own_image"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
-                android:src="@drawable/album1"/>
+                android:src="@drawable/user"/>
 
         </androidx.cardview.widget.CardView>
 
