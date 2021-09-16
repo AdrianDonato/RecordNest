@@ -41,10 +41,6 @@ public class SearchGenreActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivitySearchGenreBinding.inflate(getLayoutInflater());
 
-        //requestWindowFeature(Window.FEATURE_NO_TITLE);
-        //this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
-        //setContentView(R.layout.activity_main);
         View view = binding.getRoot();
         setContentView(view);
 

@@ -31,8 +31,6 @@ public class SearchArtistActivity extends AppCompatActivity {
 
     public ArtistAdapter artistAdapter;
 
-    TextView artist;
-
     private FirebaseFirestore fStore;
     private ArrayList<Artist> retArtistAlphabet;
 
@@ -99,6 +97,7 @@ public class SearchArtistActivity extends AppCompatActivity {
         });
     }
 
+    //initializes adapter for list of artist alphabets
     public void initArtistListAdapter(){
         artistAdapter = new ArtistAdapter(getApplicationContext(), retArtistAlphabet);
 

@@ -41,12 +41,6 @@ public class TracklistAdapter extends RecyclerView.Adapter<TracklistAdapter.Trac
 
     @Override
     public void onBindViewHolder(TracklistAdapter.TrackListViewHolder holder, int position) {
-
-        //holder.setImgAlbum(this.albumArrayList.get(position).getImageId());
-        //holder.setNameAlbum(this.albumArrayList.get(position).getAlbumName());
-        //holder.setArtistAlbum(this.albumArrayList.get(position).getArtist());
-        //holder.setTracklistItem(this.tracklistArrayList.get(position).getTrackTitle());
-
         holder.tracklist_item.setText(tracklistArrayList.get(position).getTrackTitle());
     }
 

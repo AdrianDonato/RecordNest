@@ -11,11 +11,8 @@ public class Collection {
     private ArrayList<String> albumIDList;
 
 
-    public Collection(String collectionTitle/* String description, int collectionID,  String username, ArrayList<Album> albumsList*/) {
-        //this.collectionID = collectionID;
+    public Collection(String collectionTitle) {
         this.collectionTitle = collectionTitle;
-        //this.username = username;
-        //this.albumsList = albumsList;
     }
 
     //setters

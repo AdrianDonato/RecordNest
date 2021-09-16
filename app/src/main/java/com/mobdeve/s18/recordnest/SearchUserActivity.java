@@ -37,9 +37,6 @@ public class SearchUserActivity extends AppCompatActivity {
     private FirebaseFirestore fStore;
     private ArrayList<UserList> allUsersList;
 
-    ArrayAdapter<String> adapter;
-    ArrayList<UserList> userListArrayList;
-
     EditText et_search;
 
     @Override
@@ -77,13 +74,6 @@ public class SearchUserActivity extends AppCompatActivity {
                 return false;
             }
         });
-
-        /*
-        userListAdapter = new UserListAdapter(getApplicationContext(), initializeData());
-        binding.rvUser.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-
-        //findViewById(R.id.tv_album_name).setVisibility(View.VISIBLE);;
-        binding.rvUser.setAdapter(userListAdapter); */
 
         initializeUserData();
 
@@ -128,10 +118,7 @@ public class SearchUserActivity extends AppCompatActivity {
 
     }
 
-    public void searchUser(String searchText){
-        //fStore.collection("UserDetails").where
-    }
-
+    //initializes list of all users
     public void initializeUserData(){
         allUsersList = new ArrayList<>();
         fStore.collection("UserDetails").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {

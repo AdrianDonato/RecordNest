@@ -45,7 +45,6 @@ public class RegisterActivity extends AppCompatActivity{
         EditText regUsername = (EditText)findViewById(R.id.et_register_username);
         EditText regEmail = (EditText)findViewById(R.id.et_register_email);
         EditText regPassword = (EditText)findViewById(R.id.et_register_password);
-        //registerref = FirebaseDatabase.getInstance().getReference().child("User");
         fStore = FirebaseFirestore.getInstance();
         mAuth = FirebaseAuth.getInstance();
 

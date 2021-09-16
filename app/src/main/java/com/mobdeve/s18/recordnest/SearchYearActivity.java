@@ -62,7 +62,6 @@ public class SearchYearActivity extends AppCompatActivity {
         LinearLayoutManager lm = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
 
         binding.rvYear.setLayoutManager(lm);
-        //findViewById(R.id.tv_album_name).setVisibility(View.VISIBLE);;
         binding.rvYear.setAdapter(yearAdapter);
     }
 

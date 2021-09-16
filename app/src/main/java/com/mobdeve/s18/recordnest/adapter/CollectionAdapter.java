@@ -67,12 +67,6 @@ public class CollectionAdapter extends RecyclerView.Adapter<CollectionAdapter.Co
 
     @Override
     public void onBindViewHolder(CollectionAdapter.CollectionViewHolder holder, int position) {
-
-        //holder.setImgAlbum(this.albumArrayList.get(position).getImageId());
-        //holder.setNameAlbum(this.albumArrayList.get(position).getAlbumName());
-        //holder.setArtistAlbum(this.albumArrayList.get(position).getArtist());
-        //holder.setCollectionItem(this.collectionArrayList.get(position).getTrackTitle());
-
         holder.collection_item.setText(collectionArrayList.get(position).getCollectionTitle());
         holder.collection_desc.setText(collectionArrayList.get(position).getDescription());
     }

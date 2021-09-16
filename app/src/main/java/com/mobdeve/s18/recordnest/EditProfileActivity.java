@@ -172,19 +172,10 @@ public class EditProfileActivity extends AppCompatActivity {
                 }
             }
         });
-        /*
-        if(fUser.getPhotoUrl() != null){
-            Uri currPic = fUser.getPhotoUrl();
-            try {
-                Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), currPic);
-                bitmap = Bitmap.createScaledBitmap(bitmap,  600 ,600, true);
-                iv_profilepic.setImageBitmap(bitmap); //trying bitmap
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        } */
     }
 
+
+    //updates user profile with an image
     public void updateUserProfile(){
         newUsername = etUsername.getText().toString().trim();
         newPassword = etPassword.getText().toString().trim();
@@ -276,6 +267,7 @@ public class EditProfileActivity extends AppCompatActivity {
         });
     }
 
+    //updates user profile without a change in image
     public void updateWithoutImage(){
         newUsername = etUsername.getText().toString().trim();
         newPassword = etPassword.getText().toString().trim();
@@ -333,6 +325,7 @@ public class EditProfileActivity extends AppCompatActivity {
         });
     }
 
+    //sets onclicklistener of save button
     public void setBtnSaveListener(){
         btn_save.setOnClickListener(new View.OnClickListener() {
             @Override

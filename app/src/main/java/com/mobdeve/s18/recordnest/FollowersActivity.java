@@ -86,7 +86,7 @@ public class FollowersActivity extends AppCompatActivity {
         BottomNavigationView bottomNavigationView = findViewById(R.id.nav);
 
         //home
-        bottomNavigationView.setSelectedItemId(R.id.search);
+        bottomNavigationView.setSelectedItemId(R.id.invisible);
 
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -101,22 +101,13 @@ public class FollowersActivity extends AppCompatActivity {
                         overridePendingTransition(0,0);
                         return true;
                     case R.id.search:
-
+                        startActivity(new Intent(getApplicationContext(),SearchUserActivity.class));
+                        overridePendingTransition(0,0);
                         return true;
                 }
                 return false;
             }
         });
-    }
-
-    public ArrayList<UserList> initializeData() {
-        // get data from database here?
-        ArrayList<UserList> data = new ArrayList<>();
-        data.add(new UserList(R.drawable.user, "ina", "qbvxJbLdBXWq0CYqEeoSqV91ALs2"));
-        data.add(new UserList(R.drawable.user, "pat", "4F41MMsEjSWDxzkVHcTDvlj8BLD3"));
-        data.add(new UserList(R.drawable.user, "eva", "sGMkuJr9S3TiTRfAg4inkCO5DnH2"));
-
-        return data;
     }
 
     //initialize own profile (username, profile picture, etc)
@@ -180,11 +171,7 @@ public class FollowersActivity extends AppCompatActivity {
     public void initUsersAdapter(){
         userListAdapter = new UserListAdapter(getApplicationContext(), followerUsers);
 
-        //TextView albumName = findViewById(R.id.tv_album_name);
-        //albumName.setVisibility(View.VISIBLE);
-
         binding.rvFollowerslist.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-        //findViewById(R.id.tv_album_name).setVisibility(View.VISIBLE);;
         binding.rvFollowerslist.setAdapter(userListAdapter);
     }
 

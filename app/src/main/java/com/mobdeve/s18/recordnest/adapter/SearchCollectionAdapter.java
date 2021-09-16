@@ -42,12 +42,6 @@ public class SearchCollectionAdapter extends RecyclerView.Adapter<SearchCollecti
     }
 
     public void onBindViewHolder(SearchCollectionAdapter.SearchCollectionViewHolder holder, int position) {
-
-        //holder.setImgAlbum(this.albumArrayList.get(position).getImageId());
-        //holder.setNameAlbum(this.albumArrayList.get(position).getAlbumName());
-        //holder.setArtistAlbum(this.albumArrayList.get(position).getArtist());
-        //holder.setCollectionItem(this.collectionArrayList.get(position).getTrackTitle());
-
         holder.collection_item.setText(searchCollectionArrayList.get(position).getCollectionTitle());
     }
 

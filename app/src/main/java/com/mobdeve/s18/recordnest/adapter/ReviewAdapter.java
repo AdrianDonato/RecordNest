@@ -8,7 +8,6 @@ import android.graphics.drawable.ColorDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -20,7 +19,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.mobdeve.s18.recordnest.AlbumProfileActivity;
@@ -37,7 +35,6 @@ import java.util.Map;
 
 public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewViewHolder> {
     private ArrayList<Review> reviewArrayList;
-    private DocumentReference usernameDocRef;
     private Context context;
     private boolean hideDelete; //if true then hide delete button
     private Album albumReviewed;
@@ -70,12 +67,6 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewView
 
     @Override
     public void onBindViewHolder(ReviewAdapter.ReviewViewHolder holder, int position) {
-
-        //holder.setImgAlbum(this.albumArrayList.get(position).getImageId());
-        //holder.setNameAlbum(this.albumArrayList.get(position).getAlbumName());
-        //holder.setArtistAlbum(this.albumArrayList.get(position).getArtist());
-        //holder.setTracklistItem(this.tracklistArrayList.get(position).getTrackTitle());
-
         Review review = reviewArrayList.get(position);
         if(hideDelete){
             holder.delete_review.setVisibility(View.GONE);
@@ -84,20 +75,7 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewView
                 @Override
                 public void onClick(View v) {
                     AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(context);
-                    //final View addLogoutPopup = context.getLayoutInflater().inflate(R.layout.activity_logout, null);
-                    //final View deleteDialog = View.inflate(context,R.layout.delete,null);
 
-                    //delete_review = deleteDialog.findViewById(R.id.v_delete);
-                    //btn_logout = addLogoutPopup.findViewById(R.id.btn_logout);
-
-            /*
-            dialogBuilder.setView(deleteDialog);
-            myDialog = dialogBuilder.create();
-            myDialog.show();
-
-            myDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-
-             */
                     dialogBuilder.setTitle("DELETE REVIEW?");
                     dialogBuilder.setPositiveButton("CANCEL", new DialogInterface.OnClickListener() {
                         @Override
@@ -156,8 +134,6 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewView
                             });
                         }
                     });
-
-                    //dialogBuilder.setView(deleteDialog);
                     AlertDialog myDialog = dialogBuilder.create();
                     myDialog.show();
 
@@ -227,20 +203,9 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewView
 
         private void showDialogDelete(View view){
             AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(context.getApplicationContext());
-            //final View addLogoutPopup = context.getLayoutInflater().inflate(R.layout.activity_logout, null);
             final View deleteDialog = View.inflate(context,R.layout.delete,null);
 
             delete_review = deleteDialog.findViewById(R.id.v_delete);
-            //btn_logout = addLogoutPopup.findViewById(R.id.btn_logout);
-
-            /*
-            dialogBuilder.setView(deleteDialog);
-            myDialog = dialogBuilder.create();
-            myDialog.show();
-
-            myDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-
-             */
             dialogBuilder.setView(deleteDialog);
             AlertDialog myDialog = dialogBuilder.create();
             myDialog.show();

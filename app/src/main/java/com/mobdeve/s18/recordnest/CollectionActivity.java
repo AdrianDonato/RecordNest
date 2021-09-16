@@ -67,7 +67,6 @@ public class CollectionActivity extends AppCompatActivity {
     LinearLayout twLayout;
 
     public AlbumAdapter albumAdapter;
-    MainActivity mainActivity;
 
     private FirebaseFirestore fStore;
     private FirebaseUser fUser;
@@ -79,7 +78,6 @@ public class CollectionActivity extends AppCompatActivity {
     private ShareButton sbFBShare;
     private LoginButton lbFBlogin;
     private View view;
-    private Uri twImageShareURI;
 
     Dialog dialog;
 
@@ -95,21 +93,9 @@ public class CollectionActivity extends AppCompatActivity {
         fStore = FirebaseFirestore.getInstance();
         fUser = FirebaseAuth.getInstance().getCurrentUser();
 
-        /*
-        lbFBlogin = findViewById(R.id.lb_facebooklogin);
-        sbFBShare = findViewById(R.id.sb_facebookshare);
-        //initialize callback manager
-        //this allows the app to communicate with facebook
-        callbackManager = CallbackManager.Factory.create();
-        */
-
         this.collectionName = findViewById(R.id.collection_item);
 
         Intent i = getIntent();
-
-        //String name= i.getStringExtra(CollectionAdapter.KEY_COLLECTION_NAME);
-
-        //this.collectionName.setText(name);
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.nav);
 
@@ -140,35 +126,9 @@ public class CollectionActivity extends AppCompatActivity {
 
         v_sort = view.findViewById(R.id.v_sort);
 
-        /*
-        albumAdapter = new AlbumAdapter(getApplicationContext(), initializeData());
-
-        //TextView albumName = findViewById(R.id.tv_album_name);
-        //albumName.setVisibility(View.VISIBLE);
-
-        binding.rvCollectionalbum.setLayoutManager(new GridLayoutManager(getApplicationContext(),3));
-        //findViewById(R.id.tv_album_name).setVisibility(View.  VISIBLE);;
-        binding.rvCollectionalbum.setAdapter(albumAdapter);
-        */
 
         collIntentID = i.getStringExtra(CollectionAdapter.KEY_COLLECTION_ID);
         initializeCollection(collIntentID);
-    }
-
-    public ArrayList<Album> initializeData() {
-        // get data from database here?
-        ArrayList<Album> data = new ArrayList<>();
-        data.add(new Album(R.drawable.album1, "Juicebox","Mac Ayres"));
-        data.add(new Album(R.drawable.album2, "Twentytwenty","Jake Scott"));
-        data.add(new Album(R.drawable.album3, "Happier than ever","Billie Eilish"));
-        data.add(new Album(R.drawable.album1, "Juicebox","Mac Ayres"));
-        data.add(new Album(R.drawable.album2, "Twentytwenty","Jake Scott"));
-
-        Collections.shuffle(data);
-
-
-
-        return data;
     }
 
     //creates the dialog for sharing to facebook and twitter
@@ -216,6 +176,7 @@ public class CollectionActivity extends AppCompatActivity {
         });
     }
 
+    //creates a dialog to sort the collection
     public void createSortDialog(){
         AlertDialog.Builder builder = new AlertDialog.Builder(CollectionActivity.this);
         View view = getLayoutInflater().inflate(R.layout.sortby, null);
@@ -291,21 +252,6 @@ public class CollectionActivity extends AppCompatActivity {
                     retCollection.setUsername(snapshotUserID);
                     retCollection.setDescription(snapshotDesc);
 
-                    //retAlbums = new ArrayList<>();
-
-                    //initialize album data
-                    /*
-                    for(int i = 0; i < snapshotAlbums.size(); i++){
-
-                        String retAlbumID = snapshotAlbums.get(i);
-                        String retImgURL = snapshotImgs.get(i);
-                        String retAlbumTitle = snapshotTitles.get(i);
-
-                        retAlbums.add(new Album(R.drawable.album1, retAlbumTitle, "Artist"));
-                        retAlbums.get(i).setAlbumID(retAlbumID);
-                        retAlbums.get(i).setAlbumArtURL(retImgURL);
-                    }
-                    */
                     collectionName.setText(snapshotCollTitle);
 
                     //check if collection's owner is the same as the current user
@@ -379,11 +325,7 @@ public class CollectionActivity extends AppCompatActivity {
         albumAdapter.setOwnerID(retCollection.getUsername());
         albumAdapter.setViewerID(fUser.getUid());
 
-        //TextView albumName = findViewById(R.id.tv_album_name);
-        //albumName.setVisibility(View.VISIBLE);
-
         binding.rvCollectionalbum.setLayoutManager(new GridLayoutManager(getApplicationContext(),3));
-        //findViewById(R.id.tv_album_name).setVisibility(View.VISIBLE);;
         binding.rvCollectionalbum.setAdapter(albumAdapter);
     }
 
@@ -426,22 +368,6 @@ public class CollectionActivity extends AppCompatActivity {
     //function to share current activity to twitter
     public void shareOnTwitter(){
         PackageManager pm = getPackageManager();
-        /*
-        try {
-            Intent twIntent = new Intent(Intent.ACTION_SEND);
-            twIntent.setType("text/plain");
-            String testText = "Test from application";
-
-            //from what I could understand, pmInfo is used to try and catch exceptions?
-            PackageInfo pmInfo = pm.getPackageInfo("com.twitter.android", PackageManager.GET_META_DATA);
-            twIntent.setPackage("com.twitter.android");
-            twIntent.putExtra(Intent.EXTRA_TEXT, testText);
-            startActivity(Intent.createChooser(twIntent, "Share with: "));
-        } catch (PackageManager.NameNotFoundException e){
-            Toast.makeText(CollectionActivity.this, "Twitter is not installed in your phone!",
-                    Toast.LENGTH_SHORT).show();
-        }
-        */
 
         Intent twIntent = new Intent(Intent.ACTION_SEND);
         twIntent.setType("image/png");

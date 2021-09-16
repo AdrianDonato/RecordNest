@@ -8,8 +8,7 @@ public class Review {
     private String reviewContent;
     private int userImageId;
 
-    public Review (/*int reviewID,*/ int rating,  int userImageId, String username, String reviewContent){
-        /*this.reviewID = reviewID;*/
+    public Review (int rating,  int userImageId, String username, String reviewContent){
         this.rating = rating;
         this.userImageId = userImageId;
         this.username = username;

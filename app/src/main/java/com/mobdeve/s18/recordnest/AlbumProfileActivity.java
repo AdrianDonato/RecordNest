@@ -72,8 +72,6 @@ public class AlbumProfileActivity extends AppCompatActivity {
 
     Animation topAnim, bottomAnim;
 
-    //private RecyclerView rvTrackList;
-
     public TracklistAdapter tracklistAdapter;
 
     public ReviewAdapter reviewAdapter;

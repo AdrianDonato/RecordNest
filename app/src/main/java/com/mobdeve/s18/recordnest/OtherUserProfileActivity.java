@@ -173,9 +173,10 @@ public class OtherUserProfileActivity extends AppCompatActivity {
                             for(QueryDocumentSnapshot documentSnapshot : task.getResult()){
                                 String collID = documentSnapshot.getId();
                                 String collTitle = documentSnapshot.getString("Title");
-
+                                String collDesc = documentSnapshot.getString("Description");
                                 collArray.add(new Collection(collTitle));
                                 collArray.get(collArray.size()-1).setCollectionID(collID);
+                                collArray.get(collArray.size()-1).setDescription(collDesc);
                             }
                             initCollAdapter();
                         } else {

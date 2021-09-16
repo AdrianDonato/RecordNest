@@ -16,15 +16,10 @@ public class Album {
     private int accRatingScore;
     private int year;
 
-    private ArrayList<String> trackList;
-    private ArrayList<String> reviewList;
-
     public Album(int imageId, String albumName, String artist) {
         this.imageId = imageId;
         this.albumName = albumName;
         this.artist = artist;
-
-        //this.trackList = trackList;
     }
 
     //alternate constructor for album adapter
@@ -111,12 +106,5 @@ public class Album {
     public String getAlbumArtURL(){
         return albumArtURL;
     }
-
-    /*
-    public String getTracklist(){
-        return trackList;
-    }
-
- */
 
 }

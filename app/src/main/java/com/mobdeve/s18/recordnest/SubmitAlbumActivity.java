@@ -91,8 +91,6 @@ public class SubmitAlbumActivity extends AppCompatActivity{
             @Override
             public void onClick(View v) {
                 submitAlbum();
-                //Intent i = new Intent(SubmitAlbumActivity.this, MainActivity.class);
-                //startActivity(i);
             }
         });
 
@@ -147,7 +145,7 @@ public class SubmitAlbumActivity extends AppCompatActivity{
         params.setMargins(0,10,0,10);
         //create new arraylist with this
         etTracklists.add(new EditText(this));
-        //edittTxt = findViewById(R.id.et_tracklist);
+
         int maxLength = 100;
         hint++;
         etTracklists.get(etTracklists.size()-1).setHint("Track "+hint);

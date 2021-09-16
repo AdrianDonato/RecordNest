@@ -103,7 +103,7 @@ public class FollowingActivity extends AppCompatActivity {
         BottomNavigationView bottomNavigationView = findViewById(R.id.nav);
 
         //home
-        bottomNavigationView.setSelectedItemId(R.id.search);
+        bottomNavigationView.setSelectedItemId(R.id.invisible);
 
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -118,7 +118,8 @@ public class FollowingActivity extends AppCompatActivity {
                         overridePendingTransition(0,0);
                         return true;
                     case R.id.search:
-
+                        startActivity(new Intent(getApplicationContext(),SearchUserActivity.class));
+                        overridePendingTransition(0,0);
                         return true;
                 }
                 return false;
@@ -189,18 +190,8 @@ public class FollowingActivity extends AppCompatActivity {
     public void initUsersAdapter(){
         userListAdapter = new UserListAdapter(getApplicationContext(), followingUsers);
 
-        //TextView albumName = findViewById(R.id.tv_album_name);
-        //albumName.setVisibility(View.VISIBLE);
-
         binding.rvFollowinglist.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
         //findViewById(R.id.tv_album_name).setVisibility(View.VISIBLE);;
         binding.rvFollowinglist.setAdapter(userListAdapter);
     }
-/*
-    public void onBackPressed(){
-        //super.onBackPressed();
-
-    }
-
- */
 }

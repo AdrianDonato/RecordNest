@@ -111,7 +111,7 @@ public class FollowingActActivity extends AppCompatActivity {
         BottomNavigationView bottomNavigationView = findViewById(R.id.nav);
 
         //home
-        bottomNavigationView.setSelectedItemId(R.id.search);
+        bottomNavigationView.setSelectedItemId(R.id.invisible);
 
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -126,23 +126,13 @@ public class FollowingActActivity extends AppCompatActivity {
                         overridePendingTransition(0,0);
                         return true;
                     case R.id.search:
-
+                        startActivity(new Intent(getApplicationContext(),SearchUserActivity.class));
+                        overridePendingTransition(0,0);
                         return true;
                 }
                 return false;
             }
         });
-        /*
-        activityAdapter = new ActivityAdapter(getApplicationContext(), initializeData());
-
-        //TextView albumName = findViewById(R.id.tv_album_name);
-        //albumName.setVisibility(View.VISIBLE);
-
-        binding.rvRecentactivity.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-        //findViewById(R.id.tv_album_name).setVisibility(View.VISIBLE);;
-        binding.rvRecentactivity.setAdapter(activityAdapter);
-
-         */
     }
 
     //initialize own profile (username, profile picture, etc) as well as user's feed
@@ -171,22 +161,15 @@ public class FollowingActActivity extends AppCompatActivity {
                         Glide.with(getApplicationContext())
                                 .load(retImg).into(ownImage);
                     }
-
-                    initFeed();
+                    if(fingcount > 0) {
+                        initFeed();
+                    }
                 } else {
                     Toast.makeText(FollowingActActivity.this, "Error! " + task.getException().getMessage(),
                             Toast.LENGTH_SHORT).show();
                 }
             }
         });
-    }
-
-    public ArrayList<Activity> initializeData() {
-        // get data from database here?
-        ArrayList<Activity> data = new ArrayList<>();
-        data.add(new Activity("Username","Title","Content", "Date", R.drawable.vinyl));
-        data.add(new Activity("Username","Title","Content", "Date", R.drawable.vinyl));
-        return data;
     }
 
     //retrieves recent activity of users followed from firestore db
@@ -221,12 +204,7 @@ public class FollowingActActivity extends AppCompatActivity {
     //initializes adapter of recent activities, executed after retrieving activities from db on initFeed()
     public void initFeedAdapter(){
         activityAdapter = new ActivityAdapter(getApplicationContext(), feedList);
-
-        //TextView albumName = findViewById(R.id.tv_album_name);
-        //albumName.setVisibility(View.VISIBLE);
-
         binding.rvRecentactivity.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-        //findViewById(R.id.tv_album_name).setVisibility(View.VISIBLE);;
         binding.rvRecentactivity.setAdapter(activityAdapter);
     }
 }

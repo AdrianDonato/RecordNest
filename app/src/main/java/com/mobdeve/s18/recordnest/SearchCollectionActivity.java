@@ -82,6 +82,7 @@ public class SearchCollectionActivity extends AppCompatActivity {
         });
     }
 
+    //initializes list of albums based on the from activity string extra (genre, year, artist, or approval)
     public void initPageAlbData(){
         Intent i = getIntent();
         String previousActivity= i.getStringExtra("FROM_ACTIVITY");

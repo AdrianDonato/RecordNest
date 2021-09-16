@@ -136,7 +136,7 @@ public class UserProfileActivity extends AppCompatActivity {
             }
         });
 
-        //sets username of profile page (not finished yet, only works on logged in user's profile)
+        //sets the data of profile page
         setProfileDataFStore();
 
         Intent prevPage = getIntent();
