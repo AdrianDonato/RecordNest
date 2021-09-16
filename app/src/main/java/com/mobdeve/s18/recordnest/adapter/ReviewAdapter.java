@@ -158,8 +158,11 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewView
                     } else {
                         holder.review_userImage.setImageResource(reviewArrayList.get(position).getUserImageId());
                     }
-
-                    holder.review.setText(reviewArrayList.get(position).getReviewContent());
+                    if(reviewArrayList.get(position).getReviewContent().equals("")){
+                        holder.review.setVisibility(View.GONE);
+                    } else {
+                        holder.review.setText(reviewArrayList.get(position).getReviewContent());
+                    }
                     holder.review_username.setText(retUsername);
                     holder.rating.setText(String.valueOf(reviewArrayList.get(position).getRating()));
 

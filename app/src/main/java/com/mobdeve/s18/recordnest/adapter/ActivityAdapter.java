@@ -77,7 +77,7 @@ public class ActivityAdapter extends RecyclerView.Adapter<ActivityAdapter.Activi
                                 }
                             });
                         } else {
-                            holder.activity_icon.setImageResource(R.drawable.vinyl2);
+                            holder.activity_icon.setImageResource(R.drawable.feed_review_icon);
                             holder.activity_title.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
