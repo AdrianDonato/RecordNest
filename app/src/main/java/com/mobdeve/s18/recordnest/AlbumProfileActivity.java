@@ -552,6 +552,7 @@ public class AlbumProfileActivity extends AppCompatActivity {
         if(checkIfReviewed()){
             float currRating = (float) reviewList.get(userReviewIndex).getRating();
             reviewETAlbum.setText(reviewList.get(userReviewIndex).getReviewContent());
+            reviewETAlbum.setHint("Update your rating with a review...");
             ratingViewAlbum.setRating(currRating);
         }
     }
@@ -748,6 +749,11 @@ public class AlbumProfileActivity extends AppCompatActivity {
 
                     if(isInColl) {
                         String errorMsg = albumDisplayed.getAlbumName() + " is already in " + collTitle + "!";
+                        Toast.makeText(AlbumProfileActivity.this,
+                                errorMsg,
+                                Toast.LENGTH_SHORT).show();
+                    } else if (albumIDList.size() == 10) {
+                        String errorMsg = collTitle + " already has 10 albums! Please remove to make more space.";
                         Toast.makeText(AlbumProfileActivity.this,
                                 errorMsg,
                                 Toast.LENGTH_SHORT).show();

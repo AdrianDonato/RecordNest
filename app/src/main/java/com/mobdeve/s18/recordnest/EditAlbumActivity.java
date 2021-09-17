@@ -174,7 +174,7 @@ public class EditAlbumActivity extends AppCompatActivity {
         });
     }
 
-    //transfer an album to another collection of the user, will only be called if album is not yet in target collection
+    //transfer an album to another collection of the user, will only be called if album is not yet in target collection (thru checkIfInCollection())
     public void transferColls(String targCollTitle){
         Map<String, Object> removeColl = new HashMap<>();
         removeColl.put("AlbumIDList", FieldValue.arrayRemove(albumID));
@@ -228,6 +228,11 @@ public class EditAlbumActivity extends AppCompatActivity {
                     ArrayList<String> albumIDList = (ArrayList<String>) snapshot.get("AlbumIDList");
                     if(albumIDList.contains(albumID)){
                         Toast.makeText(EditAlbumActivity.this, albTitle + " is already in " + targCollTitle + "!",
+                                Toast.LENGTH_SHORT).show();
+                    } else if (albumIDList.size() == 10) {
+                        String errorMsg = targCollTitle + " already has 10 albums! Please remove to make more space.";
+                        Toast.makeText(EditAlbumActivity.this,
+                                errorMsg,
                                 Toast.LENGTH_SHORT).show();
                     } else {
                         transferColls(targCollTitle);

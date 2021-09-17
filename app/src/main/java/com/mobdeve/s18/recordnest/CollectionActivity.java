@@ -403,6 +403,8 @@ public class CollectionActivity extends AppCompatActivity {
 
     //function to get current activity into bitmap form
     public Bitmap getScreenshot(View v){
+
+        //make menu items invisible first before taking the screenshot
         v_share.setVisibility(View.GONE);
         v_sort.setVisibility(View.GONE);
         bottomNavigationView.setVisibility(View.GONE);
@@ -411,6 +413,8 @@ public class CollectionActivity extends AppCompatActivity {
         Canvas canvas = new Canvas(bitmap);
         v.draw(canvas);
 
+
+        //return the visibility of menu items after taking the screenshot
         v_share.setVisibility(View.VISIBLE);
         v_sort.setVisibility(View.VISIBLE);
         bottomNavigationView.setVisibility(View.VISIBLE);

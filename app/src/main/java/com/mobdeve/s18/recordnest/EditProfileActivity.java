@@ -73,8 +73,6 @@ public class EditProfileActivity extends AppCompatActivity {
 
         readCurrUserData();
 
-        //setBtnSaveListener();
-
         btn_save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
