@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
@@ -79,6 +80,8 @@ public class CollectionActivity extends AppCompatActivity {
     private LoginButton lbFBlogin;
     private View view;
 
+    BottomNavigationView bottomNavigationView;
+
     Dialog dialog;
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,7 +100,7 @@ public class CollectionActivity extends AppCompatActivity {
 
         Intent i = getIntent();
 
-        BottomNavigationView bottomNavigationView = findViewById(R.id.nav);
+        bottomNavigationView = findViewById(R.id.nav);
 
         bottomNavigationView.setSelectedItemId(R.id.invisible);
 
@@ -399,11 +402,19 @@ public class CollectionActivity extends AppCompatActivity {
     }
 
     //function to get current activity into bitmap form
-    public static Bitmap getScreenshot(View v){
-        View rootView = v.getRootView();
-        rootView.setDrawingCacheEnabled(true);
-        Bitmap bitmap = Bitmap.createBitmap(rootView.getDrawingCache());
-        rootView.setDrawingCacheEnabled(false);
+    public Bitmap getScreenshot(View v){
+        v_share.setVisibility(View.GONE);
+        v_sort.setVisibility(View.GONE);
+        bottomNavigationView.setVisibility(View.GONE);
+
+        Bitmap bitmap = Bitmap.createBitmap(v.getWidth(), v.getHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        v.draw(canvas);
+
+        v_share.setVisibility(View.VISIBLE);
+        v_sort.setVisibility(View.VISIBLE);
+        bottomNavigationView.setVisibility(View.VISIBLE);
+
         return bitmap;
     }
 
