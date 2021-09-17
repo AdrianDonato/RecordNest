@@ -90,7 +90,12 @@ public class SubmitAlbumActivity extends AppCompatActivity{
         btn_submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                submitAlbum();
+                if(checkEditTextCompleteness()) {
+                    submitAlbum();
+                } else {
+                    Toast.makeText(SubmitAlbumActivity.this, "Please fill up all details!",
+                            Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -134,6 +139,33 @@ public class SubmitAlbumActivity extends AppCompatActivity{
 
 
 
+    }
+
+    public boolean checkEditTextCompleteness(){
+        boolean isComplete = true;
+
+        if(etAlbTitle.getText().toString().trim().equals("")
+                || etAlbArtist.getText().toString().trim().equals("")
+                || etAlbYear.getText().toString().trim().equals("")
+                || etAlbGenre.getText().toString().trim().equals("")){
+            isComplete = false;
+        }
+
+        if(etTracklists.size() == 0){
+            isComplete = false;
+        } else {
+            for(int i = 0; i < etTracklists.size(); i++){
+                if(etTracklists.get(i).getText().toString().trim().equals("")){
+                    isComplete = false;
+                }
+            }
+        }
+
+        if(bitmap == null){
+            isComplete = false;
+        }
+
+        return isComplete;
     }
 
     //creates an edit text view for additional tracklists
