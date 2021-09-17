@@ -45,6 +45,7 @@ public class FollowingActActivity extends AppCompatActivity {
     private FirebaseFirestore fStore;
     private String ownUserID;
     private ArrayList<String> followingIDs;
+    private ArrayList<ArrayList<String>> followingIDChunks;
     private ArrayList<Activity> feedList;
 
     //private ReviewAdapter reviewAdapter;
@@ -153,6 +154,15 @@ public class FollowingActActivity extends AppCompatActivity {
                     int fingcount= snapshot.getLong("FollowingCount").intValue();
                     followingIDs = (ArrayList<String>) snapshot.get("FollowingList");
 
+                    //we need to divide the arraylist of users into chunks of 10 due to limitations of firestore
+                    followingIDChunks = new ArrayList<>();
+                    for(int j = 0; j < followingIDs.size(); j++){
+                        if(j%10 == 0){
+                            followingIDChunks.add(new ArrayList<>());
+                        }
+                        followingIDChunks.get(followingIDChunks.size()-1).add(followingIDs.get(j));
+                    }
+
                     ownUsername.setText(retUsername);
                     ownFollowers.setText(Integer.toString(fercount));
                     ownFollowing.setText(Integer.toString(fingcount));
@@ -162,7 +172,9 @@ public class FollowingActActivity extends AppCompatActivity {
                                 .load(retImg).into(ownImage);
                     }
                     if(fingcount > 0) {
-                        initFeed();
+                        for(int x = 0; x < followingIDChunks.size(); x++) {
+                            initFeed(followingIDChunks.get(x));
+                        }
                     }
                 } else {
                     Toast.makeText(FollowingActActivity.this, "Error! " + task.getException().getMessage(),
@@ -173,9 +185,9 @@ public class FollowingActActivity extends AppCompatActivity {
     }
 
     //retrieves recent activity of users followed from firestore db
-    public void initFeed(){
+    public void initFeed(ArrayList<String> IDChunks){
         feedList = new ArrayList<>();
-        fStore.collection("FeedActivities").whereIn("UserID", followingIDs).orderBy("Date", Query.Direction.DESCENDING)
+        fStore.collection("FeedActivities").whereIn("UserID", IDChunks).orderBy("Date", Query.Direction.DESCENDING)
                 .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull @NotNull Task<QuerySnapshot> task) {
